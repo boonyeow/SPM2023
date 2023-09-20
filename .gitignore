@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 
 package-lock.json
+
+venv
+__pycache__/
+.pytest_cache/
+*.pyc
+*.pyo
