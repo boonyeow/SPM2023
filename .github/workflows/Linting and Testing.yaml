@@ -16,6 +16,7 @@ jobs:
   pr-naming:
     permissions:
       pull-requests: read
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     continue-on-error: false
     timeout-minutes: 5

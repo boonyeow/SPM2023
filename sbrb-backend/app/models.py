@@ -1,5 +1,6 @@
-from database import Base
 from sqlalchemy import Column, String, Text
+
+from .database import Base
 
 
 class Role(Base):
