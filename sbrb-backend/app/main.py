@@ -1,7 +1,7 @@
 from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
-from .models import Role
-from .database import SessionLocal
+from models import Role
+from database import SessionLocal
 import uvicorn
 
 app = FastAPI()

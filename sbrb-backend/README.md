@@ -26,6 +26,6 @@ Step 4: Visit your endpoint via [localhost:8000](http://localhost:8000/)
 ## Running unit tests
 
 ```
-cd sbrb-backend/app/tests
+cd sbrb-backend
 pytest -v
 ```
