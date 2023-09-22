@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Text
 
-from .database import Base
+from app.database import Base
 
 
 class Role(Base):
