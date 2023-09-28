@@ -35,8 +35,6 @@ function SkillSelection() {
 
   return (
     <GridItem colSpan={2} bg='papayawhip'>
-      <Text mb="8px">Skills Required:</Text>
-
       <Select
         placeholder='Select option'
         onChange={handleSkillSelect}

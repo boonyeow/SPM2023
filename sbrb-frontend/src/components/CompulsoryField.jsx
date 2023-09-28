@@ -12,11 +12,10 @@ function CompulsoryField(props) {
     
     const handleInputChange = (e) => setInput(e.target.value)
     
-    const isError = props.required && input === ''
+    const isError = input === ''
     return (
   
         <FormControl isInvalid={isError}>
-        <FormLabel>{props.label}</FormLabel>
         <Input type={props.type} value={input} onChange={handleInputChange} />
         {!isError ? (
           <FormHelperText>Great!</FormHelperText>

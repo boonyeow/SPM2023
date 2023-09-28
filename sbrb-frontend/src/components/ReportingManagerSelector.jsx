@@ -37,7 +37,6 @@ function ReportingManagerSelector() {
   return (
     <HStack spacing={5} p={4}>
       <FormControl>
-        <FormLabel>Select Reporting Manager:</FormLabel>
         <Select
           placeholder="Select reporting manager"
           value={selectedManager}
@@ -53,11 +52,9 @@ function ReportingManagerSelector() {
       {derivedDepartment && (
         <>
         
-        <Flex alignItems="center">
-          <Text flex="1">
+          <Text >
             Department: {derivedDepartment}
           </Text>
-        </Flex>
      
         </>
       )}
