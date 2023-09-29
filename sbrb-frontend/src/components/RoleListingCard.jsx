@@ -1,6 +1,6 @@
 import { Badge, Box, Heading, Text } from "@chakra-ui/react";
 
-function Feature({
+function RoleListingCard({
   title,
   desc,
   manager,
@@ -26,4 +26,4 @@ function Feature({
   );
 }
 
-export default Feature;
+export default RoleListingCard;

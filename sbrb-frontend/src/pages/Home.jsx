@@ -1,9 +1,10 @@
-import Feature from "../components/Feature";
 import Layout from "../components/Layout";
+import RoleListingCard from "../components/RoleListingCard";
 import { Box, Flex, Grid, GridItem, Stack } from "@chakra-ui/react";
 
-const featuresData = [
+const RoleListings = [
   {
+    roleListingId: 1,
     title: "Software Engineer",
     manager: "John Smith",
     desc: "Experienced software engineer with expertise in web development and cloud computing.",
@@ -12,6 +13,7 @@ const featuresData = [
     deadline: "2023-12-31",
   },
   {
+    roleListingId: 2,
     title: "Digital Marketing Specialist",
     manager: "Emily Davis",
     desc: "Digital marketing specialist with a proven track record in SEO, SEM, and content marketing.",
@@ -20,6 +22,7 @@ const featuresData = [
     deadline: "2023-11-30",
   },
   {
+    roleListingId: 3,
     title: "Data Scientist",
     manager: "Dr. Sarah Johnson",
     desc: "Data scientist with expertise in machine learning and data analysis. Strong analytical skills.",
@@ -33,6 +36,7 @@ const featuresData = [
     deadline: "2023-10-15",
   },
   {
+    roleListingId: 4,
     title: "UX/UI Designer",
     manager: "Alex Wilson",
     desc: "Creative UX/UI designer with a passion for creating user-centered design solutions.",
@@ -58,8 +62,11 @@ const Home = () => {
                 <GridItem rowSpan={2} colSpan={4}>
                   <Box h="100%" overflow="auto">
                     <Stack spacing={4}>
-                      {featuresData.map((feature, index) => (
-                        <Feature key={index} {...feature} />
+                      {RoleListings.map((roleListingData) => (
+                        <RoleListingCard
+                          key={roleListingData.roleListingId}
+                          {...roleListingData}
+                        />
                       ))}
                     </Stack>
                   </Box>
