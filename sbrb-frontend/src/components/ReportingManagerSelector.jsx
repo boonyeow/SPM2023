@@ -8,7 +8,7 @@ import {
   Flex
 } from '@chakra-ui/react';
 
-function ReportingManagerSelector() {
+function ReportingManagerSelector(props) {
   const [selectedManager, setSelectedManager] = useState('');
   const [derivedDepartment, setDerivedDepartment] = useState('');
 
@@ -22,6 +22,10 @@ function ReportingManagerSelector() {
   const handleManagerSelect = (event) => {
     const selectedValue = event.target.value;
     setSelectedManager(selectedValue);
+   
+    props.aggregateFormData("reportingManager", selectedValue); 
+    props.aggregateFormData("department", derivedDepartment);
+    
 
     const selectedManagerData = reportingManagers.find(
       (manager) => manager.name === selectedValue
@@ -35,12 +39,12 @@ function ReportingManagerSelector() {
   };
 
   return (
-    <HStack spacing={5} p={4}>
-      <FormControl>
+    <HStack spacing={5}>
+      <FormControl >
         <Select
           placeholder="Select reporting manager"
           value={selectedManager}
-          onChange={handleManagerSelect} required
+          onChange={handleManagerSelect} required name="reportingManager"
         >
           {reportingManagers.map((manager) => (
             <option key={manager.name} value={manager.name}>

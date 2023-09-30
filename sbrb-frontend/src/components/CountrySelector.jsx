@@ -7,7 +7,7 @@ import {
   Text
 } from '@chakra-ui/react';
 
-function CountrySelector() {
+function CountrySelector(props) {
   const [selectedCountry, setSelectedCountry] = useState('');
 
   const countries = [
@@ -26,12 +26,13 @@ function CountrySelector() {
   const handleCountrySelect = (event) => {
     const selectedValue = event.target.value;
     setSelectedCountry(selectedValue);
+    props.aggregateFormData("country", selectedValue); 
+    
   };
 
   return (
-    <Stack spacing={4} p={4}>
+    <Stack spacing={4}>
       <FormControl>
-        {/* <FormLabel>Select Country</FormLabel> */}
         <Select
           placeholder="Select a country"
           value={selectedCountry}

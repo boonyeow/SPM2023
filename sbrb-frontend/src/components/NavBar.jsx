@@ -16,8 +16,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-const Links = ["Home", "Job Listings", "Skills Matching", "Edit Profile"];
-
+const Links = [
+  { name: 'Home', to: '/' },
+  {name: 'Create Job Listing', to: 'create-job-listing'},
+];
 const NavLink = ({ children }) => (
   <Box
     as="a"
@@ -28,8 +30,8 @@ const NavLink = ({ children }) => (
       textDecoration: "none",
       bg: useColorModeValue("purple.200", "purple.700"),
     }}
-    href="#">
-    {children}
+    href={children.to}>
+    {children.name}
   </Box>
 );
 
@@ -50,7 +52,7 @@ export default function NavBar() {
           <Box>Logo</Box>
           <HStack as="nav" spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
-              <NavLink key={link}>{link}</NavLink>
+              <NavLink key={link.to}>{link}</NavLink>
             ))}
           </HStack>
         </HStack>

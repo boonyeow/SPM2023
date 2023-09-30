@@ -3,16 +3,17 @@ import {
   GridItem,
   Select,
   Badge,
-  Text,
+  Text, FormControl
 } from '@chakra-ui/react';
 
-function SkillSelection() {
+function SkillSelection(props) {
   const [selectedSkills, setSelectedSkills] = useState([]);
 
   const handleSkillSelect = (e) => {
     const selectedSkill = e.target.value;
     if (!selectedSkills.includes(selectedSkill)) {
       setSelectedSkills([...selectedSkills, selectedSkill]);
+      props.aggregateFormData("skills", [...selectedSkills, selectedSkill]); 
     }
   };
 
@@ -34,7 +35,8 @@ function SkillSelection() {
   'Data Analysis',];
 
   return (
-    <GridItem colSpan={2} bg='papayawhip'>
+    <GridItem colSpan={2}>
+      <FormControl>
       <Select
         placeholder='Select option'
         onChange={handleSkillSelect}
@@ -64,6 +66,7 @@ function SkillSelection() {
           ))}
         </div>
       )}
+      </FormControl>
     </GridItem>
   );
 }

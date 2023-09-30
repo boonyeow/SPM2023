@@ -10,13 +10,18 @@ import { useState } from 'react';
 function CompulsoryField(props) {
     const [input, setInput] = useState('')
     
-    const handleInputChange = (e) => setInput(e.target.value)
+    // const handleInputChange = (e) => setInput(e.target.value)
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      props.aggregateFormData(name, value); 
+      setInput(e.target.value)
+    };
     
     const isError = input === ''
     return (
   
-        <FormControl isInvalid={isError}>
-        <Input type={props.type} value={input} onChange={handleInputChange} />
+        <FormControl isInvalid={props.required}>
+        <Input type={props.type} value={input} onChange={handleInputChange} name={props.name}/>
         {!isError ? (
           <FormHelperText>Great!</FormHelperText>
         ) : (
