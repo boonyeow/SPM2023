@@ -2,7 +2,6 @@ import React, {useState, useRef} from 'react';
 import Layout from "../components/Layout";
 import {Box, Stack, Grid, GridItem, Flex, Text, Textarea, Button, FormControl, Input, Select} from '@chakra-ui/react';
 import Flatpickr from "react-flatpickr";
-import ConfirmationModal from "../components/ConfirmationModal";
 import "flatpickr/dist/flatpickr.css";
 import { useDisclosure } from '@chakra-ui/react';
 import {
@@ -13,7 +12,7 @@ import {
   CloseButton,
   Badge,
 } from '@chakra-ui/react';
-
+import { useNavigate } from 'react-router-dom';
 // - The form should include fields for the job title, job description, required skills, and the deadline for the role listing.
 // - Once saved, a confirmation message should be displayed to indicate the successful creation of the role listing.
 // - The created role listing should be visible in the list of existing role listings for other users to view.
@@ -24,11 +23,13 @@ function CreateJobListing() {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [selectedManager, setSelectedManager] = useState('');
   const [derivedDepartment, setDerivedDepartment] = useState('');
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [dateError, setDateError] = useState('');
+  const navigate = useNavigate();
   
   const skills = [ 
     'Communication Skills',
@@ -121,11 +122,22 @@ function CreateJobListing() {
     });
   
     const handleDateChange = (date) => {
-      const datestr = JSON.stringify(date)
+      var d = JSON.stringify(date)
+      d = d.substring(2, d.length-2);
+      var date = new Date(d);
+      const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+      const formattedDate = date.toLocaleDateString('en-US', options);
       setSelectedDate(date);
+
+      if (!date || date < new Date()) {
+        setDateError('Please select a valid future date.');
+      } else {
+        setDateError('');
+      }
+    
       setFormData({
         ...formData,
-        ["deadline"]: datestr,
+        ["deadline"]: formattedDate,
       });
     };
 
@@ -144,7 +156,13 @@ function CreateJobListing() {
         [e.target.id]: '',
       });
     };
-
+    
+    
+    const handleCloseAlert = () => {
+      onClose();
+      setIsSubmitted(false); 
+      navigate('/');
+    };
     // const handleSubmit = async(e) => {
     const handleSubmit = (e) => {
       let hasError = false;
@@ -179,23 +197,24 @@ function CreateJobListing() {
         }        
 
       console.log(formDataJson)
-      setShowModal(true);
+      setIsSubmitted(true);
+      onOpen();
 
 
       }
         
+ 
       else {
    
-          // setFormData({
-          //   jobTitle: '',
-          //   country: '',
-          //   department: '',
-          //   skills: [],
-          //   reportingManager: '',
-          //   jobDescription: '',
-          //   deadline: '',
-          // });
-          // setSelectedDate(null);
+          setFormData({
+            jobTitle: '',
+            country: '',
+            department: '',
+            skills: [],
+            reportingManager: '',
+            jobDescription: '',
+            deadline: '',
+          });
           }
       };
 
@@ -370,7 +389,12 @@ function CreateJobListing() {
             <div>
               <Flatpickr ref={fp}  value={selectedDate} onChange={handleDateChange}/>
               <Text fontSize={'12px'}>Click on box to change date.</Text>
-              <Button
+              
+              {(dateError || (selectedDate == "")) && (
+                  <Text color="red" fontSize="12px">
+                    {dateError || "Please select a valid future date."}
+                  </Text>
+                )}<Button
                 type="button" size="sm" variant="outline" colorScheme="blue" options={{ minDate: new Date() }}
                 onClick={() => {
                   if (!fp?.current?.flatpickr) return;
