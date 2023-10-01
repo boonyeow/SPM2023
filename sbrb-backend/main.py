@@ -1,33 +1,21 @@
 import uvicorn
-from fastapi import Depends, FastAPI
-from sqlalchemy.orm import Session
+from app.database import init_engine
+from fastapi import APIRouter, FastAPI
 
-from app.database import SessionLocal
-from app.models import Role
-
-app = FastAPI()
+api_router = APIRouter()
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-@app.get("/")
-def index():
+@api_router.get("/")
+def get_root():
     return {"message": "Hello World"}
 
 
-@app.get("/roles")
-def get_roles(db: Session = Depends(get_db)):
-    db = SessionLocal()
-    roles = db.query(Role).all()
-    db.close()
-    return roles
+init_engine(is_test=True)
 
+app = FastAPI()
+# Include your API routers
+app.include_router(api_router)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    app_module = "main:app"
+    uvicorn.run(app_module, host="0.0.0.0", port=8000, reload=True)
