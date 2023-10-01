@@ -1,8 +1,7 @@
 import React, {useState, useRef} from 'react';
 import Layout from "../components/Layout";
 import {Box, Stack, Grid, GridItem, Flex, Text, Textarea, Button, FormControl, Input, Select} from '@chakra-ui/react';
-import Flatpickr from "react-flatpickr";
-import "flatpickr/dist/flatpickr.css";
+import { DatePicker } from "antd";
 import { useDisclosure } from '@chakra-ui/react';
 import {
   Alert,
@@ -13,9 +12,6 @@ import {
   Badge,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-// - The form should include fields for the job title, job description, required skills, and the deadline for the role listing.
-// - Once saved, a confirmation message should be displayed to indicate the successful creation of the role listing.
-// - The created role listing should be visible in the list of existing role listings for other users to view.
 
 function CreateJobListing() {
 
@@ -23,13 +19,14 @@ function CreateJobListing() {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [selectedManager, setSelectedManager] = useState('');
   const [derivedDepartment, setDerivedDepartment] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [dateError, setDateError] = useState('');
   const navigate = useNavigate();
+  const [wrongSubmission, setWrongSubmission] = useState(false);
   
   const skills = [ 
     'Communication Skills',
@@ -64,6 +61,10 @@ function CreateJobListing() {
       ...formData,
       ["country"]: selectedValue,
     })
+    setErrors({
+      ...errors,
+      ["selectedCountry"]: '',
+    });
     
   };
 
@@ -89,6 +90,10 @@ function CreateJobListing() {
         ["reportingManager"]: selectedValue,
         ["department"]: selectedManagerData.department,
       })
+      setErrors({
+        ...errors,
+        ["selectedManager"]: '',
+      });
       } else {
         setDerivedDepartment(''); 
       }
@@ -102,6 +107,10 @@ function CreateJobListing() {
           ...formData,
           ["skills"]: [...selectedSkills, selectedSkill],
         })
+        setErrors({
+          ...errors,
+          ["selectedSkills"]: '',
+        });
       }
     };
   
@@ -121,15 +130,10 @@ function CreateJobListing() {
       deadline:'',
     });
   
-    const handleDateChange = (date) => {
-      var d = JSON.stringify(date)
-      d = d.substring(2, d.length-2);
-      var date = new Date(d);
-      const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-      const formattedDate = date.toLocaleDateString('en-US', options);
-      setSelectedDate(date);
+    const handleDateChange = (date, dateString) => {
+      setSelectedDate(dateString);
 
-      if (!date || date < new Date()) {
+      if (!dateString || new Date(dateString) < new Date()) {
         setDateError('Please select a valid future date.');
       } else {
         setDateError('');
@@ -137,13 +141,22 @@ function CreateJobListing() {
     
       setFormData({
         ...formData,
-        ["deadline"]: formattedDate,
+        ["deadline"]: dateString,
+      });
+
+      setErrors({
+        ...errors,
+        ["selectedDate"]: '',
       });
     };
 
     const [errors, setErrors] = useState({
       jobTitle: 'Job title is required.',
       jobDescription: 'Job description is required.',
+      selectedSkills: 'Select at least 1 skill.',
+      selectedManager: 'Select a Manager.',
+      selectedCountry: 'Select a country.',
+      selectedDate: 'Select a deadline.',
     });
   
     const handleInputChange = (e) => {
@@ -157,14 +170,12 @@ function CreateJobListing() {
       });
     };
     
-    
     const handleCloseAlert = () => {
       onClose();
       setIsSubmitted(false); 
       navigate('/');
     };
-    // const handleSubmit = async(e) => {
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
       let hasError = false;
 
       if (formData.jobTitle.trim() === '') {
@@ -181,11 +192,43 @@ function CreateJobListing() {
         }));        
         hasError = true;
       }
+
+      if (formData.country.length === 0) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          selectedCountry: 'Select a country.',
+        }));        
+        hasError = true;
+      }
+
+      if (formData.skills.length === 0) {
+        console.log(formData.skills)
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          selectedSkills: 'Select at least 1 skill.',
+        }));        
+        hasError = true;
+      }
+
+      if (formData.reportingManager.length=== 0) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          selectedManager: 'Select a Manager.',
+        }));        
+        hasError = true;
+      }
     
+      if (formData.deadline.trim() === '') {
+        console.log(formData.deadline)
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          selectedDate: 'Select a deadline.',
+        }));        
+        hasError = true;
+      }
       e.preventDefault();
         
       if(!hasError){
-
         const formDataJson = {
           jobTitle: formData.jobTitle,
           country: formData.country,
@@ -196,16 +239,17 @@ function CreateJobListing() {
           deadline: formData.deadline,
         }        
 
+      setWrongSubmission(false);
+
       console.log(formDataJson)
       setIsSubmitted(true);
       onOpen();
-
-
       }
         
  
       else {
-   
+  
+        setWrongSubmission(true);
           setFormData({
             jobTitle: '',
             country: '',
@@ -222,6 +266,12 @@ function CreateJobListing() {
     <>
     <Layout>
     <Box>
+    {wrongSubmission && (
+        <Alert status='error'>
+          <AlertIcon />
+          Please make the necessary changes.
+       </Alert>
+      )}
 
     {isSubmitted && (
         <Alert status='success'>
@@ -281,11 +331,12 @@ function CreateJobListing() {
               </option>
             ))}
           </Select>
-          {selectedSkills.length < 1 && (
-                  <Text color="red" fontSize="12px">
-                    Skills are required.
-                  </Text>
-                )}
+          {  
+            errors.selectedSkills && (
+            <Text color="red" fontSize="12px">
+              {errors.selectedSkills}
+            </Text>
+            )}           
 
           {selectedSkills.length > 0 && (
             <div>
@@ -325,11 +376,12 @@ function CreateJobListing() {
                 </option>
               ))}
             </Select>
-            {selectedManager.length == 0 && (
-                  <Text color="red" fontSize="12px">
-                    Reporting Manager is required.
-                  </Text>
-                )}
+            {errors.selectedManager && (
+                <Text color="red" fontSize="12px">
+                  {errors.selectedManager}
+                </Text>
+              )}
+
           </FormControl>
           {derivedDepartment && (
               <Text>
@@ -354,11 +406,16 @@ function CreateJobListing() {
                     </option>
                   ))}
                 </Select>
-                {selectedCountry.length == 0 && (
+                {/* {selectedCountry.length == 0 && (
                   <Text color="red" fontSize="12px">
                     Country is required.
                   </Text>
-                )}
+                )} */}
+             {errors.selectedCountry && (
+                <Text color="red" fontSize="12px">
+                  {errors.selectedCountry}
+                </Text>
+              )}
               </FormControl>
               {selectedCountry && (
                 <Text>
@@ -383,18 +440,21 @@ function CreateJobListing() {
         </GridItem>
 
         {/* application deadline */}
-        <GridItem colSpan={4} bg="beige">
+        <GridItem colSpan={4}>
 
             <Text mb="8px">Application Deadline*:</Text>
             <div>
-              <Flatpickr ref={fp}  value={selectedDate} onChange={handleDateChange}/>
+
+            <DatePicker onChange={handleDateChange}></DatePicker>
               <Text fontSize={'12px'}>Click on box to change date.</Text>
+            {  
+              (dateError || errors.selectedDate) && (
+            <Text color="red" fontSize="12px">
+              {dateError || errors.selectedDate}
+            </Text>
+            )}         
               
-              {(dateError || (selectedDate == "")) && (
-                  <Text color="red" fontSize="12px">
-                    {dateError || "Please select a valid future date."}
-                  </Text>
-                )}<Button
+              <Button
                 type="button" size="sm" variant="outline" colorScheme="blue" options={{ minDate: new Date() }}
                 onClick={() => {
                   if (!fp?.current?.flatpickr) return;
