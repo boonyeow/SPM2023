@@ -19,7 +19,7 @@ import {
 const Links = [
   { name: "Home", to: "/" },
   { name: "Job Applicants", to: "/job-applicants" },
-  {name: 'Create Job Listing', to: 'create-job-listing'},
+  { name: 'Create Job Listing', to: '/create-job-listing'},
   { name: "Skills Matching", to: "/skills-matching" },
   { name: "Edit Profile", to: "/edit-profile" },
 ];
