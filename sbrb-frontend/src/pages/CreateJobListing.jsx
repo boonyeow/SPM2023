@@ -12,7 +12,6 @@ import {
   Badge,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,13 +19,11 @@ import 'react-toastify/dist/ReactToastify.css';
 function CreateJobListing() {
 
   const [selectedSkills, setSelectedSkills] = useState([]);
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [staffId, setStaffId] = useState('');
   const [derivedDepartment, setDerivedDepartment] = useState('');
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState('');
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { onOpen, onClose } = useDisclosure();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [dateError, setDateError] = useState('');
   const navigate = useNavigate();
@@ -129,7 +126,6 @@ function CreateJobListing() {
     });
   
     const handleDateChange = (date, dateString) => {
-      setSelectedDate(dateString);
 
       if (!dateString || new Date(dateString) < new Date()) {
         setDateError('Please select a valid future date.');
@@ -279,34 +275,8 @@ function CreateJobListing() {
           created_by_name: 'Jane, Smith'
 
         }        
-
-      try {
-        const response = await axios.post('http://localhost:8000/listing/create', formDataJson);
-      
-        console.log(response)
-        if (response.status === 200) {
-          console.log('Listing created successfully:', response.data);
-          setIsSubmitted(true);
-          onOpen();
-        } else {
-          console.error('Error creating listing:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error creating listing:', error);
-        toast.error('An error occurred. Please try again.', {
-          position: toast.POSITION.TOP_CENTER, 
-          autoClose: 5000, 
-        });
-        console.log(formDataJson);
-        console.log(formDataJson)
       }
-
-     
-      }
-        
- 
       else {
-  
         console.log(errors)
         toast.error('Please make the necessary changes and submit again.', {
           position: toast.POSITION.TOP_CENTER, 
@@ -366,7 +336,7 @@ function CreateJobListing() {
        {/* skills */}
         <GridItem colSpan={2}>
           <FormControl>
-            <Text mb="8px" required={isFormSubmitted}
+            <Text mb="8px"
               name="skills">Skills Required*:</Text>
            <Select
               placeholder='Select option'
