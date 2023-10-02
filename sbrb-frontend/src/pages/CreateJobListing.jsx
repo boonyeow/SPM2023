@@ -12,12 +12,16 @@ import {
   Badge,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function CreateJobListing() {
 
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [selectedManager, setSelectedManager] = useState('');
+  const [staffId, setStaffId] = useState('');
   const [derivedDepartment, setDerivedDepartment] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
@@ -26,9 +30,9 @@ function CreateJobListing() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [dateError, setDateError] = useState('');
   const navigate = useNavigate();
-  const [wrongSubmission, setWrongSubmission] = useState(false);
   
   const skills = [ 
+    'Skill1',
     'Communication Skills',
     'Teamwork',
     'Problem Solving',
@@ -68,36 +72,26 @@ function CreateJobListing() {
     
   };
 
-  const reportingManagers = [
-    { name: 'John Smith', department: 'Sales' },
-    { name: 'Jane Doe', department: 'Marketing' },
-    { name: 'Michael Johnson', department: 'Finance' },
-    { name: 'Emily Davis', department: 'Operations' },
-  ];
-  
-    const handleManagerSelect = (event) => {
-      const selectedValue = event.target.value;
-      setSelectedManager(selectedValue);   
-      const selectedManagerData = reportingManagers.find(
-        (manager) => manager.name === selectedValue
-      );
-  
-      if (selectedManagerData) {
-        setDerivedDepartment(selectedManagerData.department);
-    
-        setFormData({
-        ...formData,
-        ["reportingManager"]: selectedValue,
-        ["department"]: selectedManagerData.department,
-      })
-      setErrors({
-        ...errors,
-        ["selectedManager"]: '',
-      });
-      } else {
-        setDerivedDepartment(''); 
-      }
-    };
+  const reportingManagers = {
+    "1": {
+      "staff_fname": "John",
+      "staff_lname": "Doe",
+      "dept": "HR",
+      "country": "USA",
+      "email": "john.doe@example.com",
+      "role_name": "Role1",
+      "access_id": 1
+    },
+    "2": {
+      "staff_fname": "Jane",
+      "staff_lname": "Smith",
+      "dept": "IT",
+      "country": "Canada",
+      "email": "jane.smith@example.com",
+      "role_name": "Role2",
+      "access_id": 2
+    }
+  }
 
     const handleSkillSelect = (e) => {
       const selectedSkill = e.target.value;
@@ -121,13 +115,17 @@ function CreateJobListing() {
     
     const fp = useRef(null);
     const [formData, setFormData] = useState({
-      jobTitle: '',
+      role_name: '',
+      listing_title: '',
       country: '',
-      department: '',
+      dept: '',
       skills: [],
-      reportingManager:'',
-      jobDescription:'',
-      deadline:'',
+      reporting_manager_id: 0,
+      reporting_manager: 'John, Doe',
+      listing_desc:'',
+      created_by: 2,
+      expiry_date:'',
+      created_by_name: 'Jane, Smith'
     });
   
     const handleDateChange = (date, dateString) => {
@@ -141,7 +139,7 @@ function CreateJobListing() {
     
       setFormData({
         ...formData,
-        ["deadline"]: dateString,
+        ["expiry_date"]: new Date(dateString),
       });
 
       setErrors({
@@ -150,16 +148,46 @@ function CreateJobListing() {
       });
     };
 
+    // error handling
     const [errors, setErrors] = useState({
-      jobTitle: 'Job title is required.',
-      jobDescription: 'Job description is required.',
-      selectedSkills: 'Select at least 1 skill.',
-      selectedManager: 'Select a Manager.',
-      selectedCountry: 'Select a country.',
-      selectedDate: 'Select a deadline.',
+      listing_title: '',
+      listing_desc: '',
+      selectedSkills: '',
+      staffId: '',
+      selectedCountry: '',
+      selectedDate: '',
+      role_name: ''
     });
   
+    const handleStaffIdChange = (e) => {
+      if(e.target.id == 'staffId'){
+        const enteredId = e.target.value;
+        setStaffId(enteredId);
+    
+        if (reportingManagers[enteredId]) {
+          setDerivedDepartment(reportingManagers[enteredId].dept);
+          setErrors({
+            ...errors,
+            ["staffId"]: '',
+            ["department"]: '',
+          });
+          setFormData({
+            ...formData,
+            ["reporting_manager_id"]: parseInt(enteredId),
+            ["dept"]:reportingManagers[enteredId].dept, 
+          })
+        } else {
+          setDerivedDepartment('');
+          setErrors({
+            ...errors,
+            ["staffId"]: 'Invalid staff ID. Please enter a valid ID.',
+          });
+        }
+      }
+    }
     const handleInputChange = (e) => {
+
+     
       setFormData({
         ...formData,
         [e.target.id]: e.target.value,
@@ -177,18 +205,19 @@ function CreateJobListing() {
     };
     const handleSubmit = async(e) => {
       let hasError = false;
+      console.log(formData)
 
-      if (formData.jobTitle.trim() === '') {
+      if (formData.listing_title.trim() === '') {
         setErrors((prevErrors)=>({...prevErrors,
-          jobTitle: 'Job title is required.'
+          listing_title: 'Job Title is required.'
           }));
         hasError = true;
       }
     
-      if (formData.jobDescription.trim() === '') {
+      if (formData.listing_desc.trim() === '') {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          jobDescription: 'Job description is required.',
+          listing_desc: 'Job Description is required.',
         }));        
         hasError = true;
       }
@@ -196,33 +225,40 @@ function CreateJobListing() {
       if (formData.country.length === 0) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          selectedCountry: 'Select a country.',
+          selectedCountry: 'Select a Country.',
         }));        
         hasError = true;
       }
 
       if (formData.skills.length === 0) {
-        console.log(formData.skills)
         setErrors((prevErrors) => ({
           ...prevErrors,
-          selectedSkills: 'Select at least 1 skill.',
+          selectedSkills: 'Select at least 1 Skill.',
         }));        
         hasError = true;
       }
 
-      if (formData.reportingManager.length=== 0) {
+      if (formData.reporting_manager_id == '') {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          selectedManager: 'Select a Manager.',
+          staffId: 'Enter Manager ID.',
         }));        
         hasError = true;
       }
     
-      if (formData.deadline.trim() === '') {
-        console.log(formData.deadline)
+      if (formData.expiry_date === '') {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          selectedDate: 'Select a deadline.',
+          selectedDate: 'Select a Deadline.',
+        }));        
+        hasError = true;
+      }
+
+      console.log(formData.role_name)
+      if (formData.role_name.trim() === '') {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          role_name: 'Enter a Role Name.',
         }));        
         hasError = true;
       }
@@ -230,49 +266,60 @@ function CreateJobListing() {
         
       if(!hasError){
         const formDataJson = {
-          jobTitle: formData.jobTitle,
+          listing_title: formData.listing_title,
           country: formData.country,
-          department: formData.department,
+          dept: formData.dept,
           skills: formData.skills,
-          reportingManager: formData.reportingManager,
-          jobDescription: formData.jobDescription,  
-          deadline: formData.deadline,
+          reporting_manager_id: formData.reporting_manager_id,
+          listing_desc: formData.listing_desc,  
+          expiry_date: formData.expiry_date,
+          role_name: formData.role_name,
+          created_by: 2,
+          reporting_manager: 'John, Doe',
+          created_by_name: 'Jane, Smith'
+
         }        
 
-      setWrongSubmission(false);
+      try {
+        const response = await axios.post('http://localhost:8000/listing/create', formDataJson);
+      
+        console.log(response)
+        if (response.status === 200) {
+          console.log('Listing created successfully:', response.data);
+          setIsSubmitted(true);
+          onOpen();
+        } else {
+          console.error('Error creating listing:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error creating listing:', error);
+        toast.error('An error occurred. Please try again.', {
+          position: toast.POSITION.TOP_CENTER, 
+          autoClose: 5000, 
+        });
+        console.log(formDataJson);
+        console.log(formDataJson)
+      }
 
-      console.log(formDataJson)
-      setIsSubmitted(true);
-      onOpen();
+     
       }
         
  
       else {
   
-        setWrongSubmission(true);
-          setFormData({
-            jobTitle: '',
-            country: '',
-            department: '',
-            skills: [],
-            reportingManager: '',
-            jobDescription: '',
-            deadline: '',
-          });
-          }
+        console.log(errors)
+        toast.error('Please make the necessary changes and submit again.', {
+          position: toast.POSITION.TOP_CENTER, 
+          autoClose: 5000, 
+        })}
       };
 
   return (
     <>
     <Layout>
     <Box>
-    {wrongSubmission && (
-        <Alert status='error'>
-          <AlertIcon />
-          Please make the necessary changes.
-       </Alert>
-      )}
-
+    <ToastContainer />
+    
     {isSubmitted && (
         <Alert status='success'>
           <AlertIcon />
@@ -303,13 +350,13 @@ function CreateJobListing() {
       >
         <GridItem colSpan={2} >
           {/* job title */}
-            <Text mb="8px">Job Title*:</Text>
+            <Text mb="8px">Job Listing Title*:</Text>
           
              <FormControl>
-              <Input type="text" value={formData.jobTitle} id="jobTitle" onChange={handleInputChange} name="jobTitle"  />
-              {errors.jobTitle && (
+              <Input type="text" value={formData.listing_title} id="listing_title" onChange={handleInputChange} name="listing_title" />
+              {errors.listing_title && (
                   <Text color="red" fontSize="12px">
-                    {errors.jobTitle}
+                    {errors.listing_title}
                   </Text>
                 )}
                 </FormControl>
@@ -360,27 +407,37 @@ function CreateJobListing() {
        
           </FormControl>
         </GridItem>
+        <GridItem colSpan={2} >
+          {/* role name */}
+            <Text mb="8px">Role Name:</Text>  
+             <FormControl>
+              <Input type="text" value={formData.role_name} id="role_name" onChange={handleInputChange} name="role_name"  />
+              {  
+            errors.role_name && (
+            <Text color="red" fontSize="12px">
+              {errors.role_name}
+            </Text>
+            )}    
+              </FormControl>
+        </GridItem>
 
         {/* reporting manager */}
         <GridItem colSpan={3} >
-            <Text mb="8px">Reporting Manager*:</Text>
+            <Text mb="8px">Reporting Manager's Staff ID*:</Text>
         <FormControl >
-            <Select
-              placeholder="Select reporting manager"
-              value={selectedManager}
-              onChange={handleManagerSelect} required name="reportingManager"
-            >
-              {reportingManagers.map((manager) => (
-                <option key={manager.name} value={manager.name}>
-                  {manager.name}
-                </option>
-              ))}
-            </Select>
-            {errors.selectedManager && (
-                <Text color="red" fontSize="12px">
-                  {errors.selectedManager}
-                </Text>
-              )}
+           
+               <Input
+                type="text"
+                placeholder="Enter Staff ID"
+                value={staffId} id="staffId"
+                onChange={handleStaffIdChange}
+              />
+              {  
+                  errors.staffId && (
+                  <Text color="red" fontSize="12px">
+                    {errors.staffId}
+                  </Text>
+                  )}  
 
           </FormControl>
           {derivedDepartment && (
@@ -406,11 +463,7 @@ function CreateJobListing() {
                     </option>
                   ))}
                 </Select>
-                {/* {selectedCountry.length == 0 && (
-                  <Text color="red" fontSize="12px">
-                    Country is required.
-                  </Text>
-                )} */}
+             
              {errors.selectedCountry && (
                 <Text color="red" fontSize="12px">
                   {errors.selectedCountry}
@@ -429,11 +482,11 @@ function CreateJobListing() {
         <GridItem colSpan={4} >
             <Text mb="8px" >Job Description*:</Text>
          <FormControl>
-            <Textarea placeholder='Please type here..' value={formData.jobDescription} name="jobDescription" id="jobDescription"
+            <Textarea placeholder='Please type here..' value={formData.listing_desc} name="listing_desc" id="listing_desc"
               onChange={handleInputChange}/>
-             {errors.jobDescription && (
+             {errors.listing_desc && (
                 <Text color="red" fontSize="12px">
-                  {errors.jobDescription}
+                  {errors.listing_desc}
                 </Text>
               )}
              </FormControl>
@@ -443,27 +496,15 @@ function CreateJobListing() {
         <GridItem colSpan={4}>
 
             <Text mb="8px">Application Deadline*:</Text>
-            <div>
-
+            <Box>
             <DatePicker onChange={handleDateChange}></DatePicker>
               <Text fontSize={'12px'}>Click on box to change date.</Text>
             {  
               (dateError || errors.selectedDate) && (
             <Text color="red" fontSize="12px">
               {dateError || errors.selectedDate}
-            </Text>
-            )}         
-              
-              <Button
-                type="button" size="sm" variant="outline" colorScheme="blue" options={{ minDate: new Date() }}
-                onClick={() => {
-                  if (!fp?.current?.flatpickr) return;
-                  fp.current.flatpickr.clear();
-                }}
-              >
-                Clear
-              </Button>
-            </div>     
+            </Text> 
+            )}</Box>     
 
         </GridItem>
 
