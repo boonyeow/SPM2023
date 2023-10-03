@@ -1,4 +1,6 @@
 import Home from "./pages/Home";
+import RoleView from "./pages/RoleView";
+
 import {
   Route,
   createBrowserRouter,
@@ -9,6 +11,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
       <Route index element={<Home />} />
+      <Route path="roles/:id" element={<RoleView />} />
     </Route>
   )
 );
