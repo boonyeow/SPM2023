@@ -16,22 +16,30 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-const Links = ["Home", "Job Listings", "Skills Matching", "Edit Profile"];
+const Links = [
+  { name: "Home", to: "/" },
+  { name: "Job Applicants", to: "/job-applicants" },
+  { name: 'Create Job Listing', to: '/create-job-listing'},
+  { name: "Skills Matching", to: "/skills-matching" },
+  { name: "Edit Profile", to: "/edit-profile" },
+];
 
-const NavLink = ({ children }) => (
-  <Box
-    as="a"
-    px={2}
-    py={1}
-    rounded="md"
-    _hover={{
-      textDecoration: "none",
-      bg: useColorModeValue("purple.200", "purple.700"),
-    }}
-    href="#">
-    {children}
-  </Box>
-);
+const NavLink = ({ children }) => {
+  return (
+    <Box
+      as="a"
+      px={2}
+      py={1}
+      rounded="md"
+      _hover={{
+        textDecoration: "none",
+        bg: useColorModeValue("purple.200", "purple.700"),
+      }}
+      href={children.to}>
+      {children.name}
+    </Box>
+  );
+};
 
 export default function NavBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,7 +58,7 @@ export default function NavBar() {
           <Box>Logo</Box>
           <HStack as="nav" spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
-              <NavLink key={link}>{link}</NavLink>
+              <NavLink key={link.to}>{link}</NavLink>
             ))}
           </HStack>
         </HStack>
@@ -79,7 +87,9 @@ export default function NavBar() {
             </MenuButton>
             <MenuList>
               <MenuItem>View Applications</MenuItem>
-              <MenuItem>Edit Profile</MenuItem>
+              <MenuItem as="a" href="/edit-profile">
+                Edit Profile
+              </MenuItem>
               <MenuDivider />
               <MenuItem>Log Out</MenuItem>
             </MenuList>
