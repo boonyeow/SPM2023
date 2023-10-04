@@ -1,5 +1,26 @@
+import { Box } from "@chakra-ui/react";
+import {
+  ProfileHeadCard,
+  ProfileSkillCard,
+  ProfileJobCard,
+} from "../components/Profile/Cards.jsx";
+
 const Profile = () => {
-  return <h1>Profile</h1>;
+  return (
+    <>
+      <Box py="8" width="57%" mx="auto">
+        <Box mb={8}>
+          <ProfileHeadCard />
+        </Box>
+        <Box mb={8}>
+          <ProfileJobCard />
+        </Box>
+        <Box>
+          <ProfileSkillCard />
+        </Box>
+      </Box>
+    </>
+  );
 };
 
 export default Profile;

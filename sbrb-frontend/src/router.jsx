@@ -1,8 +1,7 @@
 import CreateJobListing from "./pages/CreateJobListing";
 import Home from "./pages/Home";
-import RoleView from "./pages/RoleView";
-
 import Profile from "./pages/Profile";
+import RoleView from "./pages/RoleView";
 import {
   Route,
   createBrowserRouter,
