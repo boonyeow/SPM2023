@@ -1,18 +1,37 @@
+import os
+
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-url = URL.create(
-    database="postgres",
-    drivername="postgresql+psycopg2",
-    host="scrum2023.cplyu5olo9jt.ap-southeast-1.rds.amazonaws.com",
-    username="mickeymouse",
-    password="H124f%4blob",
-    port="5432",
-)
+# Load environment variables from .env file
+load_dotenv()
 
-engine = create_engine(url)
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
+engine = None
+SessionLocal = None
 Base = declarative_base()
+
+
+def init_engine(is_test=False):
+    global engine, SessionLocal
+    database = "test_db" if is_test else "production_db"
+    db_url = URL.create(
+        database=database,
+        drivername="postgresql+psycopg2",
+        host=os.getenv("DB_HOST"),
+        username=os.getenv("DB_USERNAME"),
+        password=os.getenv("DB_PASSWORD"),
+        port="5432",
+    )
+
+    engine = create_engine(db_url, echo=True)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
