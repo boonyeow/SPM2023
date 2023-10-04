@@ -60,9 +60,9 @@ const Home = () => {
                 templateRows="repeat(2, 1fr)"
                 templateColumns="repeat(5, 1fr)"
                 gap={4}>
-                  <GridItem rowSpan={2} colSpan={1}>
-                  <FilterRoleListing/>
-                  </GridItem>
+                <GridItem rowSpan={2} colSpan={1}>
+                  <FilterRoleListing />
+                </GridItem>
                 <GridItem rowSpan={2} colSpan={4}>
                   <Box h="100%" overflow="auto">
                     <Stack spacing={4}>
