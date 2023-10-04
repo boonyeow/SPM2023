@@ -1,15 +1,14 @@
-import React from 'react';
 import {
   Accordion,
-  AccordionItem,
   AccordionButton,
-  AccordionPanel,
   AccordionIcon,
-  Heading,
-  Stack,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Checkbox,
   CheckboxGroup,
+  Heading,
+  Stack,
 } from '@chakra-ui/react';
 
 const filterCategories = [
