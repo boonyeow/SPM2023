@@ -1,4 +1,5 @@
 import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 import {
   Route,
   createBrowserRouter,
@@ -9,6 +10,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
       <Route index element={<Home />} />
+      <Route path="/profile" element={<Profile />} />
     </Route>
   )
 );
