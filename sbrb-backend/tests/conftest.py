@@ -2,12 +2,11 @@ import csv
 import os
 
 import pytest
+from app.models import AccessControl, Base, Role, RoleSkill, Skill, Staff, StaffSkill
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import sessionmaker
-
-from app.models import AccessControl, Base, Role, RoleSkill, Skill, Staff, StaffSkill
 
 # Load environment variables from .env file
 load_dotenv()
@@ -69,7 +68,7 @@ def db_session():
     from app.database import SessionLocal, engine
 
     db_url = URL.create(
-        database="production_db",
+        database="test_db",
         drivername="postgresql+psycopg2",
         host=os.getenv("DB_HOST"),
         username=os.getenv("DB_USERNAME"),
