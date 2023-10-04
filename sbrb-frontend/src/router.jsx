@@ -13,7 +13,6 @@ const router = createBrowserRouter(
     <Route path="/">
       <Route index element={<Home />} />
       <Route path="create-job-listing" element={<CreateJobListing />} />
-
       <Route path="roles/:id" element={<RoleView />} />
     </Route>
   )

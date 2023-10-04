@@ -1,10 +1,10 @@
 import InfoCard from "../components/InfoCard";
 import RoleCard from "../components/RoleCard";
-import Swal from "sweetalert2";
-import axios from "axios";
+// import Swal from "sweetalert2";
+// import axios from "axios";
 import { formatDateTime } from "../service";
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+// import { useParams } from "react-router-dom";
+// import { useQuery } from "@tanstack/react-query";
 import {
   Box,
   Breadcrumb,
@@ -16,8 +16,8 @@ import {
 import { useEffect, useState } from "react";
 
 const RoleView = () => {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const { id } = useParams();
+  // const apiUrl = import.meta.env.VITE_API_URL;
+  // const { id } = useParams();
 
   const [role, setRole] = useState({
     listing_title: "",
@@ -29,38 +29,50 @@ const RoleView = () => {
     created_date: "",
   });
 
-  const {
-    isLoading,
-    isError,
-    data: roleData,
-  } = useQuery({
-    queryKey: ["todos"],
-    queryFn: async () => {
-      const res = await axios.get(`${apiUrl}/listing/${id}`);
-      return res.data;
-    },
-    retry: 3,
-  });
-
   useEffect(() => {
-    if (roleData) {
-      setRole(roleData);
-    }
-  }, [roleData]);
+    setRole({
+      listing_title: "Mock Title",
+      listing_desc: "Mock Description",
+      skills: ["Skill1", "Skill2", "Skill3"],
+      country: "Singapore",
+      dept: "Human Resources",
+      created_by_name: "Ah Gau",
+      created_date: "03/10/2023",
+    });
+  }, []);
 
-  useEffect(() => {
-    if (isError) {
-      Swal.fire({
-        title: "Error!",
-        text: "Redirecting to home page...",
-        icon: "error",
-      });
+  // const {
+  //   isLoading,
+  //   isError,
+  //   data: roleData,
+  // } = useQuery({
+  //   queryKey: ["todos"],
+  //   queryFn: async () => {
+  //     const res = await axios.get(`${apiUrl}/listing/${id}`);
+  //     return res.data;
+  //   },
+  //   retry: 3,
+  // });
 
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 2000);
-    }
-  }, [isError]);
+  // useEffect(() => {
+  //   if (roleData) {
+  //     setRole(roleData);
+  //   }
+  // }, [roleData]);
+
+  // useEffect(() => {
+  //   if (isError) {
+  //     Swal.fire({
+  //       title: "Error!",
+  //       text: "Redirecting to home page...",
+  //       icon: "error",
+  //     });
+
+  //     setTimeout(() => {
+  //       window.location.href = "/";
+  //     }, 2000);
+  //   }
+  // }, [isError]);
 
   return (
     <>
@@ -107,7 +119,7 @@ const RoleView = () => {
               dateCreated={
                 role.created_date == "" ? "" : formatDateTime(role.created_date)
               }
-              isLoading={isLoading}
+              // isLoading={isLoading}
             />
           </Box>
 
