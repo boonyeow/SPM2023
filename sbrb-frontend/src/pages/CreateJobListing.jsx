@@ -1,29 +1,21 @@
-import React, {useState, useRef} from 'react';
-import Layout from "../components/Layout";
-import {Box, Stack, Grid, GridItem, Flex, Text, Textarea, Button, FormControl, Input, Select} from '@chakra-ui/react';
 import { DatePicker } from "antd";
+import Layout from "../components/Layout";
 import { useDisclosure } from '@chakra-ui/react';
-import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  CloseButton,
-  Badge,
-} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
 
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Badge, Box, Button, CloseButton, Flex, FormControl, Grid, GridItem, Input, Select, Stack, Text, Textarea } from '@chakra-ui/react';
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 function CreateJobListing() {
 
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [staffId, setStaffId] = useState('');
   const [derivedDepartment, setDerivedDepartment] = useState('');
-  const [showModal, setShowModal] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState('');
-  const { onOpen, onClose } = useDisclosure();
+  const { onClose } = useDisclosure();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [dateError, setDateError] = useState('');
   const navigate = useNavigate();
@@ -110,7 +102,6 @@ function CreateJobListing() {
       setSelectedSkills(updatedSkills);
     };
     
-    const fp = useRef(null);
     const [formData, setFormData] = useState({
       role_name: '',
       listing_title: '',
@@ -261,23 +252,21 @@ function CreateJobListing() {
       e.preventDefault();
         
       if(!hasError){
-        const formDataJson = {
-          listing_title: formData.listing_title,
-          country: formData.country,
-          dept: formData.dept,
-          skills: formData.skills,
-          reporting_manager_id: formData.reporting_manager_id,
-          listing_desc: formData.listing_desc,  
-          expiry_date: formData.expiry_date,
-          role_name: formData.role_name,
-          created_by: 2,
-          reporting_manager: 'John, Doe',
-          created_by_name: 'Jane, Smith'
-
-        }        
+        // const formDataJson = {
+        //   listing_title: formData.listing_title,
+        //   country: formData.country,
+        //   dept: formData.dept,
+        //   skills: formData.skills,
+        //   reporting_manager_id: formData.reporting_manager_id,
+        //   listing_desc: formData.listing_desc,  
+        //   expiry_date: formData.expiry_date,
+        //   role_name: formData.role_name,
+        //   created_by: 2,
+        //   reporting_manager: 'John, Doe',
+        //   created_by_name: 'Jane, Smith'
+        // }        
       }
       else {
-        console.log(errors)
         toast.error('Please make the necessary changes and submit again.', {
           position: toast.POSITION.TOP_CENTER, 
           autoClose: 5000, 
@@ -393,7 +382,7 @@ function CreateJobListing() {
 
         {/* reporting manager */}
         <GridItem colSpan={3} >
-            <Text mb="8px">Reporting Manager's Staff ID*:</Text>
+            <Text mb="8px">Reporting Manager&rsquo;s Staff ID*:</Text>
         <FormControl >
            
                <Input
@@ -491,9 +480,7 @@ function CreateJobListing() {
     </form>
   
     </Box>
-    {showModal && (
-        <ConfirmationModal onClose={() => setShowModal(false)} />
-      )}
+   
     </Layout>
     </>
     
