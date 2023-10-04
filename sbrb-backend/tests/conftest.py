@@ -1,3 +1,4 @@
+import csv
 import os
 
 import pytest
@@ -13,88 +14,53 @@ load_dotenv()
 
 
 def populate_test_database(session):
-    # Create sample roles
-    role1 = Role(role_name="Role1", role_desc="Description for Role1")
-    role2 = Role(role_name="Role2", role_desc="Description for Role2")
+    with open("data/role.csv", "r") as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            session.add(Role(role_name=row[0], role_desc=row[1]))
 
-    # Create sample skills
-    skill1 = Skill(skill_name="Skill1", skill_desc="Description for Skill1")
-    skill2 = Skill(skill_name="Skill2", skill_desc="Description for Skill2")
-    skill3 = Skill(skill_name="Skill3", skill_desc="Description for Skill3")
-    skill4 = Skill(skill_name="Skill4", skill_desc="Description for Skill4")
-    skill5 = Skill(skill_name="Skill5", skill_desc="Description for Skill5")
+    with open("data/skill.csv", "r") as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            session.add(Skill(skill_name=row[0], skill_desc=row[1]))
 
-    # Create sample role-skill relationships
-    role_skill1 = RoleSkill(role_name="Role1", skill_name="Skill1")
-    role_skill2 = RoleSkill(role_name="Role1", skill_name="Skill2")
-    role_skill3 = RoleSkill(role_name="Role2", skill_name="Skill3")
-    role_skill4 = RoleSkill(role_name="Role2", skill_name="Skill4")
-    role_skill5 = RoleSkill(role_name="Role2", skill_name="Skill5")
+    with open("data/Access_Control.csv", "r") as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            session.add(AccessControl(access_id=row[0], access_control_name=row[1]))
 
-    # Create sample access controls
-    access_control1 = AccessControl(access_id=1, access_control_name="Access1")
-    access_control2 = AccessControl(access_id=2, access_control_name="Access2")
-
-    # Create sample staff members
-    staff1 = Staff(
-        staff_id=1,
-        staff_fname="John",
-        staff_lname="Doe",
-        dept="HR",
-        country="USA",
-        email="john.doe@example.com",
-        role_name="Role1",
-        access_id=1,
-    )
-    staff2 = Staff(
-        staff_id=2,
-        staff_fname="Jane",
-        staff_lname="Smith",
-        dept="IT",
-        country="Canada",
-        email="jane.smith@example.com",
-        role_name="Role2",
-        access_id=2,
-    )
-
-    # Create sample staff-skill relationships
-    staff_skill1 = StaffSkill(staff_id=1, skill_name="Skill1")
-    staff_skill2 = StaffSkill(staff_id=2, skill_name="Skill2")
-    staff_skill3 = StaffSkill(staff_id=2, skill_name="Skill3")
-    staff_skill4 = StaffSkill(staff_id=2, skill_name="Skill4")
-    staff_skill5 = StaffSkill(staff_id=1, skill_name="Skill5")
-
-    session.add_all(
-        [
-            role1,
-            role2,
-            skill1,
-            skill2,
-            skill3,
-            skill4,
-            skill5,
-            access_control1,
-            access_control2,
-        ]
-    )
     session.commit()
 
-    session.add_all(
-        [
-            role_skill1,
-            role_skill2,
-            role_skill3,
-            role_skill4,
-            role_skill5,
-            staff1,
-            staff2,
-            staff_skill1,
-            staff_skill2,
-            staff_skill3,
-            staff_skill4,
-            staff_skill5,
-        ]
-    )
+    with open("data/role_skill.csv", "r") as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            session.add(RoleSkill(role_name=row[0], skill_name=row[1]))
+
+    with open("data/staff.csv", "r") as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            session.add(
+                Staff(
+                    staff_id=row[0],
+                    staff_fname=row[1],
+                    staff_lname=row[2],
+                    dept=row[3],
+                    country=row[4],
+                    email=row[5],
+                    access_id=row[6],
+                )
+            )
+
+    with open("data/staff_skill.csv", "r") as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            session.add(StaffSkill(staff_id=row[0], skill_name=row[1]))
     session.commit()
 
 
