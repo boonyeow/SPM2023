@@ -2,11 +2,12 @@ import csv
 import os
 
 import pytest
-from app.models import AccessControl, Base, Role, RoleSkill, Skill, Staff, StaffSkill
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import sessionmaker
+
+from app.models import AccessControl, Base, Role, RoleSkill, Skill, Staff, StaffSkill
 
 # Load environment variables from .env file
 load_dotenv()
