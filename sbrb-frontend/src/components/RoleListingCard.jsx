@@ -13,15 +13,15 @@ function RoleListingCard({
     <Box p={5} shadow="md" borderWidth="1px" {...rest}>
       <Heading fontSize="xl">{title}</Heading>
       <Text mt={4}>{desc}</Text>
-      <Text>Country: {location}</Text>
-      <Text>Reporting Manager: {manager}</Text>
-      <Text>Skills Required:</Text>
+      <Text mt={2}>Country: {location}</Text>
+      <Text mt={2}>Reporting Manager: {manager}</Text>
+      <Text mt={2}>Skills Required:</Text>
       {skills.map((skill) => (
         <Badge ml="1" fontSize="0.8em" colorScheme="green" key={skill}>
           {skill}
         </Badge>
       ))}
-      <Text>Application deadline: {deadline}</Text>
+      <Text mt={2}>Application deadline: {deadline}</Text>
     </Box>
   );
 }
