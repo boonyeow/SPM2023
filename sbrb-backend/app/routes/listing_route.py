@@ -1,10 +1,11 @@
 from typing import List
 
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.schemas.listing_schema import ListingWithSkills
 from app.services.listing_service import ListingService
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 
 router = APIRouter()
 
