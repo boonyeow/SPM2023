@@ -1,7 +1,8 @@
-from sqlalchemy.orm import Session
+from datetime import datetime
 
 from app.models import Listing, Staff
 from app.schemas.listing_schema import ListingWithSkills
+from sqlalchemy.orm import Session
 
 
 class ListingService:
@@ -9,7 +10,27 @@ class ListingService:
         self.db = db
 
     def get_all_listings_with_skills(self):
-        listings = self.db.query(Listing).all()
+        return self.get_listings_with_skills(active=None)
+
+    def get_active_listings_with_skills(self):
+        return self.get_listings_with_skills(active=True)
+
+    def get_inactive_listings_with_skills(self):
+        return self.get_listings_with_skills(active=False)
+
+    def get_listings_with_skills(self, active=None):
+        listings_query = self.db.query(Listing)
+        if active is None:
+            pass
+        elif active:
+            listings_query = listings_query.filter(
+                Listing.expiry_date >= datetime.utcnow()
+            )
+        else:
+            listings_query = listings_query.filter(
+                Listing.expiry_date < datetime.utcnow()
+            )
+        listings = listings_query.all()
         result = []
 
         for listing in listings:
