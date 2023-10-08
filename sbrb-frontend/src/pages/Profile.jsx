@@ -1,8 +1,8 @@
 import { Box } from "@chakra-ui/react";
 import {
   ProfileHeadCard,
-  ProfileSkillCard,
   ProfileJobCard,
+  ProfileSkillCard,
 } from "../components/Profile/Cards.jsx";
 
 const Profile = () => {
