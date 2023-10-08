@@ -1,5 +1,6 @@
 import csv
 import os
+from datetime import datetime, timedelta
 
 import pytest
 from dotenv import load_dotenv
@@ -7,7 +8,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import sessionmaker
 
-from app.models import AccessControl, Base, Role, RoleSkill, Skill, Staff, StaffSkill
+from app.models import (
+    AccessControl,
+    Base,
+    Listing,
+    Role,
+    RoleSkill,
+    Skill,
+    Staff,
+    StaffSkill,
+)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -61,6 +71,49 @@ def populate_test_database(session):
         next(reader)
         for row in reader:
             session.add(StaffSkill(staff_id=row[0], skill_name=row[1]))
+    session.commit()
+
+    session.add(
+        Listing(
+            role_name="Account Manager",
+            listing_title="Account Manager 1",
+            listing_desc="hello world description",
+            dept="Finance",
+            country="Singapore",
+            reporting_manager_id=170166,
+            created_by=160008,
+            created_date=datetime.utcnow() - timedelta(days=14),
+            expiry_date=datetime.utcnow() - timedelta(days=7),
+        )
+    )
+
+    session.add(
+        Listing(
+            role_name="Account Manager",
+            listing_title="Account Manager 2",
+            listing_desc="hello world description",
+            dept="Finance",
+            country="Singapore",
+            reporting_manager_id=170166,
+            created_by=160008,
+            created_date=datetime.utcnow(),
+            expiry_date=datetime.utcnow() + timedelta(days=7),
+        )
+    )
+
+    session.add(
+        Listing(
+            role_name="Account Manager",
+            listing_title="Account Manager 3",
+            listing_desc="hello world description",
+            dept="Finance",
+            country="Singapore",
+            reporting_manager_id=170166,
+            created_by=160008,
+            created_date=datetime.utcnow(),
+            expiry_date=datetime.utcnow() + timedelta(days=2),
+        )
+    )
     session.commit()
 
 
