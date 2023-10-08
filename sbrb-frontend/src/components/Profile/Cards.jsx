@@ -227,7 +227,7 @@ const ProfileJobCard = (jobRole, jobDescription) => {
       px={14}
       py={5}>
       <CardHeader p={0} fontWeight="semibold" mb={5}>
-        <Text fontSize="xl">Role - {jobRole}</Text>
+        <Text fontSize="xl">Current Role - {jobRole}</Text>
       </CardHeader>
       <CardBody p={0} mb={5}>
         <Box>
