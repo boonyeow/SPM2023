@@ -48,6 +48,7 @@ jobs:
         run: npm run lint
 
   backend-format:
+    needs: [backend-test, frontend-lint]
     runs-on: ubuntu-latest
     permissions: write-all
     continue-on-error: false
