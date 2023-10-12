@@ -1,73 +1,97 @@
 import Layout from "../components/Layout";
 
-import { Badge, Box, Flex, Grid, GridItem, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  HStack,
+  Stack,
+  StackDivider,
+  Text,
+} from "@chakra-ui/react";
 
-function JobApplicants() {
+const JobApplicants = () => {
   return (
     <>
-  <Layout>
-    <Flex align="center" justify="center">
-  <Box w="90%" p={20}>
- 
-    <Grid
-    h='100vh'
-    templateRows='repeat(2, 1fr)'
-    templateColumns='repeat(5, 1fr)'
-    gap={4}
-    >
-  <GridItem rowSpan={2} colSpan={4} >
-  <Box h="100%" overflow="auto">
-    <Stack spacing={4}>
-     {
-      applicantsData.map((feature, index) => (
-        <Feature key={index} {...feature} />
-      ))
-     }
+      <Layout />
+      <Box w="6xl" mx="auto">
+        <Box mt={10}>
+          <Card borderRadius="2rem" px="20px" py="10px">
+            <CardHeader>
+              <Heading size="md">Job Applicants</Heading>
+            </CardHeader>
 
-    </Stack>
-  </Box>
-      
-  </GridItem>
-  </Grid>
-  
-  </Box> 
-  </Flex>
-
-   </Layout>
-  </>  )
-}
+            <CardBody>
+              <Stack divider={<StackDivider />} spacing="4">
+                <Box position="relative">
+                  <Heading size="xs" textTransform="uppercase">
+                    John Smith
+                  </Heading>
+                  <Text mt="2" fontSize="sm">
+                    Applied on 2021-09-15
+                  </Text>
+                  <Text mt="2" fontSize="sm">
+                    Skills matched: 85%
+                  </Text>
+                  <Text mt={3} fontWeight="semibold">
+                    Skills:
+                  </Text>
+                  <Box mt={2}>
+                    <HStack>
+                      <Badge>lol</Badge>
+                    </HStack>
+                  </Box>
+                  <Box position="absolute" top="50%" right="0">
+                    View
+                  </Box>
+                </Box>
+              </Stack>
+            </CardBody>
+          </Card>
+        </Box>
+      </Box>
+    </>
+  );
+};
 
 const applicantsData = [
-    {
-      name: 'Smith',
-      listing_title: 'Sales Manager',
-      desc: 'Description for Sales Manager',
-      country: 'United States',
-      date: '2023-09-15',
-      skills: ['Sales Strategy', 'Team Leadership', 'Customer Relationship'],
-    },
-    {
-      name: 'Doe',
-      listing_title: 'Software Engineer',
-      desc: 'Description for Software Engineer',
-      country: 'Canada',
-      date: '2023-09-20',
-      skills: ['Java', 'Python', 'Web Development'],
-    },
-    {
-      name: 'Johnson',
-      listing_title: 'HR Specialist',
-      desc: 'Description for HR Specialist',
-      country: 'United Kingdom',
-      date: '2023-08-05',
-      skills: ['Recruitment', 'Employee Relations', 'HR Policies'],
-    },
-  ];
-  
+  {
+    name: "Smith",
+    listing_title: "Sales Manager",
+    desc: "Description for Sales Manager",
+    country: "United States",
+    date: "2023-09-15",
+    skills: ["Sales Strategy", "Team Leadership", "Customer Relationship"],
+  },
+  {
+    name: "Doe",
+    listing_title: "Software Engineer",
+    desc: "Description for Software Engineer",
+    country: "Canada",
+    date: "2023-09-20",
+    skills: ["Java", "Python", "Web Development"],
+  },
+  {
+    name: "Johnson",
+    listing_title: "HR Specialist",
+    desc: "Description for HR Specialist",
+    country: "United Kingdom",
+    date: "2023-08-05",
+    skills: ["Recruitment", "Employee Relations", "HR Policies"],
+  },
+];
+
 function Feature({ name, desc, date, skills, ...rest }) {
   return (
-    <Box p={5} shadow='md' borderWidth='1px' {...rest}>
-      <Heading fontSize='xl'>{name}</Heading>
+    <Box p={5} shadow="md" borderWidth="1px" {...rest}>
+      <Heading fontSize="xl">{name}</Heading>
       <Text mt={4}>{desc}</Text>
       <Text>Date Applied: {date}</Text>
       {skills.map((skill) => (
@@ -76,8 +100,7 @@ function Feature({ name, desc, date, skills, ...rest }) {
         </Badge>
       ))}
     </Box>
-  )
+  );
 }
-
 
 export default JobApplicants;

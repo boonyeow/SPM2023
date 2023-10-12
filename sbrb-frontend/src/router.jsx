@@ -1,5 +1,6 @@
 import CreateJobListing from "./pages/CreateJobListing";
 import Home from "./pages/Home";
+import JobApplicants from "./pages/JobApplicants";
 import Profile from "./pages/Profile";
 import RoleView from "./pages/RoleView";
 import {
@@ -12,9 +13,10 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
       <Route index element={<Home />} />
-      <Route path="create-job-listing" element={<CreateJobListing />} />
-      <Route path="roles/:id" element={<RoleView />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route path="listing/create" element={<CreateJobListing />} />
+      <Route path="listing/:id" element={<RoleView />} />
+      <Route path="/listing/:id/applicants" element={<JobApplicants/>} />
+      <Route path="/profile/:id" element={<Profile />} />
     </Route>
   )
 );
