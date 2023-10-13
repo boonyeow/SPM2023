@@ -1,60 +1,255 @@
 import Layout from "../components/Layout";
-
 import {
-  Badge,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  Button,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
   Box,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Flex,
-  Grid,
-  GridItem,
   Heading,
-  HStack,
-  Stack,
-  StackDivider,
+  Icon,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
   Text,
+  Flex,
+  ButtonGroup,
+  Spacer,
 } from "@chakra-ui/react";
+import { useState, useMemo, useEffect } from "react";
+import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
+import { Select } from "antd";
+
+const mockData = [
+  {
+    firstName: "John",
+    lastName: "Smith",
+    email: "JohnSmith@hotmail.com",
+    currentRole: "Software Engineer",
+    country: "United States",
+    matchedPercentage: "85%",
+    skillsMatched: "Java, Python, Web Development",
+  },
+  {
+    firstName: "John",
+    lastName: "Smith",
+    email: "JohnSmith@hotmail.com",
+    currentRole: "Software Engineer",
+    country: "United States",
+    matchedPercentage: "95%",
+    skillsMatched: "Java, Python, Web Development",
+  },
+  {
+    firstName: "John",
+    lastName: "Smith",
+    email: "JohnSmith@hotmail.com",
+    currentRole: "Software Engineer",
+    country: "United States",
+    matchedPercentage: "65%",
+    skillsMatched: "Java, Python, Web Development",
+  },
+  {
+    firstName: "John",
+    lastName: "Smith",
+    email: "JohnSmith@hotmail.com",
+    currentRole: "Software Engineer",
+    country: "United States",
+    matchedPercentage: "45%",
+    skillsMatched: "Java, Python, Web Development",
+  },
+  {
+    firstName: "John",
+    lastName: "Smith",
+    email: "JohnSmith@hotmail.com",
+    currentRole: "Software Engineer",
+    country: "United States",
+    matchedPercentage: "25%",
+    skillsMatched: "Java, Python, Web Development",
+  },
+];
+
+const columnHelper = createColumnHelper();
 
 const JobApplicants = () => {
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("firstName", {
+        header: () => <span>First Name</span>,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
+        id: "lastName",
+        header: () => <span>Last Name</span>,
+      }),
+      columnHelper.accessor("email", {
+        header: () => <span>Email</span>,
+      }),
+      columnHelper.accessor("currentRole", {
+        header: "Current Role",
+      }),
+      columnHelper.accessor("country", {
+        header: () => <span>Country</span>,
+      }),
+      columnHelper.accessor("matchedPercentage", {
+        header: "Percentage Matched",
+      }),
+      columnHelper.accessor("skillsMatched", {
+        header: "Skills Matched",
+        enableSorting: false,
+      }),
+    ],
+    []
+  );
+
+  const [data, setData] = useState(mockData);
+  const [sorting, setSorting] = useState([
+    {
+      id: "matchedPercentage",
+      desc: true,
+    },
+  ]);
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
+  const selectedPageSize = table.getState().pagination.pageSize;
+
   return (
     <>
       <Layout />
-      <Box w="6xl" mx="auto">
-        <Box mt={10}>
-          <Card borderRadius="2rem" px="20px" py="10px">
-            <CardHeader>
-              <Heading size="md">Job Applicants</Heading>
-            </CardHeader>
+      <Box w="8xl" mx="auto">
+        <Breadcrumb mt={6}>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
 
-            <CardBody>
-              <Stack divider={<StackDivider />} spacing="4">
-                <Box position="relative">
-                  <Heading size="xs" textTransform="uppercase">
-                    John Smith
-                  </Heading>
-                  <Text mt="2" fontSize="sm">
-                    Applied on 2021-09-15
-                  </Text>
-                  <Text mt="2" fontSize="sm">
-                    Skills matched: 85%
-                  </Text>
-                  <Text mt={3} fontWeight="semibold">
-                    Skills:
-                  </Text>
-                  <Box mt={2}>
-                    <HStack>
-                      <Badge>lol</Badge>
-                    </HStack>
-                  </Box>
-                  <Box position="absolute" top="50%" right="0">
-                    View
-                  </Box>
-                </Box>
-              </Stack>
-            </CardBody>
-          </Card>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Role Listings</BreadcrumbLink>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Name of Role Listing</BreadcrumbLink>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink href="#">Job applicants</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
+        <Box mt={10}>
+          <Heading mb={7}> Job Applicants </Heading>
+          <TableContainer>
+            <Table variant="simple">
+              <Thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <Tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <Th key={header.id}>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            {...{
+                              className: header.column.getCanSort()
+                                ? "cursor-pointer select-none"
+                                : "",
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}>
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: (
+                                <Icon
+                                  as={BiSolidUpArrow}
+                                  transform="translateY(2px)"
+                                  ml={2}
+                                />
+                              ),
+                              desc: (
+                                <Icon
+                                  as={BiSolidDownArrow}
+                                  transform="translateY(2px)"
+                                  ml={2}
+                                />
+                              ),
+                            }[header.column.getIsSorted()] ?? null}
+                          </div>
+                        )}
+                      </Th>
+                    ))}
+                  </Tr>
+                ))}
+              </Thead>
+              <Tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <Tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <Td key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </Td>
+                    ))}
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </TableContainer>
+          <Flex mt={4} alignItems="center">
+            <Select
+              placeholder="Select Page Size"
+              value={selectedPageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e));
+              }}
+              style={{ width: "150px" }}>
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </Select>
+            <Spacer />
+            <Box mr={5}>
+              <Text fontWeight="semibold">
+                Page {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getPageCount()}
+              </Text>
+            </Box>
+            <ButtonGroup variant="outline" spacing="2">
+              <Button
+                onClick={() => table.setPageIndex(0)}
+                isDisabled={!table.getCanPreviousPage()}>{`<<`}</Button>
+              <Button
+                onClick={() => table.previousPage()}
+                isDisabled={!table.getCanPreviousPage()}>{`<`}</Button>
+              <Button
+                onClick={() => table.nextPage()}
+                isDisabled={!table.getCanNextPage()}>{`>`}</Button>
+              <Button
+                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                isDisabled={!table.getCanNextPage()}>{`>>`}</Button>
+            </ButtonGroup>
+          </Flex>
         </Box>
       </Box>
     </>
@@ -87,20 +282,5 @@ const applicantsData = [
     skills: ["Recruitment", "Employee Relations", "HR Policies"],
   },
 ];
-
-function Feature({ name, desc, date, skills, ...rest }) {
-  return (
-    <Box p={5} shadow="md" borderWidth="1px" {...rest}>
-      <Heading fontSize="xl">{name}</Heading>
-      <Text mt={4}>{desc}</Text>
-      <Text>Date Applied: {date}</Text>
-      {skills.map((skill) => (
-        <Badge ml="1" fontSize="0.8em" colorScheme="green" key={skill}>
-          {skill}
-        </Badge>
-      ))}
-    </Box>
-  );
-}
 
 export default JobApplicants;
