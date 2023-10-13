@@ -17,9 +17,9 @@ import {
 } from "@chakra-ui/react";
 
 const Links = [
-  { name: "Home", to: "/" },
-  { name: "Job Applicants", to: "/job-applicants" },
-  { name: 'Create Job Listing', to: '/create-job-listing'},
+  { name: "Home", to: "/listings" },
+  { name: "Job Applicants", to: "/listings/:id/applications" },
+  { name: 'Create Job Listing', to: '/listings/create'},
   { name: "Skills Matching", to: "/skills-matching" },
   { name: "Edit Profile", to: "/edit-profile" },
 ];
