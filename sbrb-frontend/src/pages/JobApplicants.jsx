@@ -1,9 +1,24 @@
+import { CloseIcon } from "@chakra-ui/icons";
 import Layout from "../components/Layout";
 import { Link } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
-import { Badge, Box, Flex, Grid, GridItem, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Stack,
+  Text
+} from "@chakra-ui/react";
 
 function JobApplicants() {
+  const {id} = useParams();
   return (
     <>
   <Layout>
@@ -16,13 +31,36 @@ function JobApplicants() {
     templateColumns='repeat(3, 1fr)'
     gap={4}
     >
+
+<Box mb={8} fontWeight="semibold">
+              <Breadcrumb>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/listings">Home</BreadcrumbLink>
+                </BreadcrumbItem>
+
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="#">Role Listings</BreadcrumbLink>
+                </BreadcrumbItem>
+
+                <BreadcrumbItem isCurrentPage>
+                <BreadcrumbLink href="#">
+                  {id ? `Job ${id}` : 'test'}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              </Breadcrumb>
+            </Box>
     <GridItem rowSpan={2} colSpan={3} >
     <Box h="100%" overflow="auto">
       <Stack spacing={4}>
       {
+        (applicantsData.length === 0) ? (
+          <Flex justify={"center"} align={"center"}>
+            <Text fontSize='5xl' mr={3}>No applicants have applied for this job.</Text>
+            <CloseIcon fontSize='5xl' color="grey" />
+          </Flex>) :(
         applicantsData.map((feature, index) => (
           <JobApplicantsCard key={index} {...feature} />
-        ))
+        )) )
       }
 
       </Stack>

@@ -1,9 +1,10 @@
+import { CloseIcon } from "@chakra-ui/icons";
 import FilterRoleListing from "../components/FilterRoleListings";
 import Layout from "../components/Layout";
 import { Link } from 'react-router-dom';
 import RoleListingCard from "../components/RoleListingCard";
 
-import { Box, Flex, Grid, GridItem, Stack } from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
 
 const RoleListings = [
   {
@@ -75,20 +76,26 @@ const Home = () => {
                 </GridItem>
                 <GridItem rowSpan={2} colSpan={4}>
                   <Box h="100%" overflow="auto">
-                    <Stack spacing={4}>
-                      
-                      {RoleListings.map((roleListingData) => (
-                         <Link
-                         to={`/listings/${roleListingData.roleListingId}`} 
-                         key={roleListingData.roleListingId}
-                       >
-                        <RoleListingCard
+                  <Stack spacing={4}>
+                    {RoleListings.length === 0 ? (
+                      <Flex justify={"center"} align={"center"}>
+                        <Text fontSize='5xl' mr={3}>No open job role listings.</Text>
+                        <CloseIcon fontSize='5xl' color="grey" />
+                      </Flex>
+                    ) : (
+                      RoleListings.map((roleListingData) => (
+                        <Link
+                          to={`/listings/${roleListingData.roleListingId}`}
                           key={roleListingData.roleListingId}
-                          {...roleListingData}
-                        />
+                        >
+                          <RoleListingCard
+                            key={roleListingData.roleListingId}
+                            {...roleListingData}
+                          />
                         </Link>
-                      ))}
-                    </Stack>
+                      ))
+                    )}
+                  </Stack>
                   </Box>
                 </GridItem>
               </Grid>
