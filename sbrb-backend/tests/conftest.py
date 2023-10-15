@@ -77,7 +77,7 @@ def populate_test_database(session):
         Listing(
             role_name="Account Manager",
             listing_title="Account Manager 1",
-            listing_desc="hello world description123",
+            listing_desc="hello world description",
             dept="Finance",
             country="Singapore",
             reporting_manager_id=170166,
@@ -91,7 +91,7 @@ def populate_test_database(session):
         Listing(
             role_name="Account Manager",
             listing_title="Account Manager 2",
-            listing_desc="hello world description456",
+            listing_desc="hello world description",
             dept="Finance",
             country="Singapore",
             reporting_manager_id=170166,
@@ -105,7 +105,7 @@ def populate_test_database(session):
         Listing(
             role_name="Account Manager",
             listing_title="Account Manager 3",
-            listing_desc="hello world description789",
+            listing_desc="hello world description",
             dept="Finance",
             country="Singapore",
             reporting_manager_id=170166,
