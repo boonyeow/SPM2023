@@ -1,9 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy.orm import Session
-
 from app.models import Listing, Staff
 from app.schemas.listing_schema import ListingWithSkills
+from sqlalchemy.orm import Session
 
 
 class ListingService:

@@ -3,13 +3,9 @@ import os
 from datetime import datetime, timedelta
 
 import pytest
-from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from sqlalchemy.engine import URL
-from sqlalchemy.orm import sessionmaker
-
 from app.models import (
     AccessControl,
+    Application,
     Base,
     Listing,
     Role,
@@ -18,6 +14,10 @@ from app.models import (
     Staff,
     StaffSkill,
 )
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
+from sqlalchemy.orm import sessionmaker
 
 # Load environment variables from .env file
 load_dotenv()
@@ -77,7 +77,7 @@ def populate_test_database(session):
         Listing(
             role_name="Account Manager",
             listing_title="Account Manager 1",
-            listing_desc="hello world description",
+            listing_desc="hello world description123",
             dept="Finance",
             country="Singapore",
             reporting_manager_id=170166,
@@ -91,7 +91,7 @@ def populate_test_database(session):
         Listing(
             role_name="Account Manager",
             listing_title="Account Manager 2",
-            listing_desc="hello world description",
+            listing_desc="hello world description456",
             dept="Finance",
             country="Singapore",
             reporting_manager_id=170166,
@@ -105,7 +105,7 @@ def populate_test_database(session):
         Listing(
             role_name="Account Manager",
             listing_title="Account Manager 3",
-            listing_desc="hello world description",
+            listing_desc="hello world description789",
             dept="Finance",
             country="Singapore",
             reporting_manager_id=170166,
@@ -114,6 +114,18 @@ def populate_test_database(session):
             expiry_date=datetime.utcnow() + timedelta(days=2),
         )
     )
+    session.commit()
+
+    session.add(Application(submitted_by_id=150245, listing_id=1))
+    session.add(Application(submitted_by_id=150245, listing_id=2))
+    session.add(Application(submitted_by_id=150245, listing_id=3))
+    session.add(Application(submitted_by_id=150345, listing_id=1))
+    session.add(Application(submitted_by_id=150345, listing_id=2))
+    session.add(Application(submitted_by_id=150345, listing_id=3))
+    session.add(Application(submitted_by_id=151457, listing_id=1))
+    session.add(Application(submitted_by_id=151457, listing_id=2))
+    session.add(Application(submitted_by_id=151457, listing_id=3))
+
     session.commit()
 
 
