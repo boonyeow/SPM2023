@@ -3,6 +3,11 @@ import os
 from datetime import datetime, timedelta
 
 import pytest
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
+from sqlalchemy.orm import sessionmaker
+
 from app.models import (
     AccessControl,
     Application,
@@ -14,10 +19,6 @@ from app.models import (
     Staff,
     StaffSkill,
 )
-from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from sqlalchemy.engine import URL
-from sqlalchemy.orm import sessionmaker
 
 # Load environment variables from .env file
 load_dotenv()

@@ -1,7 +1,8 @@
 import uvicorn
+from fastapi import APIRouter, FastAPI
+
 from app.database import init_engine
 from app.routers import listing_route
-from fastapi import APIRouter, FastAPI
 
 api_router = APIRouter()
 

@@ -1,7 +1,8 @@
+from sqlalchemy.orm import Session
+
 from app.models import Application
 from app.schemas.application_schema import ApplicationWithStaffSkills
 from app.schemas.staff_schema import StaffWithSkills
-from sqlalchemy.orm import Session
 
 
 class ApplicationService:
