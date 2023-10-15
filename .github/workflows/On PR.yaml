@@ -44,6 +44,10 @@ jobs:
         working-directory: sbrb-frontend
         run: npm run lint
 
+      - name: Lint frontend code
+        working-directory: sbrb-frontend
+        run: npm run check-format
+
   backend-test:
     runs-on: ubuntu-latest
     continue-on-error: false
