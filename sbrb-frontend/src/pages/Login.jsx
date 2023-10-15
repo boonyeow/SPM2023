@@ -1,4 +1,5 @@
 import { useLoginContext } from "../context/LoginContext";
+import { ACCOUNTS, ACCOUNT_PASSWORDS, ACCOUNT_ROLES } from "../service";
 import {
   Box,
   Button,
@@ -11,34 +12,29 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-const hardcodedAccount = {
-  director: "password",
-  staff: "password",
-  manager: "password",
-  humanResource: "password",
-};
-
-const role = {
-  director: "director",
-  staff: "staff",
-  manager: "manager",
-  humanResource: "humanResource",
+const ROLES = {
+  1: "Admin",
+  2: "User",
+  3: "Manager",
+  4: "HR",
 };
 
 const Login = () => {
   const [isError, setIsError] = useState(false);
   const [show, setShow] = useState(false);
-  const [account, setAccount] = useState({ username: "", password: "" });
-  const { loginInfo, setLoginInfo } = useLoginContext();
+  const [account, setAccount] = useState({ email: "", password: "" });
+  const { loginInfo } = useLoginContext();
 
   const handleSubmit = () => {
-    if (hardcodedAccount[account.username] === account.password) {
-      setLoginInfo({
-        username: account.username,
-        role: role[account.username],
-        isLoggedIn: true,
-      });
-      // window.location.href = "/listing";
+    const email = account.email.toLowerCase();
+    if (ACCOUNT_PASSWORDS[email] === account.password) {
+      console.log(ACCOUNT_ROLES[email]);
+      localStorage.setItem("userId", ACCOUNTS[email]);
+      localStorage.setItem("email", email);
+      localStorage.setItem("role", ROLES[ACCOUNT_ROLES[email]]);
+      localStorage.setItem("isLoggedIn", true);
+
+      window.location.href = "/listing";
     } else {
       document.activeElement.blur();
       setIsError(true);
@@ -46,7 +42,8 @@ const Login = () => {
   };
 
   useEffect(() => {
-    console.log(loginInfo);
+    // console.log(loginInfo);
+    if (loginInfo.isLoggedIn) window.location.href = "/listing";
   }, [loginInfo]);
 
   return (
@@ -66,14 +63,14 @@ const Login = () => {
           </Heading>
           <FormControl>
             <Input
-              id="username"
+              id="email"
               variant="flushed"
-              placeholder="Username"
+              placeholder="Email"
               size="lg"
               mb={5}
-              value={account.username}
+              value={account.email}
               onChange={(e) =>
-                setAccount({ ...account, username: e.target.value })
+                setAccount({ ...account, email: e.target.value })
               }
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -115,7 +112,7 @@ const Login = () => {
             </InputGroup>
             {isError ? (
               <FormHelperText fontSize="xs" color="red.600">
-                You have entered an invalid username or password
+                You have entered an invalid email or password
               </FormHelperText>
             ) : (
               <FormHelperText fontSize="xs">

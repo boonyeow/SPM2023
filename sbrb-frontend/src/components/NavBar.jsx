@@ -1,3 +1,4 @@
+import { useLoginContext } from "../context/LoginContext";
 import { AddIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   Avatar,
@@ -19,7 +20,7 @@ import {
 const Links = [
   { name: "Home", to: "/" },
   { name: "Job Applicants", to: "/job-applicants" },
-  { name: 'Create Job Listing', to: '/create-job-listing'},
+  { name: "Create Job Listing", to: "/create-job-listing" },
   { name: "Skills Matching", to: "/skills-matching" },
   { name: "Edit Profile", to: "/edit-profile" },
 ];
@@ -43,6 +44,7 @@ const NavLink = ({ children }) => {
 
 export default function NavBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { loginInfo } = useLoginContext();
 
   return (
     <Box bg={useColorModeValue("purple.100", "purple.900")} px={4}>
@@ -90,8 +92,18 @@ export default function NavBar() {
               <MenuItem as="a" href="/edit-profile">
                 Edit Profile
               </MenuItem>
-              <MenuDivider />
-              <MenuItem>Log Out</MenuItem>
+              {loginInfo.isLoggedIn && (
+                <>
+                  <MenuDivider />
+                  <MenuItem
+                    onClick={() => {
+                      localStorage.clear();
+                      window.location.href = "/";
+                    }}>
+                    Log Out
+                  </MenuItem>
+                </>
+              )}
             </MenuList>
           </Menu>
         </Flex>

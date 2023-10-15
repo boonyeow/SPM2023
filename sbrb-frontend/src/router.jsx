@@ -13,7 +13,8 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
       <Route index element={<Login />} />
-      <Route path="listing" element={<CreateJobListing />} />
+      <Route path="/listing" element={<Home />} />
+      <Route path="/listing/create" element={<CreateJobListing />} />
       <Route path="create-job-listing" element={<CreateJobListing />} />
       <Route path="roles/:id" element={<RoleView />} />
       <Route path="/profile" element={<Profile />} />
