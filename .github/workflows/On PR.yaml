@@ -1,4 +1,4 @@
-name: Check PR Name, Lint Frontend, Format Backend, Run Backend Tests
+name: Check PR Name, Lint Frontend, Run Backend Tests
 
 on:
   pull_request:
