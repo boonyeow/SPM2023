@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import Annotated
 
-from app.schemas.staff_schema import StaffWithSkills
 from fastapi import Body
 from pydantic import BaseModel
+
+from app.schemas.staff_schema import StaffWithSkills
 
 
 class ApplicationWithStaffSkills(BaseModel):
