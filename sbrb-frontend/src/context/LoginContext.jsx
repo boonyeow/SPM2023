@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useMemo, useState } from "react";
 
 const loginInfoDefault = {
   id: null,
@@ -27,5 +27,3 @@ export const LoginProvider = ({ children }) => {
     <LoginContext.Provider value={loginValue}>{children}</LoginContext.Provider>
   );
 };
-
-export const useLoginContext = () => useContext(LoginContext);

@@ -1,4 +1,4 @@
-import { useLoginContext } from "../context/LoginContext";
+import { useLoginContext } from "../hooks/useLoginContext";
 import { ACCOUNTS, ACCOUNT_PASSWORDS, ACCOUNT_ROLES } from "../service";
 import {
   Box,
@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    // console.log(loginInfo);
+    console.log(loginInfo);
     if (loginInfo.isLoggedIn) window.location.href = "/listing";
   }, [loginInfo]);
 

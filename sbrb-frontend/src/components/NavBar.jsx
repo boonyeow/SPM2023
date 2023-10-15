@@ -1,4 +1,4 @@
-import { useLoginContext } from "../context/LoginContext";
+import { useLoginContext } from "../hooks/useLoginContext";
 import { AddIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   Avatar,
