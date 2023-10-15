@@ -75,6 +75,7 @@ jobs:
           git push origin ${{ github.head_ref }}
 
   frontend-format:
+    needs: [backend-format]
     runs-on: ubuntu-latest
     permissions: write-all
     continue-on-error: false
