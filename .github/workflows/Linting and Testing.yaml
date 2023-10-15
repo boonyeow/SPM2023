@@ -1,0 +1,165 @@
+name: Check PR Name, Lint Frontend, Format Backend, Run Backend Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+env:
+  NODE_VERSION: "18.x"
+
+jobs:
+  pr-naming:
+    permissions:
+      pull-requests: read
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 5
+    steps:
+      - name: Check if PR title follows conventional commits specs
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  backend-format:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    continue-on-error: false
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies for formatting
+        working-directory: sbrb-backend
+        run: pip install black isort
+
+      - name: Format backend code
+        working-directory: sbrb-backend
+        run: |
+          isort .
+          black .
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git add sbrb-backend
+          if git diff-index --quiet HEAD; then
+            echo "No changes found"
+            echo "::set-output name=changes::false"
+          else
+            echo "Changes found"
+            echo "::set-output name=changes::true"
+          fi
+
+      - name: Commit formatted code
+        if: steps.check_changes.outputs.changes == 'true'
+        working-directory: sbrb-backend
+        run: |
+          git config user.name "Github Actions"
+          git config user.email "actions.github.com"
+          git commit -m "Auto-format code with Black"
+          git show-ref
+          git push origin ${{ github.head_ref }}
+
+  frontend-format:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    continue-on-error: false
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install frontend dependencies
+        working-directory: sbrb-frontend
+        run: npm ci
+
+      - name: Format frontend code
+        working-directory: sbrb-frontend
+        run: npm run format
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git add sbrb-frontend
+          if git diff-index --quiet HEAD; then
+            echo "No changes found"
+            echo "::set-output name=changes::false"
+          else
+            echo "Changes found"
+            echo "::set-output name=changes::true"
+          fi
+
+      - name: Commit formatted code
+        if: steps.check_changes.outputs.changes == 'true'
+        working-directory: sbrb-frontend
+        run: |
+          git config user.name "Github Actions"
+          git config user.email "actions.github.com"
+          git commit -m "Auto-format code with Prettier"
+          git show-ref
+          git push origin ${{ github.head_ref }}
+
+  frontend-lint:
+    needs: [backend-format, frontend-format]
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install frontend dependencies
+        working-directory: sbrb-frontend
+        run: npm ci
+
+      - name: Lint frontend code
+        working-directory: sbrb-frontend
+        run: npm run lint
+
+  backend-test:
+    needs: [backend-format, frontend-format]
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        working-directory: sbrb-backend
+        run: pip install -r requirements.txt
+
+      - name: Run backend tests
+        working-directory: sbrb-backend
+        run: pytest -v

@@ -1,8 +1,7 @@
 import uvicorn
-from fastapi import APIRouter, FastAPI
-
 from app.database import init_engine
 from app.routers import listing_route
+from fastapi import APIRouter, FastAPI
 
 api_router = APIRouter()
 
@@ -17,7 +16,7 @@ init_engine(is_test=True)
 app = FastAPI()
 # Include your API routers
 app.include_router(api_router)
-app.include_router(listing_route.router)
+app.include_router(                                                     listing_route.router)
 
 if __name__ == "__main__":
     app_module = "main:app"
