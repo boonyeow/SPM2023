@@ -1,6 +1,5 @@
 import { useLoginContext } from "../hooks/useLoginContext";
 
-import { AddIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -17,6 +16,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 
 const Links = [
   { name: "Home", to: "/listings" },

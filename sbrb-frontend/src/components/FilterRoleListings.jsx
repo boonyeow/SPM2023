@@ -1,3 +1,5 @@
+import axios from "axios";
+
 import {
   Accordion,
   AccordionButton,
@@ -10,31 +12,60 @@ import {
   Heading,
   Stack,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
+function FilterRoleListing() {
+
+  const [countries, setCountries] = useState([]);
+  const [, setRoleListings] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [, setRoleNames] = useState([]);
+  const [skills, setSkills] = useState([]);
 const filterCategories = [
   {
     title: "Department",
-    values: [
-      "Sales",
-      "Consultancy",
-      "System Solutioning",
-      "Engineering",
-      "HR",
-      "Finance",
-      "IT",
-    ],
+    values: departments,
   },
   {
-    title: "Location",
-    values: ["Singapore", "Malaysia"],
+    title: "Country",
+    values: countries,
   },
   {
     title: "Skills",
-    values: ["Agile", "Excel"],
+    values: skills
   },
 ];
 
-function FilterRoleListing() {
+useEffect(() => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  axios
+    .get(`${apiUrl}/listings`)
+    .then((response) => {
+      const data = response.data;
+      const extractedCountries = [...new Set(data.map((item) => item.country))];
+      const extractedDepartments = [...new Set(data.map((item) => item.dept))];
+      const extractedRoleNames = [...new Set(data.map((item) => item.role_name))];
+      const extractedSkills = [];
+      
+      data.forEach((item) => {
+        item.skills.forEach((skill) => {
+          if (!extractedSkills.includes(skill)) {
+            extractedSkills.push(skill);
+          }
+        });
+      });
+
+      setCountries(extractedCountries);
+      setDepartments(extractedDepartments);
+      setRoleNames(extractedRoleNames);
+      setRoleListings(data);
+      setSkills(extractedSkills);
+    })
+    .catch((error) => {
+      console.error('Error fetching role listings:', error);
+    });
+}, []);
+
   return (
     <>
       <Heading as="h5" size="sm">
