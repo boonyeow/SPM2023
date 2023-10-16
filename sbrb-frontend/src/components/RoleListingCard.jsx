@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useLoginContext } from "../hooks/useLoginContext";
 
 import { Badge, Box, Button, Heading, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 
 function RoleListingCard({
   title,
@@ -13,31 +14,27 @@ function RoleListingCard({
   location,
   deadline,
   skills,
- 
   ...rest
 }) {
 
-  const [userAccessRights, setUserAccessRights] = useState("hr");
-  const [showButton, setShowButton] = useState(false);
+  const { loginInfo } = useLoginContext();
 
   useEffect(() => {
-    if (userAccessRights === "hr") {
-      setShowButton(true);
-    } else {
-      setUserAccessRights("staff");
-      setShowButton(false);
-    }
-  }, [userAccessRights]);
+    if (!loginInfo.isLoggedIn) window.location.href = "/";
+  }, [loginInfo]);
 
   return (
     <Box p={5} shadow="md" borderWidth="1px" {...rest} position="relative" borderRadius="lg">
-      {showButton && (
+      {loginInfo.role === 'HR' && (
         <Link to={`/listings/${roleListingId}/applications`}>
-        <Button id="viewJobButton" position="absolute" top={2} right={2}>
-          View Job Applicants
-        </Button>
-      </Link>
+          <Button id="viewJobButton" position="absolute" top={2} right={2}>
+            View Job Applicants
+          </Button>
+        </Link>
       )}
+
+      <Link  to={`/listings/${roleListingId}`}
+                          key={roleListingId}>   
       <Heading fontSize="xl">{title}</Heading>
       <Text mt={2}>Job Title: {jobtitle}</Text>
       <Text mt={4}>{desc}</Text>
@@ -51,6 +48,7 @@ function RoleListingCard({
         </Badge>
       ))}
       <Text mt={2}>Application deadline: {deadline}</Text>
+      </Link>
     </Box>
   );
 }

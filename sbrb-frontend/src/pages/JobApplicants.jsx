@@ -25,6 +25,23 @@ function JobApplicants() {
     <Flex align="center" justify="center">
   <Box w="90%" p={20}>
  
+  <Box mb={8} fontWeight="semibold">
+    <Breadcrumb>
+      <BreadcrumbItem>
+        <BreadcrumbLink href="/listings">Home</BreadcrumbLink>
+      </BreadcrumbItem>
+
+      <BreadcrumbItem>
+        <BreadcrumbLink href="#">Role Listings</BreadcrumbLink>
+      </BreadcrumbItem>
+
+      <BreadcrumbItem isCurrentPage>
+      <BreadcrumbLink href="#">
+        {id ? `Job ${id}` : 'test'}
+      </BreadcrumbLink>
+    </BreadcrumbItem>
+    </Breadcrumb>
+    </Box>
     <Grid
     h='100vh'
     templateRows='repeat(2, 1fr)'
@@ -32,23 +49,6 @@ function JobApplicants() {
     gap={4}
     >
 
-<Box mb={8} fontWeight="semibold">
-              <Breadcrumb>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/listings">Home</BreadcrumbLink>
-                </BreadcrumbItem>
-
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="#">Role Listings</BreadcrumbLink>
-                </BreadcrumbItem>
-
-                <BreadcrumbItem isCurrentPage>
-                <BreadcrumbLink href="#">
-                  {id ? `Job ${id}` : 'test'}
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              </Breadcrumb>
-            </Box>
     <GridItem rowSpan={2} colSpan={3} >
     <Box h="100%" overflow="auto">
       <Stack spacing={4}>
@@ -120,13 +120,14 @@ function JobApplicantsCard({ staff_fname, staff_lname, staff_id, desc, date, ski
         <Text>Staff Id: {staff_id}</Text>
         <Text mt={4}>Current job: {desc}</Text>
         <Text>Date Applied: {date}</Text>
-        <Text>
-          Skills:  {skills.map((skill) => (
-          <Badge ml="1" fontSize="0.8em" colorScheme="green" key={skill}>
-            {skill}
-          </Badge>
-        ))}
-        </Text> 
+        <Text>Skills:</Text>
+        <Box>
+          {skills.map((skill) => (
+            <Badge ml="1" fontSize="0.8em" colorScheme="green" key={skill}>
+              {skill}
+            </Badge>
+          ))}
+        </Box>
          
       </Box>
     </Link>

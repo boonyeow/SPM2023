@@ -1,7 +1,6 @@
 import { CloseIcon } from "@chakra-ui/icons";
 import FilterRoleListing from "../components/FilterRoleListings";
 import Layout from "../components/Layout";
-import { Link } from 'react-router-dom';
 import RoleListingCard from "../components/RoleListingCard";
 import { useEffect } from "react";
 import { useLoginContext } from "../hooks/useLoginContext";
