@@ -52,7 +52,7 @@ function FilterRoleListing() {
               </AccordionButton>
             </h2>
             <AccordionPanel pb={4}>
-              <CheckboxGroup colorScheme="green" defaultValue={category.values}>
+              <CheckboxGroup colorScheme="blue" defaultValue={category.values}>
                 <Stack spacing={[1]} direction={["column"]}>
                   {category.values.map((value) => (
                     <Checkbox key={value} value={value}>

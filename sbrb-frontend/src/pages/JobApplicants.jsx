@@ -123,7 +123,7 @@ function JobApplicantsCard({ staff_fname, staff_lname, staff_id, desc, date, ski
         <Text>Skills:</Text>
         <Box>
           {skills.map((skill) => (
-            <Badge ml="1" fontSize="0.8em" colorScheme="green" key={skill}>
+            <Badge ml="1" fontSize="0.8em" colorScheme="blue" key={skill}>
               {skill}
             </Badge>
           ))}
