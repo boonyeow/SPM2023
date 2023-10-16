@@ -3,12 +3,29 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.models import Listing, Staff
-from app.schemas.listing_schema import ListingWithSkills
+from app.schemas.listing_schema import ListingWithSkills, ListingCreate
 
 
 class ListingService:
     def __init__(self, db: Session):
         self.db = db
+
+    def create_listing(self, body: ListingCreate):
+        new_listing = Listing(
+            role_name=body.role_name,
+            listing_title=body.listing_title,
+            listing_desc=body.listing_desc,
+            dept=body.dept,
+            country=body.country,
+            reporting_manager_id=body.reporting_manager_id,
+            created_by=body.created_by,
+            expiry_date=body.expiry_date,
+        )
+
+        self.db.add(new_listing)
+        self.db.commit()
+        self.db.refresh(new_listing)
+        return new_listing
 
     def get_all_listings_with_skills(self):
         return self.get_listings_with_skills(active=None)
