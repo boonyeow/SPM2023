@@ -1,4 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react";
+import { LoginProvider } from "./context/LoginContext";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
@@ -11,7 +12,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
-        <RouterProvider router={router} />
+        <LoginProvider>
+          <RouterProvider router={router} />
+        </LoginProvider>
       </ChakraProvider>
     </QueryClientProvider>
   </React.StrictMode>

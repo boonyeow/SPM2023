@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.models import (
     AccessControl,
+    Application,
     Base,
     Listing,
     Role,
@@ -114,6 +115,18 @@ def populate_test_database(session):
             expiry_date=datetime.utcnow() + timedelta(days=2),
         )
     )
+    session.commit()
+
+    session.add(Application(submitted_by_id=150245, listing_id=1))
+    session.add(Application(submitted_by_id=150245, listing_id=2))
+    session.add(Application(submitted_by_id=150245, listing_id=3))
+    session.add(Application(submitted_by_id=150345, listing_id=1))
+    session.add(Application(submitted_by_id=150345, listing_id=2))
+    session.add(Application(submitted_by_id=150345, listing_id=3))
+    session.add(Application(submitted_by_id=151457, listing_id=1))
+    session.add(Application(submitted_by_id=151457, listing_id=2))
+    session.add(Application(submitted_by_id=151457, listing_id=3))
+
     session.commit()
 
 
