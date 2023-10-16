@@ -18,8 +18,6 @@ import { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
 // import { useQuery } from "@tanstack/react-query";
 
-
-
 const RoleView = () => {
   // const apiUrl = import.meta.env.VITE_API_URL;
   // const { id } = useParams();

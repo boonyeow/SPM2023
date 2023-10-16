@@ -15,56 +15,56 @@ import {
 import { useEffect, useState } from "react";
 
 function FilterRoleListing() {
-
   const [countries, setCountries] = useState([]);
-  const [, setRoleListings] = useState([]);
+
   const [departments, setDepartments] = useState([]);
-  const [, setRoleNames] = useState([]);
+
   const [skills, setSkills] = useState([]);
-const filterCategories = [
-  {
-    title: "Department",
-    values: departments,
-  },
-  {
-    title: "Country",
-    values: countries,
-  },
-  {
-    title: "Skills",
-    values: skills
-  },
-];
+  const filterCategories = [
+    {
+      title: "Department",
+      values: departments,
+    },
+    {
+      title: "Country",
+      values: countries,
+    },
+    {
+      title: "Skills",
+      values: skills,
+    },
+  ];
 
-useEffect(() => {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  axios
-    .get(`${apiUrl}/listings`)
-    .then((response) => {
-      const data = response.data;
-      const extractedCountries = [...new Set(data.map((item) => item.country))];
-      const extractedDepartments = [...new Set(data.map((item) => item.dept))];
-      const extractedRoleNames = [...new Set(data.map((item) => item.role_name))];
-      const extractedSkills = [];
-      
-      data.forEach((item) => {
-        item.skills.forEach((skill) => {
-          if (!extractedSkills.includes(skill)) {
-            extractedSkills.push(skill);
-          }
+  useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    axios
+      .get(`${apiUrl}/listings`)
+      .then((response) => {
+        const data = response.data;
+        const extractedCountries = [
+          ...new Set(data.map((item) => item.country)),
+        ];
+        const extractedDepartments = [
+          ...new Set(data.map((item) => item.dept)),
+        ];
+        const extractedSkills = [];
+
+        data.forEach((item) => {
+          item.skills.forEach((skill) => {
+            if (!extractedSkills.includes(skill)) {
+              extractedSkills.push(skill);
+            }
+          });
         });
-      });
 
-      setCountries(extractedCountries);
-      setDepartments(extractedDepartments);
-      setRoleNames(extractedRoleNames);
-      setRoleListings(data);
-      setSkills(extractedSkills);
-    })
-    .catch((error) => {
-      console.error('Error fetching role listings:', error);
-    });
-}, []);
+        setCountries(extractedCountries);
+        setDepartments(extractedDepartments);
+        setSkills(extractedSkills);
+      })
+      .catch((error) => {
+        console.error("Error fetching role listings:", error);
+      });
+  }, []);
 
   return (
     <>

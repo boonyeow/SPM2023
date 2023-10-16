@@ -9,24 +9,23 @@ import { Box, Flex, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 const Home = () => {
-
   const { loginInfo } = useLoginContext();
   const [roleListings, setRoleListings] = useState([]);
   useEffect(() => {
     if (!loginInfo.isLoggedIn) window.location.href = "/";
     const apiUrl = import.meta.env.VITE_API_URL;
-    
+
     axios
-    .get(`${apiUrl}/listings`)
-    .then((response) => {
-      console.log(response.data)
-      setRoleListings(response.data); 
-    })
-    .catch((error) => {
-      console.error('Error fetching role listings:', error);
-    });
+      .get(`${apiUrl}/listings`)
+      .then((response) => {
+        console.log(response.data);
+        setRoleListings(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching role listings:", error);
+      });
   }, [loginInfo]);
-  
+
   return (
     <>
       <Layout>
@@ -44,21 +43,20 @@ const Home = () => {
                 </GridItem>
                 <GridItem rowSpan={2} colSpan={4}>
                   <Box h="100%" overflow="auto">
-                  <Stack spacing={4}>
-                    {roleListings.length === 0 ? (
-                      <Flex justify={"center"} align={"center"}>
-                        <Text fontSize='5xl' mr={3}>No open job role listings.</Text>
-                        <CloseIcon fontSize='5xl' color="grey" />
-                      </Flex>
-                    ) : (
-                      roleListings.map((roleListingData, index) => (
-                        <RoleListingCard
-                          key={index}
-                          {...roleListingData}
-                        />
-                      ))
-                    )}
-                  </Stack>
+                    <Stack spacing={4}>
+                      {roleListings.length === 0 ? (
+                        <Flex justify={"center"} align={"center"}>
+                          <Text fontSize="5xl" mr={3}>
+                            No open job role listings.
+                          </Text>
+                          <CloseIcon fontSize="5xl" color="grey" />
+                        </Flex>
+                      ) : (
+                        roleListings.map((roleListingData, index) => (
+                          <RoleListingCard key={index} {...roleListingData} />
+                        ))
+                      )}
+                    </Stack>
                   </Box>
                 </GridItem>
               </Grid>

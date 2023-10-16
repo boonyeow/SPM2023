@@ -21,7 +21,7 @@ import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 const Links = [
   { name: "Home", to: "/listings" },
   { name: "Job Applicants", to: "/listings/:id/applications" },
-  { name: 'Create Job Listing', to: '/listings/create'},
+  { name: "Create Job Listing", to: "/listing/create" },
   { name: "Skills Matching", to: "/skills-matching" },
   { name: "Edit Profile", to: "/edit-profile" },
 ];
@@ -33,8 +33,8 @@ const NavLink = ({ children }) => {
       px={2}
       py={1}
       rounded="md"
-      _hover={{ color: 'white', bg: 'blue.700' }}
-      _active={{ color: 'white', bg: 'blue.600' }}
+      _hover={{ color: "white", bg: "blue.700" }}
+      _active={{ color: "white", bg: "blue.600" }}
       href={children.to}>
       {children.name}
     </Box>
