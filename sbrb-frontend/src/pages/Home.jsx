@@ -3,6 +3,8 @@ import FilterRoleListing from "../components/FilterRoleListings";
 import Layout from "../components/Layout";
 import { Link } from 'react-router-dom';
 import RoleListingCard from "../components/RoleListingCard";
+import { useEffect } from "react";
+import { useLoginContext } from "../hooks/useLoginContext";
 
 import { Box, Flex, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
 
@@ -59,6 +61,13 @@ const RoleListings = [
 ];
 
 const Home = () => {
+
+  const { loginInfo } = useLoginContext();
+
+  useEffect(() => {
+    if (!loginInfo.isLoggedIn) window.location.href = "/";
+  }, [loginInfo]);
+  
   return (
     <>
       <Layout>
@@ -84,15 +93,10 @@ const Home = () => {
                       </Flex>
                     ) : (
                       RoleListings.map((roleListingData) => (
-                        <Link
-                          to={`/listings/${roleListingData.roleListingId}`}
-                          key={roleListingData.roleListingId}
-                        >
                           <RoleListingCard
                             key={roleListingData.roleListingId}
                             {...roleListingData}
                           />
-                        </Link>
                       ))
                     )}
                   </Stack>
