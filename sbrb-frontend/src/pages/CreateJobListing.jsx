@@ -300,8 +300,7 @@ function CreateJobListing() {
               <AlertIcon />
               <AlertTitle>Success!</AlertTitle>
               <AlertDescription>
-                Your application has been received. We will review your
-                application and respond within the next 48 hours.
+                Job listing has been created successfully.
               </AlertDescription>
               <CloseButton
                 alignSelf="flex-start"

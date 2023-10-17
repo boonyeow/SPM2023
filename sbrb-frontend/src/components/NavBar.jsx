@@ -1,5 +1,5 @@
 import { useLoginContext } from "../hooks/useLoginContext";
-import { AddIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+
 import {
   Avatar,
   Box,
@@ -16,11 +16,12 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 
 const Links = [
-  { name: "Home", to: "/" },
-  { name: "Job Applicants", to: "/job-applicants" },
-  { name: "Create Job Listing", to: "/create-job-listing" },
+  { name: "Home", to: "/listings" },
+  { name: "Job Applicants", to: "/listings/:id/applications" },
+  { name: "Create Job Listing", to: "/listing/create" },
   { name: "Skills Matching", to: "/skills-matching" },
   { name: "Edit Profile", to: "/edit-profile" },
 ];
@@ -32,10 +33,8 @@ const NavLink = ({ children }) => {
       px={2}
       py={1}
       rounded="md"
-      _hover={{
-        textDecoration: "none",
-        bg: useColorModeValue("purple.200", "purple.700"),
-      }}
+      _hover={{ color: "white", bg: "blue.700" }}
+      _active={{ color: "white", bg: "blue.600" }}
       href={children.to}>
       {children.name}
     </Box>
@@ -47,7 +46,7 @@ export default function NavBar() {
   const { loginInfo } = useLoginContext();
 
   return (
-    <Box bg={useColorModeValue("purple.100", "purple.900")} px={4}>
+    <Box bg={useColorModeValue("blue.100", "blue.900")} px={4}>
       <Flex h={16} alignItems="center" justifyContent="space-between">
         <IconButton
           size="md"
@@ -65,14 +64,6 @@ export default function NavBar() {
           </HStack>
         </HStack>
         <Flex alignItems="center">
-          <Button
-            variant="solid"
-            colorScheme="purple"
-            size="sm"
-            mr={4}
-            leftIcon={<AddIcon />}>
-            Action
-          </Button>
           <Menu>
             <MenuButton
               as={Button}

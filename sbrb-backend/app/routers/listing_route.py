@@ -18,18 +18,14 @@ def get_listings(
     db: Session = Depends(get_db),
 ):
     listing_service = ListingService(db)
-
-    if active is None:
-        # No 'active' parameter provided, fetch all listings
-        listings = listing_service.get_all_listings_with_skills()
-    else:
-        if active:
-            # 'active=True', fetch active listings
-            listings = listing_service.get_active_listings_with_skills()
-        else:
-            # 'active=False', fetch inactive listings
-            listings = listing_service.get_inactive_listings_with_skills()
+    listings = listing_service.get_listings_with_skills(active)
     return listings
+
+
+@router.get("/listings/{id}", status_code=200, response_model=ListingWithSkills)
+def get_listing_by_id(id: int, db: Session = Depends(get_db)):
+    listing_service = ListingService(db)
+    return listing_service.get_listing_by_id(id)
 
 
 @router.get(
