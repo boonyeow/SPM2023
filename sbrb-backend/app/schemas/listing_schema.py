@@ -13,7 +13,7 @@ class Listing(BaseModel):
     dept: str
     country: str
     reporting_manager_id: int
-    created_by: int
+    created_by_id: int
     created_date: Annotated[datetime, Body()]
     expiry_date: Annotated[datetime, Body()]
 
