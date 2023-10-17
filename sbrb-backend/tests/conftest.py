@@ -3,15 +3,12 @@ import os
 from datetime import datetime, timedelta
 
 import pytest
-from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from sqlalchemy.engine import URL
-from sqlalchemy.orm import sessionmaker
-
 from app.models import (
     AccessControl,
     Application,
     Base,
+    Country,
+    Department,
     Listing,
     Role,
     RoleSkill,
@@ -19,6 +16,10 @@ from app.models import (
     Staff,
     StaffSkill,
 )
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
+from sqlalchemy.orm import sessionmaker
 
 # Load environment variables from .env file
 load_dotenv()
@@ -43,6 +44,26 @@ def populate_test_database(session):
         for row in reader:
             session.add(AccessControl(access_id=row[0], access_control_name=row[1]))
 
+    # add department
+    departments = [
+        "Chariman",
+        "CEO",
+        "Consultancy",
+        "Engineering",
+        "Finance",
+        "HR",
+        "IT",
+        "Sales",
+        "Solutioning",
+    ]
+    for dept in departments:
+        session.add(Department(department_name=dept))
+
+    # add country
+    countries = ["Hong Kong", "Indonesia", "Malaysia", "Singapore", "Vietnam"]
+    for country in countries:
+        session.add(Country(country_name=country))
+
     session.commit()
 
     with open("data/role_skill.csv", "r") as f:
@@ -55,13 +76,14 @@ def populate_test_database(session):
         reader = csv.reader(f)
         next(reader)
         for row in reader:
+            print("heya", row)
             session.add(
                 Staff(
                     staff_id=row[0],
                     staff_fname=row[1],
                     staff_lname=row[2],
-                    dept=row[3],
-                    country=row[4],
+                    department_name=row[3].strip(),
+                    country_name=row[4].strip(),
                     email=row[5],
                     access_id=row[6],
                 )
@@ -79,10 +101,10 @@ def populate_test_database(session):
             role_name="Account Manager",
             listing_title="Account Manager 1",
             listing_desc="hello world description",
-            dept="Finance",
-            country="Singapore",
+            department_name="Finance",
+            country_name="Singapore",
             reporting_manager_id=170166,
-            created_by=160008,
+            created_by_id=160008,
             created_date=datetime.utcnow() - timedelta(days=14),
             expiry_date=datetime.utcnow() - timedelta(days=7),
         )
@@ -93,10 +115,10 @@ def populate_test_database(session):
             role_name="Account Manager",
             listing_title="Account Manager 2",
             listing_desc="hello world description",
-            dept="Finance",
-            country="Singapore",
+            department_name="Finance",
+            country_name="Singapore",
             reporting_manager_id=170166,
-            created_by=160008,
+            created_by_id=160008,
             created_date=datetime.utcnow(),
             expiry_date=datetime.utcnow() + timedelta(days=7),
         )
@@ -107,10 +129,10 @@ def populate_test_database(session):
             role_name="Account Manager",
             listing_title="Account Manager 3",
             listing_desc="hello world description",
-            dept="Finance",
-            country="Singapore",
+            department_name="Finance",
+            country_name="Singapore",
             reporting_manager_id=170166,
-            created_by=160008,
+            created_by_id=160008,
             created_date=datetime.utcnow(),
             expiry_date=datetime.utcnow() + timedelta(days=2),
         )
@@ -135,7 +157,7 @@ def db_session():
     from app.database import SessionLocal, engine
 
     db_url = URL.create(
-        database="test_db",
+        database="production_db",
         drivername="postgresql+psycopg2",
         host=os.getenv("DB_HOST"),
         username=os.getenv("DB_USERNAME"),
