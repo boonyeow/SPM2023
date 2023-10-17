@@ -18,7 +18,7 @@ const router = createBrowserRouter(
       <Route path="listings" element={<Home />} />
       <Route path="listings/create" element={<CreateJobListing />} />
       <Route path="listings/:id" element={<RoleView />} />
-      <Route path="/listing/:id/applicants" element={<JobApplicants />} />
+      <Route path="/listings/:id/applicants" element={<JobApplicants />} />
       <Route path="profile/:id" element={<Profile />} />
     </Route>
   )
