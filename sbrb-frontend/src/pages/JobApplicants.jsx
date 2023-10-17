@@ -66,7 +66,7 @@ const JobApplicants = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
-  const { isLoggedIn, role } = useLoginContext();
+  const { loginInfo } = useLoginContext();
 
   function renderTableBody() {
     return table.getRowModel().rows.map((row) =>
@@ -194,10 +194,12 @@ const JobApplicants = () => {
   const selectedPageSize = table.getState().pagination.pageSize;
 
   useEffect(() => {
-    if (isLoggedIn != undefined && !isLoggedIn) navigate("/");
+    if (loginInfo.isLoggedIn != undefined && !loginInfo.isLoggedIn)
+      navigate("/");
 
-    if (role != undefined && role == "User") navigate("/listings");
-  }, [navigate, role, isLoggedIn]);
+    if (loginInfo.role != undefined && loginInfo.role == "User")
+      navigate("/listings");
+  }, [navigate, loginInfo]);
 
   useEffect(() => {
     if (isError) navigate("/listings");
@@ -207,15 +209,9 @@ const JobApplicants = () => {
     <>
       <Layout />
       <Box w="8xl" mx="auto">
-        <Breadcrumb mt={6}>
+        <Breadcrumb mt={10}>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-
-          <BreadcrumbItem>
-            <BreadcrumbLink as={Link} to="/listings">
-              Role Listings
-            </BreadcrumbLink>
+            <BreadcrumbLink href="/listings">Home</BreadcrumbLink>
           </BreadcrumbItem>
 
           <BreadcrumbItem>

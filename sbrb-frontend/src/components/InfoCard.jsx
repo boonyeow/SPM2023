@@ -85,7 +85,7 @@ const InfoCard = ({ progress }) => {
             borderRadius="25px"
           />
           <Box my={5}>
-            <Button w="100%" h={14} colorScheme="facebook">
+            <Button w="100%" h={14} colorScheme="blue">
               Apply Now!
             </Button>
           </Box>
