@@ -1,9 +1,8 @@
 from datetime import datetime
 
+from app.models import Listing
+from app.schemas.listing_schema import ListingCreate, ListingWithSkills
 from sqlalchemy.orm import Session
-
-from app.models import Listing, Staff
-from app.schemas.listing_schema import ListingWithSkills, ListingCreate
 
 
 def get_staff_name(first_name, last_name):
@@ -22,7 +21,7 @@ class ListingService:
             dept=body.dept,
             country=body.country,
             reporting_manager_id=body.reporting_manager_id,
-            created_by=body.created_by,
+            created_by_id=body.created_by_id,
             expiry_date=body.expiry_date,
         )
 
