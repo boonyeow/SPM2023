@@ -64,3 +64,7 @@ jobs:
       - name: Run backend tests
         working-directory: sbrb-backend
         run: pytest -v
+        env:
+          DB_HOST: scrum2023-master.cplyu5olo9jt.ap-southeast-1.rds.amazonaws.com
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
