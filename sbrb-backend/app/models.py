@@ -102,8 +102,7 @@ class Listing(Base):
     )
     created_date = Column("created_date", DateTime, default=datetime.datetime.utcnow)
     expiry_date = Column("expiry_date", DateTime)
-
-    created_by = Column(
+    created_by_id = Column(
         "created_by",
         Integer,
         ForeignKey("staff.staff_id", ondelete="CASCADE", onupdate="CASCADE"),
@@ -111,6 +110,7 @@ class Listing(Base):
 
     role = relationship("Role", back_populates="listing")
     reporting_manager = relationship("Staff", foreign_keys=[reporting_manager_id])
+    created_by = relationship("Staff", foreign_keys=[created_by_id])
     applications = relationship("Application", back_populates="listing")
 
 

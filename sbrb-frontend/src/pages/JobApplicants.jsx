@@ -1,4 +1,7 @@
+import { CloseIcon } from "@chakra-ui/icons";
 import Layout from "../components/Layout";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   createColumnHelper,
   flexRender,
@@ -29,7 +32,6 @@ import {
 } from "@chakra-ui/react";
 import { useState, useMemo, useEffect } from "react";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
-import { Select } from "antd";
 
 const mockData = [
   {
@@ -82,6 +84,7 @@ const mockData = [
 const columnHelper = createColumnHelper();
 
 const JobApplicants = () => {
+  const { id } = useParams();
   const columns = useMemo(
     () => [
       columnHelper.accessor("firstName", {
@@ -135,152 +138,122 @@ const JobApplicants = () => {
 
   return (
     <>
-      <Layout />
-      <Box w="8xl" mx="auto">
-        <Breadcrumb mt={6}>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
+      <Layout>
+        <Flex align="center" justify="center">
+          <Box w="90%" p={20}>
+            <Box mb={8} fontWeight="semibold">
+              <Breadcrumb>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/listings">Home</BreadcrumbLink>
+                </BreadcrumbItem>
 
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Role Listings</BreadcrumbLink>
-          </BreadcrumbItem>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="#">Role Listings</BreadcrumbLink>
+                </BreadcrumbItem>
 
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Name of Role Listing</BreadcrumbLink>
-          </BreadcrumbItem>
-
-          <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href="#">Job applicants</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
-        <Box mt={10}>
-          <Heading mb={7}> Job Applicants </Heading>
-          <TableContainer>
-            <Table variant="simple">
-              <Thead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <Tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <Th key={header.id}>
-                        {header.isPlaceholder ? null : (
-                          <div
-                            {...{
-                              className: header.column.getCanSort()
-                                ? "cursor-pointer select-none"
-                                : "",
-                              onClick: header.column.getToggleSortingHandler(),
-                            }}>
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                            {{
-                              asc: (
-                                <Icon
-                                  as={BiSolidUpArrow}
-                                  transform="translateY(2px)"
-                                  ml={2}
-                                />
-                              ),
-                              desc: (
-                                <Icon
-                                  as={BiSolidDownArrow}
-                                  transform="translateY(2px)"
-                                  ml={2}
-                                />
-                              ),
-                            }[header.column.getIsSorted()] ?? null}
-                          </div>
-                        )}
-                      </Th>
-                    ))}
-                  </Tr>
-                ))}
-              </Thead>
-              <Tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <Tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <Td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </Td>
-                    ))}
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </TableContainer>
-          <Flex mt={4} alignItems="center">
-            <Select
-              placeholder="Select Page Size"
-              value={selectedPageSize}
-              onChange={(e) => {
-                table.setPageSize(Number(e));
-              }}
-              style={{ width: "150px" }}>
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </Select>
-            <Spacer />
-            <Box mr={5}>
-              <Text fontWeight="semibold">
-                Page {table.getState().pagination.pageIndex + 1} of{" "}
-                {table.getPageCount()}
-              </Text>
+                <BreadcrumbItem isCurrentPage>
+                  <BreadcrumbLink href="#">
+                    {id ? `Job ${id}` : "test"}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+              </Breadcrumb>
             </Box>
-            <ButtonGroup variant="outline" spacing="2">
-              <Button
-                onClick={() => table.setPageIndex(0)}
-                isDisabled={!table.getCanPreviousPage()}>{`<<`}</Button>
-              <Button
-                onClick={() => table.previousPage()}
-                isDisabled={!table.getCanPreviousPage()}>{`<`}</Button>
-              <Button
-                onClick={() => table.nextPage()}
-                isDisabled={!table.getCanNextPage()}>{`>`}</Button>
-              <Button
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                isDisabled={!table.getCanNextPage()}>{`>>`}</Button>
-            </ButtonGroup>
-          </Flex>
-        </Box>
-      </Box>
+            <Grid
+              h="100vh"
+              templateRows="repeat(2, 1fr)"
+              templateColumns="repeat(3, 1fr)"
+              gap={4}>
+              <GridItem rowSpan={2} colSpan={3}>
+                <Box h="100%" overflow="auto">
+                  <Stack spacing={4}>
+                    {applicantsData.length === 0 ? (
+                      <Flex justify={"center"} align={"center"}>
+                        <Text fontSize="5xl" mr={3}>
+                          No applicants have applied for this job.
+                        </Text>
+                        <CloseIcon fontSize="5xl" color="grey" />
+                      </Flex>
+                    ) : (
+                      applicantsData.map((feature, index) => (
+                        <JobApplicantsCard key={index} {...feature} />
+                      ))
+                    )}
+                  </Stack>
+                </Box>
+              </GridItem>
+            </Grid>
+          </Box>
+        </Flex>
+      </Layout>
     </>
   );
 };
 
 const applicantsData = [
   {
-    name: "Smith",
-    listing_title: "Sales Manager",
-    desc: "Description for Sales Manager",
+    staff_fname: "Sam",
+    staff_lname: "Smith",
+    email: "abc@allin1.com",
+    staff_id: "130001",
+    listing_title: "Software Engineer",
+    desc: "Sales Manager",
     country: "United States",
     date: "2023-09-15",
     skills: ["Sales Strategy", "Team Leadership", "Customer Relationship"],
   },
   {
-    name: "Doe",
+    staff_fname: "Doe",
+    staff_lname: "Dee",
+    email: "abc@allin1.com",
+    staff_id: "130002",
     listing_title: "Software Engineer",
-    desc: "Description for Software Engineer",
+    desc: "Software Engineer",
     country: "Canada",
     date: "2023-09-20",
     skills: ["Java", "Python", "Web Development"],
   },
   {
-    name: "Johnson",
-    listing_title: "HR Specialist",
-    desc: "Description for HR Specialist",
+    staff_fname: "Ti",
+    staff_lname: "Ta",
+    email: "abc@allin1.com",
+    staff_id: "130003",
+    listing_title: "Software Engineer",
+    desc: "HR Specialist",
     country: "United Kingdom",
     date: "2023-08-05",
     skills: ["Recruitment", "Employee Relations", "HR Policies"],
   },
 ];
+
+function JobApplicantsCard({
+  staff_fname,
+  staff_lname,
+  staff_id,
+  desc,
+  date,
+  skills,
+  ...rest
+}) {
+  return (
+    <Link to={`/profile/${staff_id}`}>
+      <Box p={5} shadow="md" borderWidth="1px" {...rest} borderRadius="lg">
+        <Heading fontSize="xl">
+          {staff_fname} {staff_lname}
+        </Heading>
+        <Text>Staff Id: {staff_id}</Text>
+        <Text mt={4}>Current job: {desc}</Text>
+        <Text>Date Applied: {date}</Text>
+        <Text>Skills:</Text>
+        <Box>
+          {skills.map((skill) => (
+            <Badge ml="1" fontSize="0.8em" colorScheme="blue" key={skill}>
+              {skill}
+            </Badge>
+          ))}
+        </Box>
+      </Box>
+    </Link>
+  );
+}
 
 export default JobApplicants;

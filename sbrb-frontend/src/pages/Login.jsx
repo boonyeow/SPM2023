@@ -1,4 +1,5 @@
 import { useLoginContext } from "../hooks/useLoginContext";
+
 import { ACCOUNTS, ACCOUNT_PASSWORDS, ACCOUNT_ROLES } from "../service";
 import {
   Box,
@@ -34,7 +35,7 @@ const Login = () => {
       localStorage.setItem("role", ROLES[ACCOUNT_ROLES[email]]);
       localStorage.setItem("isLoggedIn", true);
 
-      window.location.href = "/listing";
+      window.location.href = "/listings";
     } else {
       document.activeElement.blur();
       setIsError(true);
@@ -43,7 +44,7 @@ const Login = () => {
 
   useEffect(() => {
     console.log(loginInfo);
-    if (loginInfo.isLoggedIn) window.location.href = "/listing";
+    if (loginInfo.isLoggedIn) window.location.href = "/listings";
   }, [loginInfo]);
 
   return (
