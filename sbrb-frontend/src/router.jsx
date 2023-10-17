@@ -1,7 +1,7 @@
 import CreateJobListing from "./pages/CreateJobListing";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
 import JobApplicants from "./pages/JobApplicants";
+import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import RoleView from "./pages/RoleView";
 import {
