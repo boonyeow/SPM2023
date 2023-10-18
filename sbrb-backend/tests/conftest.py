@@ -82,7 +82,7 @@ def populate_test_database(session):
             dept="Finance",
             country="Singapore",
             reporting_manager_id=170166,
-            created_by=160008,
+            created_by_id=160008,
             created_date=datetime.utcnow() - timedelta(days=14),
             expiry_date=datetime.utcnow() - timedelta(days=7),
         )
@@ -96,7 +96,7 @@ def populate_test_database(session):
             dept="Finance",
             country="Singapore",
             reporting_manager_id=170166,
-            created_by=160008,
+            created_by_id=160008,
             created_date=datetime.utcnow(),
             expiry_date=datetime.utcnow() + timedelta(days=7),
         )
@@ -110,7 +110,7 @@ def populate_test_database(session):
             dept="Finance",
             country="Singapore",
             reporting_manager_id=170166,
-            created_by=160008,
+            created_by_id=160008,
             created_date=datetime.utcnow(),
             expiry_date=datetime.utcnow() + timedelta(days=2),
         )
