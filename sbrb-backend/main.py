@@ -3,6 +3,8 @@ from fastapi import APIRouter, FastAPI
 
 from app.database import init_engine
 from app.routers import listing_route
+from fastapi.middleware.cors import CORSMiddleware
+
 
 api_router = APIRouter()
 
@@ -15,6 +17,12 @@ def get_root():
 init_engine(is_test=True)
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Include your API routers
 app.include_router(api_router)
 app.include_router(listing_route.router)

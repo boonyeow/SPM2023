@@ -1,5 +1,5 @@
+import { Link as ReactRouterLink, useLocation } from "react-router-dom";
 import { useLoginContext } from "../hooks/useLoginContext";
-
 import {
   Avatar,
   Box,
@@ -7,108 +7,111 @@ import {
   Flex,
   HStack,
   IconButton,
+  Link,
   Menu,
   MenuButton,
   MenuDivider,
   MenuItem,
   MenuList,
+  Spacer,
   Stack,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { useEffect } from "react";
 
 const Links = [
-  { name: "Home", to: "/listings" },
-  { name: "Job Applicants", to: "/listings/:id/applications" },
-  { name: "Create Job Listing", to: "/listing/create" },
-  { name: "Skills Matching", to: "/skills-matching" },
-  { name: "Edit Profile", to: "/edit-profile" },
+  { name: "Listings", to: "/listings" },
+  { name: "My Applications", to: "/applications" },
+  { name: "My Profile", to: "/profile" },
 ];
 
-const NavLink = ({ children }) => {
+const NavBar = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { loginInfo } = useLoginContext();
+  const location = useLocation();
+
+  let activeLink;
+  if (location.pathname.includes("/listings")) {
+    activeLink = "Listings";
+  } else if (location.pathname.includes("/applications")) {
+    activeLink = "My Applications";
+  } else if (location.pathname.includes("/profile")) {
+    activeLink = "My Profile";
+  }
+
+  useEffect(() => {}, [location]);
+
   return (
-    <Box
-      as="a"
-      px={2}
-      py={1}
-      rounded="md"
-      _hover={{ color: "white", bg: "blue.700" }}
-      _active={{ color: "white", bg: "blue.600" }}
-      href={children.to}>
-      {children.name}
-    </Box>
+    <>
+      <Box px={5} py={5} boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)">
+        <Box display={{ md: "none" }}>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Options"
+              icon={<HamburgerIcon />}
+              variant="outline"
+            />
+            <MenuList>
+              {Links.map((link, index) => (
+                <MenuItem
+                  key={index}
+                  as={ReactRouterLink}
+                  to={link.to}
+                  fontWeight={activeLink == link.name ? "semibold" : "normal"}>
+                  {link.name}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+        </Box>
+        <Flex alignItems="center" display={{ base: "none", md: "flex" }}>
+          <Spacer />
+          <Box>
+            {Links.map((link, index) => (
+              <Link
+                as={ReactRouterLink}
+                to={link.to}
+                key={index}
+                mr={10}
+                color={activeLink == link.name ? "blackAlpha.800" : "gray.600"}
+                fontWeight={activeLink == link.name ? "semibold" : "normal"}
+                _hover={{
+                  color: "blackAlpha.800",
+                  fontWeight: "semibold",
+                }}>
+                {link.name}
+              </Link>
+            ))}
+            {loginInfo.isLoggedIn && (
+              <Link
+                mr={10}
+                color="gray.600"
+                _hover={{
+                  color: "blackAlpha.900",
+                  fontWeight: "semibold",
+                }}
+                onClick={() => {
+                  localStorage.clear();
+                  window.location.href = "/";
+                }}>
+                Logout
+              </Link>
+            )}
+          </Box>
+          <Spacer />
+          <Avatar
+            size="sm"
+            src={
+              "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+            }
+          />
+        </Flex>
+      </Box>
+    </>
   );
 };
 
-export default function NavBar() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { loginInfo } = useLoginContext();
-
-  return (
-    <Box bg={useColorModeValue("blue.100", "blue.900")} px={4}>
-      <Flex h={16} alignItems="center" justifyContent="space-between">
-        <IconButton
-          size="md"
-          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-          aria-label="Open Menu"
-          display={{ md: "none" }}
-          onClick={isOpen ? onClose : onOpen}
-        />
-        <HStack spacing={8} alignItems="center">
-          <Box>Logo</Box>
-          <HStack as="nav" spacing={4} display={{ base: "none", md: "flex" }}>
-            {Links.map((link) => (
-              <NavLink key={link.to}>{link}</NavLink>
-            ))}
-          </HStack>
-        </HStack>
-        <Flex alignItems="center">
-          <Menu>
-            <MenuButton
-              as={Button}
-              rounded="full"
-              variant="link"
-              cursor="pointer"
-              minW={0}>
-              <Avatar
-                size="sm"
-                src={
-                  "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                }
-              />
-            </MenuButton>
-            <MenuList>
-              <MenuItem>View Applications</MenuItem>
-              <MenuItem as="a" href="/edit-profile">
-                Edit Profile
-              </MenuItem>
-              {loginInfo.isLoggedIn && (
-                <>
-                  <MenuDivider />
-                  <MenuItem
-                    onClick={() => {
-                      localStorage.clear();
-                      window.location.href = "/";
-                    }}>
-                    Log Out
-                  </MenuItem>
-                </>
-              )}
-            </MenuList>
-          </Menu>
-        </Flex>
-      </Flex>
-
-      {isOpen && (
-        <Box pb={4} display={{ md: "none" }}>
-          <Stack as="nav" spacing={4}>
-            {Links.map((link) => (
-              <NavLink key={link}>{link}</NavLink>
-            ))}
-          </Stack>
-        </Box>
-      )}
-    </Box>
-  );
-}
+export default NavBar;
