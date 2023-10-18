@@ -1,9 +1,10 @@
 import datetime
 from enum import Enum as PyEnum
 
-from app.database import Base
 from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
+
+from app.database import Base
 
 
 class Role(Base):
@@ -135,7 +136,7 @@ class Listing(Base):
         "reporting_manager_id", Integer, ForeignKey("staff.staff_id"), nullable=False
     )
     created_by_id = Column(
-        "created_by",
+        "created_by_id",
         Integer,
         ForeignKey("staff.staff_id", ondelete="CASCADE", onupdate="CASCADE"),
     )
