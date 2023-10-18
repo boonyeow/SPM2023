@@ -1,8 +1,9 @@
 from datetime import datetime
 
+from sqlalchemy.orm import Session
+
 from app.models import Listing
 from app.schemas.listing_schema import ListingWithSkills
-from sqlalchemy.orm import Session
 
 
 def get_staff_name(first_name, last_name):
@@ -81,5 +82,3 @@ class ListingService:
             expiry_date=listing.expiry_date,
             skills=skills,
         )
-
-    
