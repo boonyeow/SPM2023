@@ -31,16 +31,22 @@ const RoleView = () => {
     dept: "",
     created_by_name: "",
     created_date: "",
+    expiry_date: "",
+    applied: true,
   });
 
   const { isLoading, isError } = useQuery({
-    queryKey: ["todos"],
+    queryKey: ["role listing"],
     queryFn: async () => {
-      const res = await axios.get(`${apiUrl}/listings/${id}`);
+      const res = await axios.get(
+        `${apiUrl}/listings/${id}?user_id=${loginInfo.userId}`
+      );
+      // console.log(res.data);
       setRole(res.data);
       return res.data;
     },
     retry: 3,
+    enabled: loginInfo.isLoggedIn,
   });
 
   useEffect(() => {
@@ -66,21 +72,17 @@ const RoleView = () => {
       <Layout>
         <Box position="relative">
           <Box
-            bgGradient={[
-              "linear(to-b,  pink.500, purple.300)",
-              "linear(to-tr, teal.300, yellow.400)",
-              "linear(to-t, blue.200, pink.500)",
-            ]}
+            bg="linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(228,229,255,1) 30%, rgba(219,232,255,1) 64%, rgba(193,229,252,1) 100%, rgba(255,228,228,1) 100%)"
             w="100%"
             h="200px" // Adjust the height as needed
-          ></Box>
+          />
           <Flex justify="space-between" px={4} py={8}>
             <Spacer />
             <Box
               position="relative" // To make it overlap with the image
               top={-48} // To make it protrude the bottom of the image
-              w="48%">
-              <Box mb={8} color="white" fontWeight="semibold">
+              w="47%">
+              <Box mb={8}>
                 <Breadcrumb>
                   <BreadcrumbItem>
                     <BreadcrumbLink as={Link} to="/listings">
@@ -113,7 +115,13 @@ const RoleView = () => {
             </Box>
 
             <Box w="27%" ml={10}>
-              <InfoCard progress={35} />
+              <InfoCard
+                progress={35}
+                userId={loginInfo.userId}
+                listingId={id}
+                expiryDate={role.expiry_date}
+                hasApplied={role.applied}
+              />
             </Box>
             <Spacer />
           </Flex>

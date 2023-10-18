@@ -1,36 +1,34 @@
-import { Link as ReactRouterLink, useLocation } from "react-router-dom";
+import { HamburgerIcon } from "@chakra-ui/icons";
 import { useLoginContext } from "../hooks/useLoginContext";
 import {
   Avatar,
   Box,
-  Button,
   Flex,
-  HStack,
   IconButton,
   Link,
   Menu,
   MenuButton,
-  MenuDivider,
   MenuItem,
   MenuList,
   Spacer,
-  Stack,
-  useColorModeValue,
-  useDisclosure,
+  Text,
 } from "@chakra-ui/react";
-import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
-import { useEffect } from "react";
-
-const Links = [
-  { name: "Listings", to: "/listings" },
-  { name: "My Applications", to: "/applications" },
-  { name: "My Profile", to: "/profile" },
-];
+import {
+  Link as ReactRouterLink,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 const NavBar = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { loginInfo } = useLoginContext();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const Links = [
+    { name: "Listings", to: "/listings" },
+    { name: "My Applications", to: "/applications" },
+    { name: "My Profile", to: `/profile/${loginInfo.userId}` },
+  ];
 
   let activeLink;
   if (location.pathname.includes("/listings")) {
@@ -41,11 +39,13 @@ const NavBar = () => {
     activeLink = "My Profile";
   }
 
-  useEffect(() => {}, [location]);
-
   return (
     <>
-      <Box px={5} py={5} boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)">
+      <Box
+        px={5}
+        py={5}
+        boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
+        zIndex={9999}>
         <Box display={{ md: "none" }}>
           <Menu>
             <MenuButton
@@ -68,13 +68,20 @@ const NavBar = () => {
           </Menu>
         </Box>
         <Flex alignItems="center" display={{ base: "none", md: "flex" }}>
+          <Text
+            as="kbd"
+            fontWeight="bold"
+            _hover={{ cursor: "pointer" }}
+            onClick={() => navigate("/listings")}>
+            ALL-IN-ONE
+          </Text>
           <Spacer />
           <Box>
             {Links.map((link, index) => (
               <Link
+                key={index}
                 as={ReactRouterLink}
                 to={link.to}
-                key={index}
                 mr={10}
                 color={activeLink == link.name ? "blackAlpha.800" : "gray.600"}
                 fontWeight={activeLink == link.name ? "semibold" : "normal"}
@@ -105,7 +112,7 @@ const NavBar = () => {
           <Avatar
             size="sm"
             src={
-              "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+              "https://res.cloudinary.com/practicaldev/image/fetch/s--i96Gcbyf--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://thepracticaldev.s3.amazonaws.com/uploads/user/profile_image/50592/f46e43c2-f4f0-4787-b34e-a310cecc221a.jpg"
             }
           />
         </Flex>

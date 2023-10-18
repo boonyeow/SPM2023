@@ -1,3 +1,6 @@
+import Swal from "sweetalert2";
+import axios from "axios";
+import { checkHasExpired } from "../service";
 import {
   Box,
   Button,
@@ -22,7 +25,10 @@ import {
   IoPeopleOutline,
 } from "react-icons/io5";
 
-const InfoCard = ({ progress }) => {
+const InfoCard = ({ progress, listingId, userId, expiryDate, hasApplied }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const hasExpired = checkHasExpired(expiryDate);
+
   let progressText;
   if (progress >= 0 && progress < 25) {
     progressText = "Poorly matched with your profile";
@@ -33,6 +39,29 @@ const InfoCard = ({ progress }) => {
   } else if (progress >= 75 && progress <= 100) {
     progressText = "Perfectly match with your profile!";
   }
+
+  const handleApply = async () => {
+    try {
+      await axios.post(`${apiUrl}/apply`, {
+        listing_id: listingId,
+        user_id: userId,
+      });
+      // console.log(res);
+      Swal.fire(
+        "Applied!",
+        "You have successfully applied for the role",
+        "success"
+      );
+    } catch (e) {
+      Swal.fire({
+        title: "Error!",
+        text: "There was an error applying for this role. Please try again later.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      console.log(e);
+    }
+  };
   return (
     <Card
       boxShadow="0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.2)" // Adjust the values as needed
@@ -85,8 +114,13 @@ const InfoCard = ({ progress }) => {
             borderRadius="25px"
           />
           <Box my={5}>
-            <Button w="100%" h={14} colorScheme="blue">
-              Apply Now!
+            <Button
+              w="100%"
+              h={14}
+              colorScheme="blue"
+              onClick={handleApply}
+              isDisabled={hasExpired || hasApplied}>
+              {hasApplied ? "Applied" : hasExpired ? "Expired!" : "Apply Now!"}
             </Button>
           </Box>
         </Box>
