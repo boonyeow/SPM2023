@@ -62,7 +62,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run backend tests
-        working-directory: sbrb-backend
+        working-directory: sbrb-backend/tests
         run: pytest -v
         env:
           DB_HOST: scrum2023-master.cplyu5olo9jt.ap-southeast-1.rds.amazonaws.com
