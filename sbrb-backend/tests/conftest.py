@@ -26,19 +26,19 @@ load_dotenv()
 
 
 def populate_test_database(session):
-    with open("data/role.csv", "r") as f:
+    with open("data/role.csv", "r", encoding='iso-8859-1') as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
             session.add(Role(role_name=row[0], role_desc=row[1]))
 
-    with open("data/skill.csv", "r") as f:
+    with open("data/skill.csv", "r", encoding='iso-8859-1') as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
             session.add(Skill(skill_name=row[0], skill_desc=row[1]))
 
-    with open("data/Access_Control.csv", "r") as f:
+    with open("data/Access_Control.csv", "r", encoding='iso-8859-1') as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
@@ -89,7 +89,7 @@ def populate_test_database(session):
                 )
             )
 
-    with open("data/staff_skill.csv", "r") as f:
+    with open("data/staff_skill.csv", "r", encoding='iso-8859-1') as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
