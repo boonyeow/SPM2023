@@ -22,3 +22,4 @@ class ListingWithSkills(Listing):
     reporting_manager_name: str
     created_by_name: str
     skills: List[str]
+    applied: bool | None = None
