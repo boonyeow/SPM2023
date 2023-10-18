@@ -13,6 +13,12 @@ def get_staff_name(first_name, last_name):
 class ListingService:
     def __init__(self, db: Session):
         self.db = db
+        
+    def check_if_listing_is_active(self, listing_id):
+        listing = self.db.get(Listing, listing_id)
+        if listing.expiry_date >= datetime.utcnow():
+            return True
+        return False
 
     def get_listings_with_skills(self, active=None):
         listings_query = self.db.query(Listing)
