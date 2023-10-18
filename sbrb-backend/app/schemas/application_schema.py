@@ -12,3 +12,8 @@ class ApplicationWithStaffSkills(BaseModel):
     listing_id: int
     staff: StaffWithSkills
     submission_date: Annotated[datetime, Body()]
+
+
+class ApplyListing(BaseModel):
+    listing_id: int
+    user_id: int

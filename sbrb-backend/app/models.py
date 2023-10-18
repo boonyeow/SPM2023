@@ -123,20 +123,20 @@ class ApplicationStatusEnum(PyEnum):
 class Application(Base):
     __tablename__ = "application"
     application_id = Column("application_id", Integer, primary_key=True)
+    listing_id = Column(
+        "listing_id", Integer, ForeignKey("listing.listing_id"), nullable=False
+    )
     submitted_by_id = Column(
-        "submitted_by",
+        "submitted_by_id",
         Integer,
         ForeignKey("staff.staff_id", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
     )
     submission_date = Column(
         "submission_date", DateTime, default=datetime.datetime.utcnow
     )
     status = Column(
         "status", Enum(ApplicationStatusEnum), default=ApplicationStatusEnum.PENDING
-    )
-
-    listing_id = Column(
-        "listing_id", Integer, ForeignKey("listing.listing_id"), nullable=False
     )
 
     listing = relationship("Listing", back_populates="applications")
