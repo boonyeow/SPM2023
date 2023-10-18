@@ -57,3 +57,4 @@ class ApplicationService:
         )
         self.db.add(new_application)
         self.db.commit()
+        self.db.refresh(new_application)
