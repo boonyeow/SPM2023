@@ -14,7 +14,6 @@ import {
   AlertDescription,
   AlertIcon,
   AlertTitle,
-  Badge,
   Box,
   Button,
   CloseButton,
@@ -26,7 +25,7 @@ import {
   Select,
   Textarea,
 } from "@chakra-ui/react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 import { Formik, useFormik } from "formik";
@@ -34,10 +33,6 @@ import * as Yup from "yup";
 import axios from "axios";
 
 function CreateJobListing() {
-  const { onClose } = useDisclosure();
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const navigate = useNavigate();
-
   const countries = [
     "Malaysia",
     "Hong Kong",
