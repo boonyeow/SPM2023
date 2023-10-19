@@ -22,10 +22,25 @@ def get_listings(
     return listings
 
 
-@router.get("/listings/{id}", status_code=200, response_model=ListingWithSkills)
-def get_listing_by_id(id: int, db: Session = Depends(get_db)):
+@router.get(
+    "/listings/{listing_id}",
+    status_code=200,
+    response_model=ListingWithSkills,
+)
+def get_listing_by_id(
+    listing_id: int,
+    user_id: int = Query(None, description="User ID"),
+    db: Session = Depends(get_db),
+):
     listing_service = ListingService(db)
-    return listing_service.get_listing_by_id(id)
+    listing = listing_service.get_listing_by_id(listing_id)
+    if user_id:
+        application_service = ApplicationService(db)
+        listing.applied = application_service.check_if_user_already_applied(
+            user_id, listing_id
+        )
+
+    return listing
 
 
 @router.get(
