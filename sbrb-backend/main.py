@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import APIRouter, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import init_engine
 from app.routers import application_route, listing_route
@@ -15,6 +16,12 @@ def get_root():
 init_engine(is_test=True)
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Include your API routers
 app.include_router(api_router)
 app.include_router(application_route.router)
