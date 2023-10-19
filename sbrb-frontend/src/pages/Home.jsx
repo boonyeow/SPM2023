@@ -11,15 +11,43 @@ import { useEffect, useState } from "react";
 const Home = () => {
   const { loginInfo } = useLoginContext();
   const [roleListings, setRoleListings] = useState([]);
+  const [filteredRoleListings, setFilteredRoleListings] = useState([]);
+  const [isAllUnchecked, setIsAllUnchecked] = useState(true);
+
+  const handleFilterChange = (checkedValues) => {
+    console.log(checkedValues);
+
+    let filteredListings = [...roleListings];
+    const isAllUnchecked = Object.values(checkedValues).every(
+      (values) => values.length === 0
+    );
+
+    setIsAllUnchecked(isAllUnchecked);
+
+    if (!isAllUnchecked) {
+      if (checkedValues.departments.length > 0) {
+        filteredListings = filteredListings.filter((listing) =>
+          checkedValues.departments.includes(listing.dept)
+        );
+      }
+    } else {
+      filteredListings = [];
+    }
+
+    setFilteredRoleListings(filteredListings);
+  };
+
+  const resetFilters = () => {
+    setFilteredRoleListings(roleListings);
+  };
   useEffect(() => {
     if (!loginInfo.isLoggedIn) window.location.href = "/";
     const apiUrl = import.meta.env.VITE_API_URL;
-
     axios
       .get(`${apiUrl}/listings`)
       .then((response) => {
-        console.log(response.data);
         setRoleListings(response.data);
+        setFilteredRoleListings(response.data);
       })
       .catch((error) => {
         console.error("Error fetching role listings:", error);
@@ -39,20 +67,27 @@ const Home = () => {
                 templateColumns="repeat(5, 1fr)"
                 gap={4}>
                 <GridItem rowSpan={2} colSpan={1}>
-                  <FilterRoleListing />
+                  <FilterRoleListing
+                    onFilterChange={handleFilterChange}
+                    resetFilters={resetFilters}
+                  />
                 </GridItem>
                 <GridItem rowSpan={2} colSpan={4}>
                   <Box h="100%" overflow="auto">
                     <Stack spacing={4}>
-                      {roleListings.length === 0 ? (
+                      {filteredRoleListings.length === 0 ? (
                         <Flex justify={"center"} align={"center"}>
-                          <Text fontSize="5xl" mr={3}>
-                            No open job role listings.
+                          <Text fontSize="4xl" mr={3}>
+                            {isAllUnchecked
+                              ? "Please tick one of the checkboxes to filter the role listings."
+                              : "No open job role listings."}
                           </Text>
-                          <CloseIcon fontSize="5xl" color="grey" />
+                          {!isAllUnchecked && (
+                            <CloseIcon fontSize="4xl" color="grey" />
+                          )}
                         </Flex>
                       ) : (
-                        roleListings.map((roleListingData, index) => (
+                        filteredRoleListings.map((roleListingData, index) => (
                           <RoleListingCard key={index} {...roleListingData} />
                         ))
                       )}

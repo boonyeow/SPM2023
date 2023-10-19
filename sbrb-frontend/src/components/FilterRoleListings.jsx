@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Button,
   Checkbox,
   CheckboxGroup,
   Heading,
@@ -14,16 +15,21 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-function FilterRoleListing() {
+function FilterRoleListing({ onFilterChange, resetFilters }) {
   const [countries, setCountries] = useState([]);
-
   const [departments, setDepartments] = useState([]);
-
   const [skills, setSkills] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState({
+    departments: [],
+    // countries: [],
+    // skills: [],
+  });
+
   const filterCategories = [
     {
       title: "Department",
       values: departments,
+      key: "departments",
     },
     {
       title: "Country",
@@ -34,6 +40,36 @@ function FilterRoleListing() {
       values: skills,
     },
   ];
+
+  const handleCheckboxChange = (categoryKey, selectedValues) => {
+    console.log(categoryKey, selectedValues);
+    setSelectedFilters({
+      ...selectedFilters,
+      [categoryKey]: selectedValues,
+    });
+  };
+
+  const getCheckedValues = () => {
+    const checkedValues = {};
+
+    for (const categoryKey in selectedFilters) {
+      checkedValues[categoryKey] = selectedFilters[categoryKey];
+    }
+
+    return checkedValues;
+  };
+
+  const handleFilterButtonClick = () => {
+    const checkedValues = getCheckedValues();
+    onFilterChange(checkedValues);
+  };
+
+  const handleResetFiltersClick = () => {
+    resetFilters();
+    setSelectedFilters({
+      departments: [],
+    });
+  };
 
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -83,7 +119,12 @@ function FilterRoleListing() {
               </AccordionButton>
             </h2>
             <AccordionPanel pb={4}>
-              <CheckboxGroup colorScheme="blue" defaultValue={category.values}>
+              <CheckboxGroup
+                colorScheme="blue"
+                value={selectedFilters[category.key]}
+                onChange={(selectedValues) =>
+                  handleCheckboxChange(category.key, selectedValues)
+                }>
                 <Stack spacing={[1]} direction={["column"]}>
                   {category.values.map((value) => (
                     <Checkbox key={value} value={value}>
@@ -96,6 +137,14 @@ function FilterRoleListing() {
           </AccordionItem>
         ))}
       </Accordion>
+
+      <Button mt={8} onClick={handleFilterButtonClick}>
+        Apply Filter
+      </Button>
+
+      <Button mt={4} onClick={handleResetFiltersClick}>
+        Reset Filters
+      </Button>
     </>
   );
 }
