@@ -3,13 +3,8 @@ import Layout from "../components/Layout";
 import { FormErrorMessage, FormLabel, Heading } from "@chakra-ui/react";
 
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   Box,
   Button,
-  CloseButton,
   Flex,
   FormControl,
   Grid,
@@ -18,9 +13,6 @@ import {
   Select,
   Textarea,
 } from "@chakra-ui/react";
-import { ToastContainer } from "react-toastify";
-
-import "react-toastify/dist/ReactToastify.css";
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -114,24 +106,6 @@ function CreateJobListing() {
     <>
       <Layout>
         <Box>
-          <ToastContainer />
-
-          {isSubmitted && (
-            <Alert status="success">
-              <AlertIcon />
-              <AlertTitle>Success!</AlertTitle>
-              <AlertDescription>
-                Job listing has been created successfully.
-              </AlertDescription>
-              <CloseButton
-                alignSelf="flex-start"
-                position="relative"
-                right={-1}
-                top={-1}
-                onClick={handleCloseAlert}
-              />
-            </Alert>
-          )}
           <Formik
             initialValues={formik.initialValues}
             onSubmit={formik.handleSubmit}
