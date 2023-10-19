@@ -3,6 +3,11 @@ import os
 from datetime import datetime, timedelta
 
 import pytest
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
+from sqlalchemy.orm import sessionmaker
+
 from app.models import (
     AccessControl,
     Application,
@@ -16,29 +21,25 @@ from app.models import (
     Staff,
     StaffSkill,
 )
-from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from sqlalchemy.engine import URL
-from sqlalchemy.orm import sessionmaker
 
 # Load environment variables from .env file
 load_dotenv()
 
 
 def populate_test_database(session):
-    with open("data/role.csv", "r", encoding='iso-8859-1') as f:
+    with open("data/role.csv", "r", encoding="iso-8859-1") as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
             session.add(Role(role_name=row[0], role_desc=row[1]))
 
-    with open("data/skill.csv", "r", encoding='iso-8859-1') as f:
+    with open("data/skill.csv", "r", encoding="iso-8859-1") as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
             session.add(Skill(skill_name=row[0], skill_desc=row[1]))
 
-    with open("data/Access_Control.csv", "r", encoding='iso-8859-1') as f:
+    with open("data/Access_Control.csv", "r", encoding="iso-8859-1") as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
@@ -89,7 +90,7 @@ def populate_test_database(session):
                 )
             )
 
-    with open("data/staff_skill.csv", "r", encoding='iso-8859-1') as f:
+    with open("data/staff_skill.csv", "r", encoding="iso-8859-1") as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:

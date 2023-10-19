@@ -1,21 +1,23 @@
 import { DatePicker } from "antd";
 import Layout from "../components/Layout";
-import { FormErrorMessage, FormLabel, Heading } from "@chakra-ui/react";
-
+import axios from "axios";
 import {
   Box,
   Button,
   Flex,
   FormControl,
+  FormErrorMessage,
+  FormLabel,
   Grid,
   GridItem,
+  Heading,
   Input,
   Select,
   Textarea,
 } from "@chakra-ui/react";
 import { Formik, useFormik } from "formik";
+
 import * as Yup from "yup";
-import axios from "axios";
 
 function CreateJobListing() {
   const countries = [
@@ -309,4 +311,3 @@ function CreateJobListing() {
 }
 
 export default CreateJobListing;
-

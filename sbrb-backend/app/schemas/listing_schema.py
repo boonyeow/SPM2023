@@ -23,6 +23,7 @@ class ListingWithSkills(Listing):
     created_by_name: str
     skills: List[str]
 
+
 class ListingCreate(BaseModel):
     role_name: str
     listing_title: str
@@ -30,5 +31,5 @@ class ListingCreate(BaseModel):
     dept: str
     country: str
     reporting_manager_id: int
-    created_by_id:int
+    created_by_id: int
     expiry_date: Annotated[datetime, Body()]

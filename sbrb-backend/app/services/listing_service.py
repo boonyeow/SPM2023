@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.models import Listing
 from app.schemas.listing_schema import ListingCreate, ListingWithSkills
 
+
 def get_staff_name(first_name, last_name):
     return f"{first_name}, {last_name}"
 
@@ -12,7 +13,7 @@ def get_staff_name(first_name, last_name):
 class ListingService:
     def __init__(self, db: Session):
         self.db = db
-        
+
     def check_if_listing_is_active(self, listing_id):
         listing = self.db.get(Listing, listing_id)
         if listing.expiry_date >= datetime.utcnow():
