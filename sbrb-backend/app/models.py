@@ -54,14 +54,35 @@ class AccessControl(Base):
     staff = relationship("Staff", back_populates="access_control")
 
 
+class Country(Base):
+    __tablename__ = "country"
+    country_name = Column("country_name", String(50), primary_key=True)
+    staff = relationship("Staff", back_populates="country")
+    listing = relationship("Listing", back_populates="country")
+
+
+class Department(Base):
+    __tablename__ = "department"
+    department_name = Column("department_name", String(50), primary_key=True)
+    staff = relationship("Staff", back_populates="department")
+    listing = relationship("Listing", back_populates="department")
+
+
 class Staff(Base):
     __tablename__ = "staff"
     staff_id = Column("staff_id", Integer, primary_key=True)
     staff_fname = Column("staff_fname", String(50), nullable=False)
     staff_lname = Column("staff_lname", String(50), nullable=False)
-    dept = Column("dept", String(50), nullable=False)
-    country = Column("country", String(50), nullable=False)
     email = Column("email", String(50), nullable=False)
+    department_name = Column(
+        "department_name",
+        String(50),
+        ForeignKey("department.department_name"),
+        nullable=False,
+    )
+    country_name = Column(
+        "country_name", String(50), ForeignKey("country.country_name"), nullable=False
+    )
     role_name = Column("rname", ForeignKey("role.rname"), nullable=True)
     access_id = Column(
         "ac_id", Integer, ForeignKey("access_control.ac_id"), nullable=False
@@ -69,6 +90,9 @@ class Staff(Base):
 
     role = relationship("Role", back_populates="staff")
     access_control = relationship("AccessControl", back_populates="staff")
+    country = relationship("Country", back_populates="staff")
+    department = relationship("Department", back_populates="staff")
+
     applications = relationship("Application", back_populates="submitted_by")
     skills = relationship("Skill", secondary="staff_skill", back_populates="staff")
 
@@ -95,18 +119,29 @@ class Listing(Base):
     role_name = Column("rname", ForeignKey("role.rname"), nullable=False)
     listing_title = Column("title", String(50))
     listing_desc = Column("description", String(50))
-    dept = Column("dept", String(50), nullable=False)
-    country = Column("country", String(50), nullable=False)
+
+    country_name = Column(
+        "country_name", String(50), ForeignKey("country.country_name"), nullable=False
+    )
+    department_name = Column(
+        "department_name",
+        String(50),
+        ForeignKey("department.department_name"),
+        nullable=False,
+    )
+
+    country = relationship("Country", back_populates="listing")
+    department = relationship("Department", back_populates="listing")
     reporting_manager_id = Column(
         "reporting_manager_id", Integer, ForeignKey("staff.staff_id"), nullable=False
     )
-    created_date = Column("created_date", DateTime, default=datetime.datetime.utcnow)
-    expiry_date = Column("expiry_date", DateTime)
     created_by_id = Column(
-        "created_by",
+        "created_by_id",
         Integer,
         ForeignKey("staff.staff_id", ondelete="CASCADE", onupdate="CASCADE"),
     )
+    created_date = Column("created_date", DateTime, default=datetime.datetime.utcnow)
+    expiry_date = Column("expiry_date", DateTime)
 
     role = relationship("Role", back_populates="listing")
     reporting_manager = relationship("Staff", foreign_keys=[reporting_manager_id])

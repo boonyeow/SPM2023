@@ -11,5 +11,5 @@ def test_read_main():
     assert res.json() == {"message": "Hello World"}
 
 
-# def test_hello(db_session):
-#     assert 100 == 100
+def test_hello(db_session):
+    assert 100 == 100
