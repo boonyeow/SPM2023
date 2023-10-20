@@ -15,8 +15,6 @@ const Home = () => {
   const [isAllUnchecked, setIsAllUnchecked] = useState(true);
 
   const handleFilterChange = (checkedValues) => {
-    console.log(checkedValues);
-
     let filteredListings = [...roleListings];
     const isAllUnchecked = Object.values(checkedValues).every(
       (values) => values.length === 0
@@ -30,10 +28,14 @@ const Home = () => {
           checkedValues.departments.includes(listing.dept)
         );
       }
+      if (checkedValues.countries.length > 0) {
+        filteredListings = filteredListings.filter((listing) =>
+          checkedValues.countries.includes(listing.country)
+        );
+      }
     } else {
       filteredListings = [];
     }
-
     setFilteredRoleListings(filteredListings);
   };
 
