@@ -1,6 +1,9 @@
 import InfoCard from "../components/InfoCard";
 import RoleCard from "../components/RoleCard";
+import axios from "axios";
 import { formatDateTime } from "../service";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 import {
   Box,
@@ -10,10 +13,6 @@ import {
   Flex,
   Spacer,
 } from "@chakra-ui/react";
-import axios from "axios";
-
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 
 const RoleView = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
