@@ -15,8 +15,6 @@ const Home = () => {
   const [isAllUnchecked, setIsAllUnchecked] = useState(true);
 
   const handleFilterChange = (checkedValues) => {
-    console.log(checkedValues);
-
     let filteredListings = [...roleListings];
     const isAllUnchecked = Object.values(checkedValues).every(
       (values) => values.length === 0
@@ -33,7 +31,7 @@ const Home = () => {
 
       if (checkedValues.skills.length > 0) {
         filteredListings = filteredListings.filter((listing) =>
-        checkedValues.skills.every((skill) => listing.skills.includes(skill))
+          checkedValues.skills.every((skill) => listing.skills.includes(skill))
         );
       }
     } else {
