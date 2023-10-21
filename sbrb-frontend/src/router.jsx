@@ -1,4 +1,5 @@
 import CreateJobListing from "./pages/CreateJobListing";
+import EditJobListing from "./pages/EditRoleListing";
 import Home from "./pages/Home";
 import JobApplicants from "./pages/JobApplicants";
 import Login from "./pages/Login";
@@ -17,6 +18,7 @@ const router = createBrowserRouter(
       <Route index element={<Login />} />
       <Route path="listings" element={<Home />} />
       <Route path="listings/create" element={<CreateJobListing />} />
+      <Route path="listings/:id/edit" element={<EditJobListing />} />
       <Route path="listings/:id" element={<RoleView />} />
       <Route path="/listings/:id/applicants" element={<JobApplicants />} />
       <Route path="profile/:id" element={<Profile />} />

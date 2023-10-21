@@ -62,7 +62,6 @@ const Home = () => {
             {/* display all jobs */}
             <Box w="90%" p={20}>
               <Grid
-                h="100vh"
                 templateRows="repeat(2, 1fr)"
                 templateColumns="repeat(5, 1fr)"
                 gap={4}>

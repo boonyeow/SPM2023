@@ -1,8 +1,9 @@
+import { EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useLoginContext } from "../hooks/useLoginContext";
 
-import { Badge, Box, Button, Heading, Text } from "@chakra-ui/react";
+import { Badge, Box, Button, Heading, Stack, Text } from "@chakra-ui/react";
 
 function RoleListingCard({
   listing_title,
@@ -39,16 +40,28 @@ function RoleListingCard({
       borderWidth="1px"
       {...rest}
       position="relative"
-      borderRadius="lg">
+      borderRadius="lg"
+      display="block"
+      bgColor="white"
+      padding="32px 24px"
+      margin="12px"
+      textDecoration="none"
+      overflow="hidden"
+      _hover={{
+        transition: "all 0.2s ease-out",
+        boxShadow: "0px 4px 8px rgba(38, 38, 38, 0.2)",
+        top: "-4px",
+        borderWidth: "1px",
+      }}>
       {loginInfo.role === "HR" && (
-        <Link to={`/listings/${listing_id}/applications`}>
-          <Box
-            position="absolute"
-            top={2}
-            right={2}
-            _hover={{ bg: "blue.700" }}
-            _active={{ bg: "blue.600" }}
-            borderRadius="lg">
+        <Stack
+          direction={{ base: "column", sm: "row" }}
+          spacing={2}
+          position="absolute"
+          top={2}
+          right={2}
+          borderRadius="lg">
+          <Link to={`/listings/${listing_id}/applicants`}>
             <Button
               id="viewJobButton"
               colorScheme="blue"
@@ -56,10 +69,17 @@ function RoleListingCard({
               _active={{ bg: "blue.600" }}>
               View Job Applicants
             </Button>
-          </Box>
-        </Link>
+          </Link>
+          <Link to={`/listings/${listing_id}/edit`}>
+            <Button
+              colorScheme="teal"
+              _hover={{ bg: "teal.700" }}
+              _active={{ bg: "teal.600" }}>
+              <EditIcon /> Edit Role Listing
+            </Button>
+          </Link>
+        </Stack>
       )}
-
       <Link to={`/listings/${listing_id}`}>
         <Heading fontSize="xl">{listing_title}</Heading>
         <Text mt={2}>Job Title: {role_name}</Text>
