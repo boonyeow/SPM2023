@@ -1,10 +1,9 @@
 from datetime import datetime
 
-from sqlalchemy.orm import Session
-
 from app.models import Application
 from app.schemas.application_schema import ApplicationWithStaffSkills
 from app.schemas.staff_schema import StaffWithSkills
+from sqlalchemy.orm import Session
 
 
 class ApplicationService:
@@ -38,8 +37,8 @@ class ApplicationService:
                 staff_id=staff.staff_id,
                 staff_fname=staff.staff_fname,
                 staff_lname=staff.staff_lname,
-                dept=staff.dept,
-                country=staff.country,
+                dept=staff.department_name,
+                country=staff.country_name,
                 email=staff.email,
                 skills=skills,
             )

@@ -63,8 +63,8 @@ class ListingService:
                 role_name=listing.role_name,
                 listing_title=listing.listing_title,
                 listing_desc=listing.listing_desc,
-                dept=listing.dept,
-                country=listing.country,
+                dept=listing.department_name,
+                country=listing.country_name,
                 reporting_manager_id=listing.reporting_manager_id,
                 reporting_manager_name=get_staff_name(
                     reporting_manager.staff_fname, reporting_manager.staff_lname
@@ -91,8 +91,8 @@ class ListingService:
             role_name=listing.role_name,
             listing_title=listing.listing_title,
             listing_desc=listing.listing_desc,
-            dept=listing.dept,
-            country=listing.country,
+            dept=listing.department_name,
+            country=listing.country_name,
             reporting_manager_id=listing.reporting_manager_id,
             reporting_manager_name=get_staff_name(
                 reporting_manager.staff_fname, reporting_manager.staff_lname
