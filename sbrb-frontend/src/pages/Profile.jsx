@@ -1,4 +1,6 @@
 import { Box } from "@chakra-ui/react";
+import axios from "axios";
+import { useState } from "react";
 import {
   ProfileHeadCard,
   ProfileJobCard,
@@ -6,6 +8,18 @@ import {
 } from "../components/Profile/Cards.jsx";
 
 const Profile = () => {
+  const [staffProfile, setStaffProfile] = useState({});
+  console.log(staffProfile);
+
+  axios
+    .get(`http://localhost:8000/staff/150245`)
+    .then((response) => {
+      setStaffProfile(response.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching staff profile:", error);
+    });
+
   return (
     <>
       <Box py="8" width="57%" mx="auto">

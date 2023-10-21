@@ -1,6 +1,9 @@
 import InfoCard from "../components/InfoCard";
 import RoleCard from "../components/RoleCard";
+import axios from "axios";
 import { formatDateTime } from "../service";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 import {
   Box,
@@ -10,72 +13,27 @@ import {
   Flex,
   Spacer,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-
-// import Swal from "sweetalert2";
-// import axios from "axios";
-
-// import { useParams } from "react-router-dom";
-// import { useQuery } from "@tanstack/react-query";
 
 const RoleView = () => {
-  // const apiUrl = import.meta.env.VITE_API_URL;
-  // const { id } = useParams();
-
-  const [role, setRole] = useState({
-    listing_title: "",
-    listing_desc: "",
-    skills: [],
-    country: "",
-    dept: "",
-    created_by_name: "",
-    created_date: "",
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const { id } = useParams();
+  const { isLoading, data: role } = useQuery({
+    queryKey: ["todos"],
+    queryFn: async () => {
+      const res = await axios.get(`${apiUrl}/listings/${id}`);
+      return res.data;
+    },
+    initialData: {
+      listing_title: "",
+      listing_desc: "",
+      skills: [],
+      country: "",
+      dept: "",
+      created_by_name: "",
+      created_date: "",
+    },
+    retry: 3,
   });
-
-  useEffect(() => {
-    setRole({
-      listing_title: "Mock Title",
-      listing_desc: "Mock Description",
-      skills: ["Skill1", "Skill2", "Skill3"],
-      country: "Singapore",
-      dept: "Human Resources",
-      created_by_name: "Ah Gau",
-      created_date: "03/10/2023",
-    });
-  }, []);
-
-  // const {
-  //   isLoading,
-  //   isError,
-  //   data: roleData,
-  // } = useQuery({
-  //   queryKey: ["todos"],
-  //   queryFn: async () => {
-  //     const res = await axios.get(`${apiUrl}/listing/${id}`);
-  //     return res.data;
-  //   },
-  //   retry: 3,
-  // });
-
-  // useEffect(() => {
-  //   if (roleData) {
-  //     setRole(roleData);
-  //   }
-  // }, [roleData]);
-
-  // useEffect(() => {
-  //   if (isError) {
-  //     Swal.fire({
-  //       title: "Error!",
-  //       text: "Redirecting to home page...",
-  //       icon: "error",
-  //     });
-
-  //     setTimeout(() => {
-  //       window.location.href = "/";
-  //     }, 2000);
-  //   }
-  // }, [isError]);
 
   return (
     <>
@@ -101,10 +59,6 @@ const RoleView = () => {
                   <BreadcrumbLink href="/listings">Home</BreadcrumbLink>
                 </BreadcrumbItem>
 
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="#">Role Listings</BreadcrumbLink>
-                </BreadcrumbItem>
-
                 <BreadcrumbItem isCurrentPage>
                   <BreadcrumbLink href="#">
                     {role.listing_title || "..."}
@@ -122,7 +76,7 @@ const RoleView = () => {
               dateCreated={
                 role.created_date == "" ? "" : formatDateTime(role.created_date)
               }
-              // isLoading={isLoading}
+              isLoading={isLoading}
             />
           </Box>
 

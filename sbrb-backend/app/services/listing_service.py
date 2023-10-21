@@ -25,8 +25,8 @@ class ListingService:
             role_name=body.role_name,
             listing_title=body.listing_title,
             listing_desc=body.listing_desc,
-            department_name=body.dept,
-            country_name=body.country,
+            country_name=body.country_name,
+            department_name=body.department_name,
             reporting_manager_id=body.reporting_manager_id,
             created_by_id=body.created_by_id,
             expiry_date=body.expiry_date,
@@ -63,8 +63,8 @@ class ListingService:
                 role_name=listing.role_name,
                 listing_title=listing.listing_title,
                 listing_desc=listing.listing_desc,
-                dept=listing.dept,
-                country=listing.country,
+                country_name=listing.country_name,
+                department_name=listing.department_name,
                 reporting_manager_id=listing.reporting_manager_id,
                 reporting_manager_name=get_staff_name(
                     reporting_manager.staff_fname, reporting_manager.staff_lname
@@ -91,8 +91,8 @@ class ListingService:
             role_name=listing.role_name,
             listing_title=listing.listing_title,
             listing_desc=listing.listing_desc,
-            dept=listing.dept,
-            country=listing.country,
+            country_name=listing.country_name,
+            department_name=listing.department_name,
             reporting_manager_id=listing.reporting_manager_id,
             reporting_manager_name=get_staff_name(
                 reporting_manager.staff_fname, reporting_manager.staff_lname
