@@ -30,6 +30,12 @@ const Home = () => {
           checkedValues.departments.includes(listing.dept)
         );
       }
+
+      if (checkedValues.skills.length > 0) {
+        filteredListings = filteredListings.filter((listing) =>
+        checkedValues.skills.every((skill) => listing.skills.includes(skill))
+        );
+      }
     } else {
       filteredListings = [];
     }

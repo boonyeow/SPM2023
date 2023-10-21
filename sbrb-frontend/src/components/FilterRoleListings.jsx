@@ -21,8 +21,8 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
   const [skills, setSkills] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({
     departments: [],
-    // countries: [],
-    // skills: [],
+
+    skills: [],
   });
 
   const filterCategories = [
@@ -38,11 +38,11 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
     {
       title: "Skills",
       values: skills,
+      key: "skills",
     },
   ];
 
   const handleCheckboxChange = (categoryKey, selectedValues) => {
-    console.log(categoryKey, selectedValues);
     setSelectedFilters({
       ...selectedFilters,
       [categoryKey]: selectedValues,
