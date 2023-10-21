@@ -10,8 +10,8 @@ class Listing(BaseModel):
     role_name: str
     listing_title: str
     listing_desc: str
-    dept: str
-    country: str
+    country_name: str
+    department_name: str
     reporting_manager_id: int
     created_by_id: int
     created_date: Annotated[datetime, Body()]
@@ -28,8 +28,12 @@ class ListingCreate(BaseModel):
     role_name: str
     listing_title: str
     listing_desc: str
-    dept: str
-    country: str
+    country_name: str
+    department_name: str
     reporting_manager_id: int
     created_by_id: int
     expiry_date: Annotated[datetime, Body()]
+
+
+class ListingOverview(BaseModel):
+    

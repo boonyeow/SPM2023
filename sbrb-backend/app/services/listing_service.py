@@ -1,9 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy.orm import Session
-
 from app.models import Listing
 from app.schemas.listing_schema import ListingCreate, ListingWithSkills
+from sqlalchemy.orm import Session
 
 
 def get_staff_name(first_name, last_name):
@@ -25,8 +24,8 @@ class ListingService:
             role_name=body.role_name,
             listing_title=body.listing_title,
             listing_desc=body.listing_desc,
-            department_name=body.dept,
-            country_name=body.country,
+            country_name=body.country_name,
+            department_name=body.department_name,
             reporting_manager_id=body.reporting_manager_id,
             created_by_id=body.created_by_id,
             expiry_date=body.expiry_date,
@@ -63,8 +62,8 @@ class ListingService:
                 role_name=listing.role_name,
                 listing_title=listing.listing_title,
                 listing_desc=listing.listing_desc,
-                dept=listing.department_name,
-                country=listing.country_name,
+                country_name=listing.country_name,
+                department_name=listing.department_name,
                 reporting_manager_id=listing.reporting_manager_id,
                 reporting_manager_name=get_staff_name(
                     reporting_manager.staff_fname, reporting_manager.staff_lname
@@ -91,8 +90,8 @@ class ListingService:
             role_name=listing.role_name,
             listing_title=listing.listing_title,
             listing_desc=listing.listing_desc,
-            dept=listing.department_name,
-            country=listing.country_name,
+            country_name=listing.country_name,
+            department_name=listing.department_name,
             reporting_manager_id=listing.reporting_manager_id,
             reporting_manager_name=get_staff_name(
                 reporting_manager.staff_fname, reporting_manager.staff_lname

@@ -55,9 +55,4 @@ def get_applicants_for_listing(id: int, db: Session = Depends(get_db)):
 @router.post("/listing/create", status_code=200, response_model=Listing)
 def create_listing(body: ListingCreate, db: Session = Depends(get_db)):
     listing_service = ListingService(db)
-    new_listing = listing_service.create_listing(body)
-    return Listing(
-        **new_listing.__dict__,
-        country=new_listing.country_name,
-        dept=new_listing.department_name
-    )
+    return listing_service.create_listing(body)
