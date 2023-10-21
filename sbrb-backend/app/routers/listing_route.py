@@ -1,13 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, Query
-from sqlalchemy.orm import Session
-
 from app.database import get_db
 from app.schemas.application_schema import ApplicationWithStaffSkills
 from app.schemas.listing_schema import Listing, ListingCreate, ListingWithSkills
 from app.services.application_service import ApplicationService
 from app.services.listing_service import ListingService
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 
@@ -57,4 +56,8 @@ def get_applicants_for_listing(id: int, db: Session = Depends(get_db)):
 def create_listing(body: ListingCreate, db: Session = Depends(get_db)):
     listing_service = ListingService(db)
     new_listing = listing_service.create_listing(body)
-    return new_listing
+    return Listing(
+        **new_listing.__dict__,
+        country=new_listing.country_name,
+        dept=new_listing.department_name
+    )
