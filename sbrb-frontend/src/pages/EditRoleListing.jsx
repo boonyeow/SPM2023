@@ -1,6 +1,8 @@
 import { DatePicker } from "antd";
 import Layout from "../components/Layout";
 import axios from "axios";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import {
   Box,
@@ -21,6 +23,24 @@ import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 
 function EditJobListing() {
+  const { id } = useParams();
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    axios
+      .get(`${apiUrl}/listings/${id}`)
+      .then((response) => {
+        const roleListingData = response.data;
+        const newExpiryDate = roleListingData.expiry_date.substring(0, 10);
+        const updatedRoleListingData = { ...roleListingData };
+        updatedRoleListingData["expiry_date"] = newExpiryDate;
+        formik.setValues(updatedRoleListingData);
+      })
+      .catch((error) => {
+        console.error("Error fetching listing data:", error);
+      });
+  }, [apiUrl, id]);
+
   const countries = [
     "Malaysia",
     "Hong Kong",
@@ -66,43 +86,32 @@ function EditJobListing() {
     "Support Engineer",
   ];
 
-  const handleCreateListing = () => {
-    console.log();
-    axios
-      .post("http://localhost:8000/listing/create", {
-        role_name: formik.values.role_name,
-        listing_title: formik.values.listing_title,
-        listing_desc: formik.values.listing_desc,
-        dept: formik.values.dept,
-        country: formik.values.country,
-        reporting_manager_id: formik.values.reporting_manager_id,
-        created_by_id: formik.values.created_by_id,
-        expiry_date: formik.values.expiry_date.toISOString(),
-      })
-      .then((res) => console.log("res", res));
-  };
+  const validationSchema = Yup.object({
+    role_name: Yup.string().required("Role Name is required"),
+    listing_title: Yup.string().required("Listing Title is required"),
+    listing_desc: Yup.string().required("Listing Description is required"),
+    dept: Yup.string().required("Department is required"),
+    country: Yup.string().required("Country is required"),
+    reporting_manager_id: Yup.string().required(
+      "Reporting Manager ID is required"
+    ),
+    expiry_date: Yup.date().required("Expiry Date is required"),
+  });
 
+  const handleUpdateListing = (values) => {
+    axios
+      .post(`${apiUrl}/listings/${id}`, values)
+      .then((res) => {
+        console.log("Listing updated successfully:", res);
+      })
+      .catch((error) => {
+        console.error("Error updating listing:", error);
+      });
+  };
   const formik = useFormik({
-    initialValues: {
-      role_name: "Sales Director",
-      listing_title: "[NEW] Sales Director",
-      listing_desc: "Hello, this is a sample description",
-      dept: "Sales",
-      country: "Singapore",
-      reporting_manager_id: "140900",
-      created_by_id: "210020",
-      expiry_date: null,
-    },
-    validationSchema: Yup.object({
-      role_name: Yup.string().required("Required"),
-      listing_title: Yup.string().required("Required"),
-      listing_desc: Yup.string().required("Required"),
-      dept: Yup.string().required("Required"),
-      country: Yup.string().required("Required"),
-      reporting_manager_id: Yup.string().required("Required"),
-      expiry_date: Yup.date().required("Required"),
-    }),
-    onSubmit: handleCreateListing,
+    initialValues: {},
+    validationSchema: validationSchema,
+    onSubmit: handleUpdateListing,
   });
 
   return (
