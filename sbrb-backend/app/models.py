@@ -1,10 +1,10 @@
 import datetime
 from enum import Enum as PyEnum
 
-from app.database import Base
-from sqlalchemy import (Column, DateTime, Enum, ForeignKey, Integer, String,
-                        Text)
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
+
+from app.database import Base
 
 
 class Role(Base):
@@ -57,7 +57,7 @@ class AccessControl(Base):
 class Country(Base):
     __tablename__ = "country"
     country_name = Column("country_name", String(50), primary_key=True)
-    
+
     staff = relationship("Staff", back_populates="country")
     listing = relationship("Listing", back_populates="country")
 
@@ -65,7 +65,7 @@ class Country(Base):
 class Department(Base):
     __tablename__ = "department"
     department_name = Column("department_name", String(50), primary_key=True)
-    
+
     staff = relationship("Staff", back_populates="department")
     listing = relationship("Listing", back_populates="department")
 

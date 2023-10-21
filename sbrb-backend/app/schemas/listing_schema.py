@@ -33,7 +33,3 @@ class ListingCreate(BaseModel):
     reporting_manager_id: int
     created_by_id: int
     expiry_date: Annotated[datetime, Body()]
-
-
-class ListingOverview(BaseModel):
-    

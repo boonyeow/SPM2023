@@ -1,8 +1,9 @@
 from datetime import datetime
 
+from sqlalchemy.orm import Session
+
 from app.models import Listing
 from app.schemas.listing_schema import ListingCreate, ListingWithSkills
-from sqlalchemy.orm import Session
 
 
 def get_staff_name(first_name, last_name):

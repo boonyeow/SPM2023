@@ -1,5 +1,7 @@
-from typing import List
+from datetime import datetime
+from typing import Annotated, List
 
+from fastapi import Body
 from pydantic import BaseModel
 
 
@@ -16,5 +18,14 @@ class StaffWithSkills(Staff):
     skills: List[str]
 
 
+class StaffApplicationOverview(BaseModel):
+    listing_id: int
+    application_id: int
+    submission_date: Annotated[datetime, Body()]
+    role_name: str
+    country_name: str
+    department_name: str
+
+
 class StaffProfile(StaffWithSkills):
-    applied_listings: List[int]
+    applied_listings: List[StaffApplicationOverview]
