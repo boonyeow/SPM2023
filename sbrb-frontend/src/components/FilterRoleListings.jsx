@@ -22,8 +22,7 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
   const [skills, setSkills] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({
     departments: [],
-    // countries: [],
-    // skills: [],
+    countries: [],
   });
 
   const filterCategories = [
@@ -33,8 +32,9 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
       key: "departments",
     },
     {
-      title: "Country",
+      title: "Location",
       values: countries,
+      key: "countries",
     },
     {
       title: "Skills",
@@ -63,6 +63,8 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
   const handleFilterButtonClick = () => {
     const checkedValues = getCheckedValues();
     onFilterChange(checkedValues);
+
+    console.log(checkedValues);
   };
 
   const handleResetFiltersClick = () => {

@@ -21,7 +21,7 @@ import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 const Links = [
   { name: "Home", to: "/listings" },
   { name: "Job Applicants", to: "/listings/:id/applications" },
-  { name: "Create Job Listing", to: "/listing/create" },
+  { name: "Create Job Listing", to: "/listings/create" },
   { name: "Skills Matching", to: "/skills-matching" },
   { name: "Edit Profile", to: "/edit-profile" },
 ];
