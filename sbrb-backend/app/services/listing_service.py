@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.models import Listing
-from app.schemas.listing_schema import ListingWithSkills
+from app.schemas.listing_schema import ListingCreate, ListingWithSkills
 
 
 def get_staff_name(first_name, last_name):
@@ -13,12 +13,29 @@ def get_staff_name(first_name, last_name):
 class ListingService:
     def __init__(self, db: Session):
         self.db = db
-        
+
     def check_if_listing_is_active(self, listing_id):
         listing = self.db.get(Listing, listing_id)
         if listing.expiry_date >= datetime.utcnow():
             return True
         return False
+
+    def create_listing(self, body: ListingCreate):
+        new_listing = Listing(
+            role_name=body.role_name,
+            listing_title=body.listing_title,
+            listing_desc=body.listing_desc,
+            country_name=body.country_name,
+            department_name=body.department_name,
+            reporting_manager_id=body.reporting_manager_id,
+            created_by_id=body.created_by_id,
+            expiry_date=body.expiry_date,
+        )
+
+        self.db.add(new_listing)
+        self.db.commit()
+        self.db.refresh(new_listing)
+        return new_listing
 
     def get_listings_with_skills(self, active=None):
         listings_query = self.db.query(Listing)
@@ -46,8 +63,8 @@ class ListingService:
                 role_name=listing.role_name,
                 listing_title=listing.listing_title,
                 listing_desc=listing.listing_desc,
-                dept=listing.dept,
-                country=listing.country,
+                country_name=listing.country_name,
+                department_name=listing.department_name,
                 reporting_manager_id=listing.reporting_manager_id,
                 reporting_manager_name=get_staff_name(
                     reporting_manager.staff_fname, reporting_manager.staff_lname
@@ -74,8 +91,8 @@ class ListingService:
             role_name=listing.role_name,
             listing_title=listing.listing_title,
             listing_desc=listing.listing_desc,
-            dept=listing.dept,
-            country=listing.country,
+            country_name=listing.country_name,
+            department_name=listing.department_name,
             reporting_manager_id=listing.reporting_manager_id,
             reporting_manager_name=get_staff_name(
                 reporting_manager.staff_fname, reporting_manager.staff_lname

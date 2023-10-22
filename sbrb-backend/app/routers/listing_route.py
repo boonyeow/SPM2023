@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.schemas.application_schema import ApplicationWithStaffSkills
-from app.schemas.listing_schema import ListingWithSkills
+from app.schemas.listing_schema import Listing, ListingCreate, ListingWithSkills
 from app.services.application_service import ApplicationService
 from app.services.listing_service import ListingService
 
@@ -51,3 +51,9 @@ def get_listing_by_id(
 def get_applicants_for_listing(id: int, db: Session = Depends(get_db)):
     application_service = ApplicationService(db)
     return application_service.get_applicants_for_listing(id)
+
+
+@router.post("/listing/create", status_code=200, response_model=Listing)
+def create_listing(body: ListingCreate, db: Session = Depends(get_db)):
+    listing_service = ListingService(db)
+    return listing_service.create_listing(body)

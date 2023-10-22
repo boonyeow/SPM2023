@@ -1,9 +1,10 @@
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.schemas.application_schema import Application, ApplyListing
 from app.services.application_service import ApplicationService
 from app.services.listing_service import ListingService
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
 
 router = APIRouter()
 

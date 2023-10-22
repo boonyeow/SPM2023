@@ -38,8 +38,8 @@ class ApplicationService:
                 staff_id=staff.staff_id,
                 staff_fname=staff.staff_fname,
                 staff_lname=staff.staff_lname,
-                dept=staff.dept,
-                country=staff.country,
+                country_name=staff.country_name,
+                department_name=staff.department_name,
                 email=staff.email,
                 skills=skills,
             )
