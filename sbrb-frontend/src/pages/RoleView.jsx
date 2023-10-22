@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 import RoleCard from "../components/RoleCard";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { formatDateTime } from "../service";
+import { formatDateTime, getRoleSkillMatch } from "../service";
 import { useLoginContext } from "../hooks/useLoginContext";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -34,14 +34,20 @@ const RoleView = () => {
     expiry_date: "",
     applied: true,
   });
+  const [percentageMatched, setPercentageMatched] = useState(0);
 
-  const { isLoading, isError } = useQuery({
+  const { isLoading, isError, data } = useQuery({
     queryKey: ["role listing"],
     queryFn: async () => {
       const res = await axios.get(
         `${apiUrl}/listings/${id}?user_id=${loginInfo.userId}`
       );
-      // console.log(res.data);
+      const profileRes = await axios.get(`${apiUrl}/staff/${loginInfo.userId}`);
+      const percentMatch = getRoleSkillMatch(
+        profileRes.data.skills,
+        res.data.skills
+      );
+      setPercentageMatched(percentMatch);
       setRole(res.data);
       return res.data;
     },
@@ -60,7 +66,6 @@ const RoleView = () => {
         text: "Redirecting to home page...",
         icon: "error",
       });
-
       setTimeout(() => {
         navigate("/listings");
       }, 2000);
@@ -102,8 +107,8 @@ const RoleView = () => {
                 title={role.listing_title}
                 description={role.listing_desc}
                 skillsRequired={role.skills}
-                country={role.country}
-                department={role.dept}
+                country={role.country_name}
+                department={role.department_name}
                 creator={role.created_by_name}
                 dateCreated={
                   role.created_date == ""
@@ -116,7 +121,7 @@ const RoleView = () => {
 
             <Box w="27%" ml={10}>
               <InfoCard
-                progress={35}
+                progress={percentageMatched}
                 userId={loginInfo.userId}
                 listingId={id}
                 expiryDate={role.expiry_date}

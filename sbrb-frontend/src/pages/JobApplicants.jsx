@@ -111,8 +111,8 @@ const JobApplicants = () => {
       columnHelper.accessor("email", {
         header: () => "Email",
       }),
-      columnHelper.accessor("currentRole", {
-        header: "Current Role",
+      columnHelper.accessor("department", {
+        header: "Department",
       }),
       columnHelper.accessor("country", {
         header: () => "Country",
@@ -157,8 +157,8 @@ const JobApplicants = () => {
           firstName: applicant.staff.staff_fname,
           lastName: applicant.staff.staff_lname,
           email: applicant.staff.email,
-          currentRole: applicant.staff.dept,
-          country: applicant.staff.country,
+          department: applicant.staff.department_name,
+          country: applicant.staff.country_name,
           matchedPercentage: `${percentage.toFixed(2)}%`,
           skillsMatched:
             matchedSkills.length == 0 ? "Nil" : matchedSkills.join(", "),

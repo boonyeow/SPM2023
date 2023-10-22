@@ -46,12 +46,12 @@ const InfoCard = ({ progress, listingId, userId, expiryDate, hasApplied }) => {
         listing_id: listingId,
         user_id: userId,
       });
-      // console.log(res);
       Swal.fire(
         "Applied!",
         "You have successfully applied for the role",
         "success"
       );
+      location.reload();
     } catch (e) {
       Swal.fire({
         title: "Error!",
