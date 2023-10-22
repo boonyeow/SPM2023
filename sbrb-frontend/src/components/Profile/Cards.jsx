@@ -8,7 +8,7 @@ import {
   Flex,
   HStack,
   Image,
-  LinkOverlay,
+  // LinkOverlay,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -18,7 +18,7 @@ import {
   ModalOverlay,
   Skeleton,
   SkeletonText,
-  Spacer,
+  // Spacer,
   StackDivider,
   Text,
   VStack,
@@ -145,10 +145,10 @@ const ProfileSkillCard = ({ isLoading, skills }) => {
         <CardHeader p={0} fontWeight="semibold" mb={5}>
           <Flex alignItems="center">
             <Text fontSize="xl">Skills</Text>
-            <Spacer />
+            {/* <Spacer />
             <Button>
               <LinkOverlay href="/profile">Add Skills</LinkOverlay>
-            </Button>
+            </Button> */}
           </Flex>
         </CardHeader>
         <CardBody p={0}>
