@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
+import Layout from "../components/Layout.jsx";
 import axios from "axios";
 import { useState } from "react";
-import Layout from "../components/Layout.jsx";
 import {
   ProfileHeadCard,
   ProfileJobCard,

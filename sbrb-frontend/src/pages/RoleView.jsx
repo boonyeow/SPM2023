@@ -3,7 +3,6 @@ import Layout from "../components/Layout";
 import RoleCard from "../components/RoleCard";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { formatDateTime, getRoleSkillMatch } from "../service";
 import { useLoginContext } from "../hooks/useLoginContext";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -15,6 +14,7 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { formatDateTime, getRoleSkillMatch } from "../service";
 import { useEffect, useState } from "react";
 
 const RoleView = () => {
@@ -36,7 +36,7 @@ const RoleView = () => {
   });
   const [percentageMatched, setPercentageMatched] = useState(0);
 
-  const { isLoading, isError, data } = useQuery({
+  const { isLoading, isError } = useQuery({
     queryKey: ["role listing"],
     queryFn: async () => {
       const res = await axios.get(
