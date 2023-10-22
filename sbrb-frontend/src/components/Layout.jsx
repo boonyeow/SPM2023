@@ -1,9 +1,9 @@
-import Navbar from "./Navbar";
+import NavBar from "./NavBar";
 
 const Layout = ({ children }) => {
   return (
     <div>
-      <Navbar />
+      <NavBar />
       <main>{children}</main>
     </div>
   );

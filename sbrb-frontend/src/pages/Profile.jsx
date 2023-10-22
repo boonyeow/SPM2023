@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import Layout from "../components/Layout.jsx";
 import axios from "axios";
 import { useState } from "react";
 import {
@@ -22,17 +23,19 @@ const Profile = () => {
 
   return (
     <>
-      <Box py="8" width="57%" mx="auto">
-        <Box mb={8}>
-          <ProfileHeadCard />
+      <Layout>
+        <Box py="8" width="57%" mx="auto">
+          <Box mb={8}>
+            <ProfileHeadCard />
+          </Box>
+          <Box mb={8}>
+            <ProfileJobCard />
+          </Box>
+          <Box>
+            <ProfileSkillCard />
+          </Box>
         </Box>
-        <Box mb={8}>
-          <ProfileJobCard />
-        </Box>
-        <Box>
-          <ProfileSkillCard />
-        </Box>
-      </Box>
+      </Layout>
     </>
   );
 };

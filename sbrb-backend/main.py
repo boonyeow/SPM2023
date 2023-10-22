@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import init_engine
 from app.routers import application_route, listing_route, staff_route
 
+from fastapi.middleware.cors import CORSMiddleware
+
 api_router = APIRouter()
 
 
