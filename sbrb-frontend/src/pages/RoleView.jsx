@@ -47,7 +47,7 @@ const RoleView = () => {
         profileRes.data.skills,
         res.data.skills
       );
-      setPercentageMatched(percentMatch);
+      setPercentageMatched(percentMatch.toFixed(2));
       setRole(res.data);
       return res.data;
     },

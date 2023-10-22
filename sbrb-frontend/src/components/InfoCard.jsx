@@ -51,7 +51,9 @@ const InfoCard = ({ progress, listingId, userId, expiryDate, hasApplied }) => {
         "You have successfully applied for the role",
         "success"
       );
-      location.reload();
+      setTimeout(() => {
+        location.reload();
+      }, 1500);
     } catch (e) {
       Swal.fire({
         title: "Error!",
