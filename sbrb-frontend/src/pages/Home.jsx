@@ -34,10 +34,15 @@ const Home = () => {
           checkedValues.skills.every((skill) => listing.skills.includes(skill))
         );
       }
+
+      if (checkedValues.countries.length > 0) {
+        filteredListings = filteredListings.filter((listing) =>
+          checkedValues.countries.includes(listing.country)
+        );
+      }
     } else {
       filteredListings = [];
     }
-
     setFilteredRoleListings(filteredListings);
   };
 

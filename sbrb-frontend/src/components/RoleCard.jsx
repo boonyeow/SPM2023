@@ -1,6 +1,9 @@
+import { useLoginContext } from "../hooks/useLoginContext";
+import { useNavigate } from "react-router-dom";
 import {
   Badge,
   Box,
+  Button,
   Card,
   CardBody,
   CardHeader,
@@ -8,11 +11,13 @@ import {
   Heading,
   Skeleton,
   SkeletonText,
+  Spacer,
   Stack,
   Text,
 } from "@chakra-ui/react";
 
 const RoleCard = ({
+  id,
   title,
   description,
   skillsRequired,
@@ -22,6 +27,8 @@ const RoleCard = ({
   dateCreated,
   isLoading,
 }) => {
+  const navigate = useNavigate();
+  const { loginInfo } = useLoginContext();
   return (
     <Card
       py={2}
@@ -37,12 +44,26 @@ const RoleCard = ({
           </Stack>
         ) : (
           <>
-            <Heading size="lg">{title}</Heading>
-            <Flex mt={3} fontWeight="semibold">
-              <Text as="sub" mr={3}>
-                Created: {creator}
-              </Text>
-              <Text as="sub">Last Updated: {dateCreated}</Text>
+            <Flex alignItems="center">
+              <Box>
+                <Heading size="lg">{title}</Heading>
+                <Flex mt={1} fontWeight="semibold" fontSize="xs">
+                  <Text mr={3}>Created: {creator}</Text>
+                  <Text>Last Updated: {dateCreated}</Text>
+                </Flex>
+              </Box>
+              <Spacer />
+              <Box>
+                {loginInfo.role != "User" && (
+                  <Button
+                    colorScheme="blue"
+                    onClick={() => {
+                      navigate(`/listings/${id}/applicants`);
+                    }}>
+                    View Applicants
+                  </Button>
+                )}
+              </Box>
             </Flex>
           </>
         )}

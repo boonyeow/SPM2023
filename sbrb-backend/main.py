@@ -3,7 +3,9 @@ from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import init_engine
-from app.routers import application_route, listing_route
+from app.routers import application_route, listing_route, staff_route
+
+from fastapi.middleware.cors import CORSMiddleware
 
 api_router = APIRouter()
 
@@ -26,6 +28,7 @@ app.add_middleware(
 app.include_router(api_router)
 app.include_router(application_route.router)
 app.include_router(listing_route.router)
+app.include_router(staff_route.router)
 
 if __name__ == "__main__":
     app_module = "main:app"

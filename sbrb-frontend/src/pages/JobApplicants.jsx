@@ -66,7 +66,7 @@ const JobApplicants = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
-  const { isLoggedIn, role } = useLoginContext();
+  const { loginInfo } = useLoginContext();
 
   function renderTableBody() {
     return table.getRowModel().rows.map((row) =>
@@ -111,8 +111,8 @@ const JobApplicants = () => {
       columnHelper.accessor("email", {
         header: () => "Email",
       }),
-      columnHelper.accessor("currentRole", {
-        header: "Current Role",
+      columnHelper.accessor("department", {
+        header: "Department",
       }),
       columnHelper.accessor("country", {
         header: () => "Country",
@@ -157,8 +157,8 @@ const JobApplicants = () => {
           firstName: applicant.staff.staff_fname,
           lastName: applicant.staff.staff_lname,
           email: applicant.staff.email,
-          currentRole: applicant.staff.dept,
-          country: applicant.staff.country,
+          department: applicant.staff.department_name,
+          country: applicant.staff.country_name,
           matchedPercentage: `${percentage.toFixed(2)}%`,
           skillsMatched:
             matchedSkills.length == 0 ? "Nil" : matchedSkills.join(", "),
@@ -194,10 +194,12 @@ const JobApplicants = () => {
   const selectedPageSize = table.getState().pagination.pageSize;
 
   useEffect(() => {
-    if (isLoggedIn != undefined && !isLoggedIn) navigate("/");
+    if (loginInfo.isLoggedIn != undefined && !loginInfo.isLoggedIn)
+      navigate("/");
 
-    if (role != undefined && role == "User") navigate("/listings");
-  }, [navigate, role, isLoggedIn]);
+    if (loginInfo.role != undefined && loginInfo.role == "User")
+      navigate("/listings");
+  }, [navigate, loginInfo]);
 
   useEffect(() => {
     if (isError) navigate("/listings");
@@ -207,15 +209,9 @@ const JobApplicants = () => {
     <>
       <Layout />
       <Box w="8xl" mx="auto">
-        <Breadcrumb mt={6}>
+        <Breadcrumb mt={10}>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-
-          <BreadcrumbItem>
-            <BreadcrumbLink as={Link} to="/listings">
-              Role Listings
-            </BreadcrumbLink>
+            <BreadcrumbLink href="/listings">Home</BreadcrumbLink>
           </BreadcrumbItem>
 
           <BreadcrumbItem>

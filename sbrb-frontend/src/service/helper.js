@@ -12,3 +12,11 @@ export const getMatchedSkills = (userSkills, roleSkills) => {
   );
   return matchingItems;
 };
+
+export const checkHasExpired = (expiryDate) => {
+  const expirationDate = new Date(expiryDate);
+
+  const currentDate = new Date();
+
+  return currentDate > expirationDate;
+};
