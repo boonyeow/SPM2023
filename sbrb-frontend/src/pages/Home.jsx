@@ -25,7 +25,7 @@ const Home = () => {
     if (!isAllUnchecked) {
       if (checkedValues.departments.length > 0) {
         filteredListings = filteredListings.filter((listing) =>
-          checkedValues.departments.includes(listing.dept)
+          checkedValues.departments.includes(listing.department_name)
         );
       }
 
@@ -37,7 +37,7 @@ const Home = () => {
 
       if (checkedValues.countries.length > 0) {
         filteredListings = filteredListings.filter((listing) =>
-          checkedValues.countries.includes(listing.country)
+          checkedValues.countries.includes(listing.country_name)
         );
       }
     } else {

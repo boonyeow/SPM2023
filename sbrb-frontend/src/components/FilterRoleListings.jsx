@@ -32,7 +32,6 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
   const [countries, setCountries] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [skills, setSkills] = useState([]);
-  const [, setSearchTerm] = useState("");
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({
     departments: [],
@@ -55,7 +54,6 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
   const handleSkillSelection = (value) => {
     if (!selectedSkills.includes(value)) {
       setSelectedSkills([...selectedSkills, value]);
-      setSearchTerm("");
     }
   };
 
@@ -104,10 +102,10 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
       .then((response) => {
         const data = response.data;
         const extractedCountries = [
-          ...new Set(data.map((item) => item.country)),
+          ...new Set(data.map((item) => item.country_name)),
         ];
         const extractedDepartments = [
-          ...new Set(data.map((item) => item.dept)),
+          ...new Set(data.map((item) => item.department_name)),
         ];
         const extractedSkills = [];
 
@@ -169,7 +167,6 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
           <FormLabel>Skills</FormLabel>
           <AutoComplete openOnFocus>
             <AutoCompleteInput
-              onChange={(value) => setSearchTerm(value)}
               placeholder="Type to search for skills"
               variant="filled"
             />
