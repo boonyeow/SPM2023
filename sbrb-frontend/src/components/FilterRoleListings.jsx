@@ -10,19 +10,33 @@ import {
   Button,
   Checkbox,
   CheckboxGroup,
+  Flex,
+  FormControl,
+  FormHelperText,
+  FormLabel,
   Heading,
   Stack,
+  Tag,
+  TagCloseButton,
+  TagLabel,
 } from "@chakra-ui/react";
+import {
+  AutoComplete,
+  AutoCompleteInput,
+  AutoCompleteItem,
+  AutoCompleteList,
+} from "@choc-ui/chakra-autocomplete";
 import { useEffect, useState } from "react";
 
 function FilterRoleListing({ onFilterChange, resetFilters }) {
   const [countries, setCountries] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [skills, setSkills] = useState([]);
+  const [, setSearchTerm] = useState("");
+  const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({
     departments: [],
-
-    skills: [],
+    countries: [],
   });
 
   const filterCategories = [
@@ -32,15 +46,25 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
       key: "departments",
     },
     {
-      title: "Country",
+      title: "Location",
       values: countries,
-    },
-    {
-      title: "Skills",
-      values: skills,
-      key: "skills",
+      key: "countries",
     },
   ];
+
+  const handleSkillSelection = (value) => {
+    if (!selectedSkills.includes(value)) {
+      setSelectedSkills([...selectedSkills, value]);
+      setSearchTerm("");
+    }
+  };
+
+  const handleRemoveSkill = (skillToRemove) => {
+    const updatedSkills = selectedSkills.filter(
+      (skill) => skill !== skillToRemove
+    );
+    setSelectedSkills(updatedSkills);
+  };
 
   const handleCheckboxChange = (categoryKey, selectedValues) => {
     setSelectedFilters({
@@ -61,7 +85,9 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
 
   const handleFilterButtonClick = () => {
     const checkedValues = getCheckedValues();
-    onFilterChange(checkedValues);
+    const filters = { ...checkedValues, skills: selectedSkills };
+    console.log(filters);
+    onFilterChange(filters);
   };
 
   const handleResetFiltersClick = () => {
@@ -69,6 +95,7 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
     setSelectedFilters({
       departments: [],
     });
+    setSelectedSkills([]);
   };
 
   useEffect(() => {
@@ -138,13 +165,51 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
         ))}
       </Accordion>
 
-      <Button mt={8} onClick={handleFilterButtonClick}>
-        Apply Filter
-      </Button>
+      <Flex pt="5" w="full">
+        <FormControl w="60">
+          <FormLabel>Skills</FormLabel>
+          <AutoComplete openOnFocus>
+            <AutoCompleteInput
+              onChange={(value) => setSearchTerm(value)}
+              placeholder="Type to search for skills"
+              variant="filled"
+            />
+            <AutoCompleteList>
+              {skills.map((skill, cid) => (
+                <AutoCompleteItem
+                  key={`option-${cid}`}
+                  value={skill.toString()}
+                  textTransform="capitalize"
+                  onClick={() => handleSkillSelection(skill.toString())}>
+                  {skill.toString()}
+                </AutoCompleteItem>
+              ))}
+            </AutoCompleteList>
+          </AutoComplete>
+          <FormHelperText></FormHelperText>
+        </FormControl>
+      </Flex>
+      <Flex flexWrap="wrap">
+        {selectedSkills.map((skill) => (
+          <Tag key={skill} size="lg" marginEnd="2" marginBottom="2">
+            <TagLabel>{skill}</TagLabel>
+            <TagCloseButton onClick={() => handleRemoveSkill(skill)} />
+          </Tag>
+        ))}
+      </Flex>
 
-      <Button mt={4} onClick={handleResetFiltersClick}>
-        Reset Filters
-      </Button>
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        alignItems="center"
+        mt={15}>
+        <Button
+          onClick={handleFilterButtonClick}
+          mr={{ base: 0, md: 4 }}
+          mb={{ base: 4, md: 0 }}>
+          Apply Filter
+        </Button>
+        <Button onClick={handleResetFiltersClick}>Reset Filters</Button>
+      </Flex>
     </>
   );
 }
