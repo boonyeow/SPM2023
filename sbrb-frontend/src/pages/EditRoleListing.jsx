@@ -31,7 +31,8 @@ function EditJobListing() {
       .get(`${apiUrl}/listings/${id}`)
       .then((response) => {
         const roleListingData = response.data;
-        const newExpiryDate = roleListingData.expiry_date.substring(0, 10);
+        const newExpiryDate = new Date(roleListingData.expiry_date);
+        console.log(newExpiryDate);
         const updatedRoleListingData = { ...roleListingData };
         updatedRoleListingData["expiry_date"] = newExpiryDate;
         formik.setValues(updatedRoleListingData);
@@ -99,6 +100,7 @@ function EditJobListing() {
   });
 
   const handleUpdateListing = (values) => {
+    console.log(values);
     axios
       .post(`${apiUrl}/listings/${id}`, values)
       .then((res) => {
