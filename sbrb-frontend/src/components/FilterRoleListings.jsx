@@ -1,3 +1,4 @@
+import { Flex } from "@chakra-ui/react";
 import axios from "axios";
 
 import {
@@ -21,8 +22,7 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
   const [skills, setSkills] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({
     departments: [],
-    // countries: [],
-    // skills: [],
+    countries: [],
   });
 
   const filterCategories = [
@@ -32,8 +32,9 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
       key: "departments",
     },
     {
-      title: "Country",
+      title: "Location",
       values: countries,
+      key: "countries",
     },
     {
       title: "Skills",
@@ -62,6 +63,8 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
   const handleFilterButtonClick = () => {
     const checkedValues = getCheckedValues();
     onFilterChange(checkedValues);
+
+    console.log(checkedValues);
   };
 
   const handleResetFiltersClick = () => {
@@ -137,14 +140,18 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
           </AccordionItem>
         ))}
       </Accordion>
-
-      <Button mt={8} onClick={handleFilterButtonClick}>
-        Apply Filter
-      </Button>
-
-      <Button mt={4} onClick={handleResetFiltersClick}>
-        Reset Filters
-      </Button>
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        alignItems="center"
+        mt={4}>
+        <Button
+          onClick={handleFilterButtonClick}
+          mr={{ base: 0, md: 4 }}
+          mb={{ base: 4, md: 0 }}>
+          Apply Filter
+        </Button>
+        <Button onClick={handleResetFiltersClick}>Reset Filters</Button>
+      </Flex>
     </>
   );
 }
