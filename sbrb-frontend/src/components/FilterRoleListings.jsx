@@ -86,7 +86,6 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
   const handleFilterButtonClick = () => {
     const checkedValues = getCheckedValues();
     const filters = { ...checkedValues, skills: selectedSkills };
-    console.log(filters);
     onFilterChange(filters);
   };
 
