@@ -25,12 +25,19 @@ const Home = () => {
     if (!isAllUnchecked) {
       if (checkedValues.departments.length > 0) {
         filteredListings = filteredListings.filter((listing) =>
-          checkedValues.departments.includes(listing.dept)
+          checkedValues.departments.includes(listing.department_name)
         );
       }
+
+      if (checkedValues.skills.length > 0) {
+        filteredListings = filteredListings.filter((listing) =>
+          checkedValues.skills.every((skill) => listing.skills.includes(skill))
+        );
+      }
+
       if (checkedValues.countries.length > 0) {
         filteredListings = filteredListings.filter((listing) =>
-          checkedValues.countries.includes(listing.country)
+          checkedValues.countries.includes(listing.country_name)
         );
       }
     } else {
@@ -64,7 +71,6 @@ const Home = () => {
             {/* display all jobs */}
             <Box w="90%" p={20}>
               <Grid
-                h="100vh"
                 templateRows="repeat(2, 1fr)"
                 templateColumns="repeat(5, 1fr)"
                 gap={4}>
