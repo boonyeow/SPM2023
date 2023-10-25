@@ -8,6 +8,10 @@ hooks:
     - location: scripts/install_app_dependencies
       timeout: 300
       runas: root
+  PreSettings:
+    - location: scripts/pre_settings
+      timeout: 300
+      runas: root
   ApplicationStart:
     - location: scripts/start_server
       timeout: 300

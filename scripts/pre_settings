@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Define the directory where your application code is located
+APP_DIR=/home/ec2-user/app
+
+# Change directory to your application directory
+cd $APP_DIR
+
+# Pull the latest code from the GitHub repository (assuming it's the 'main' branch)
+git pull origin test-cd 
+
+# Stop the Supervisor-managed process (replace 'my-python-program' with the actual program name)
+sudo supervisorctl stop main.py
+
+sudo pkill -f /home/ubuntu/.local/bin/supervisord 
+
+# Wait for the process to stop gracefully
+sleep 60
+
+# # Start the updated application using Supervisor
+# sudo supervisorctl start main.py
+
+# # Ensure the Supervisor-managed process is running
+# sudo supervisorctl status
+
+# # Optionally, you can log the deployment process for reference
+# echo "Deployment completed at $(date)" >> $APP_DIR/deployment.log
