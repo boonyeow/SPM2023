@@ -1,0 +1,12 @@
+#!/bin/bash
+# Stop the Supervisor-managed process (replace 'my-python-program' with the actual program name)
+sudo supervisorctl stop main.py
+
+sudo pkill -f /home/ubuntu/.local/bin/supervisord 
+
+# Wait for the process to stop gracefully in seconds
+sleep 30
+cd /home/ec2-user/app
+chmod +x scripts/start_server
+chmod +w /tmp/supervisord.log
+sudo /home/ubuntu/.local/bin/supervisord -c /home/ec2-user/app/supervisord.conf 

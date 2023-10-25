@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /home/ec2-user/app/sbrb-backend
+sudo apt install postgresql
+sudo pip3 install -r requirements.txt
