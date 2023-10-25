@@ -2,7 +2,7 @@
 # Stop the Supervisor-managed process (replace 'my-python-program' with the actual program name)
 sudo supervisorctl stop main.py
 
-sudo pkill -f /home/ubuntu/.local/bin/supervisord 
+sudo pkill -f /usr/bin/supervisord
 
 # Wait for the process to stop gracefully in seconds
 sleep 30
