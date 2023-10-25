@@ -1,6 +1,9 @@
 name: Check PR Name, Lint Frontend, Run Backend Tests
 
 on:
+  push:
+    branches:
+      - test-cd
   pull_request:
     branches:
       - main
