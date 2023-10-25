@@ -102,3 +102,5 @@ jobs:
             --deployment-config-name CodeDeployDefault.OneAtATime \
             --github-location repository=${{ github.repository }},commitId=${{ github.sha }} \
             --region us-east-1
+      - name: hehehe
+        run: echo ${{ github.repository }}
