@@ -68,7 +68,7 @@ function CreateJobListing() {
   const handleCreateListing = () => {
     console.log();
     axios
-      .post("http://localhost:8000/listing/create", {
+      .post(`${import.meta.VITE_API_URL}/listing/create`, {
         role_name: formik.values.role_name,
         listing_title: formik.values.listing_title,
         listing_desc: formik.values.listing_desc,
@@ -311,3 +311,4 @@ function CreateJobListing() {
 }
 
 export default CreateJobListing;
+
