@@ -11,8 +11,9 @@ import {
 const Profile = () => {
   const [staffProfile, setStaffProfile] = useState({});
   console.log(staffProfile);
+
   axios
-    .get(`${import.meta.VITE_API_URL}/staff/150245`)
+    .get(`http://localhost:8000/staff/150245`)
     .then((response) => {
       setStaffProfile(response.data);
     })
@@ -40,4 +41,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
