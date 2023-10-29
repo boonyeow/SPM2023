@@ -37,6 +37,7 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
     departments: [],
     countries: [],
   });
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const filterCategories = [
     {
@@ -48,6 +49,11 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
       title: "Location",
       values: countries,
       key: "countries",
+    },
+    {
+      title: "Availability",
+      values: ["Available", "Expired"],
+      key: "availability",
     },
   ];
 
@@ -72,7 +78,12 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
   };
 
   const getCheckedValues = () => {
-    const checkedValues = {};
+    const checkedValues = {
+      departments: [],
+      countries: [],
+      skills: [],
+      availability: [],
+    };
 
     for (const categoryKey in selectedFilters) {
       checkedValues[categoryKey] = selectedFilters[categoryKey];
@@ -91,12 +102,13 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
     resetFilters();
     setSelectedFilters({
       departments: [],
+      countries: [],
+      availability: [],
     });
     setSelectedSkills([]);
   };
 
   useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL;
     axios
       .get(`${apiUrl}/listings`)
       .then((response) => {

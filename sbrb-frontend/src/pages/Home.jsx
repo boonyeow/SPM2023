@@ -13,6 +13,7 @@ const Home = () => {
   const [roleListings, setRoleListings] = useState([]);
   const [filteredRoleListings, setFilteredRoleListings] = useState([]);
   const [isAllUnchecked, setIsAllUnchecked] = useState(true);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleFilterChange = (checkedValues) => {
     let filteredListings = [...roleListings];
@@ -40,8 +41,55 @@ const Home = () => {
           checkedValues.countries.includes(listing.country_name)
         );
       }
+
+      if (
+        (checkedValues.availability.length == 0) |
+        (checkedValues.availability.length == 2)
+      ) {
+        axios
+          .get(`${apiUrl}/listings`)
+          .then((response) => {
+            setRoleListings(response.data);
+            setFilteredRoleListings(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching role listings:", error);
+          });
+      } else if (checkedValues.availability.length == 1) {
+        if (checkedValues.availability.includes("Expired")) {
+          axios
+            .get(`${apiUrl}/listings?active=false`)
+            .then((response) => {
+              setRoleListings(response.data);
+              setFilteredRoleListings(response.data);
+            })
+            .catch((error) => {
+              console.error("Error fetching role listings:", error);
+            });
+        } else {
+          console.log("want active");
+          axios
+            .get(`${apiUrl}/listings?active=true`)
+            .then((response) => {
+              setRoleListings(response.data);
+              setFilteredRoleListings(response.data);
+            })
+            .catch((error) => {
+              console.error("Error fetching role listings:", error);
+            });
+        }
+      }
     } else {
       filteredListings = [];
+      axios
+        .get(`${apiUrl}/listings`)
+        .then((response) => {
+          setRoleListings(response.data);
+          setFilteredRoleListings(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching role listings:", error);
+        });
     }
     setFilteredRoleListings(filteredListings);
   };
@@ -51,7 +99,6 @@ const Home = () => {
   };
   useEffect(() => {
     if (!loginInfo.isLoggedIn) window.location.href = "/";
-    const apiUrl = import.meta.env.VITE_API_URL;
     axios
       .get(`${apiUrl}/listings`)
       .then((response) => {
