@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 const Home = () => {
   const { loginInfo } = useLoginContext();
   const [roleListings, setRoleListings] = useState([]);
+  const [availableRoleListings, setAvailableRoleListings] = useState([]);
+  const [expiredRoleListings, setExpiredRoleListings] = useState([]);
   const [filteredRoleListings, setFilteredRoleListings] = useState([]);
   const [isAllUnchecked, setIsAllUnchecked] = useState(true);
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -24,6 +26,16 @@ const Home = () => {
     setIsAllUnchecked(isAllUnchecked);
 
     if (!isAllUnchecked) {
+      if (checkedValues.availability.length == 2) {
+        filteredListings = [...roleListings];
+      } else if (checkedValues.availability.length == 1) {
+        if (checkedValues.availability.includes("Expired")) {
+          filteredListings = [...expiredRoleListings];
+        } else {
+          filteredListings = [...availableRoleListings];
+        }
+      }
+
       if (checkedValues.departments.length > 0) {
         filteredListings = filteredListings.filter((listing) =>
           checkedValues.departments.includes(listing.department_name)
@@ -41,60 +53,22 @@ const Home = () => {
           checkedValues.countries.includes(listing.country_name)
         );
       }
-
-      if (
-        (checkedValues.availability.length == 0) |
-        (checkedValues.availability.length == 2)
-      ) {
-        axios
-          .get(`${apiUrl}/listings`)
-          .then((response) => {
-            setRoleListings(response.data);
-            setFilteredRoleListings(response.data);
-          })
-          .catch((error) => {
-            console.error("Error fetching role listings:", error);
-          });
-      } else if (checkedValues.availability.length == 1) {
-        if (checkedValues.availability.includes("Expired")) {
-          axios
-            .get(`${apiUrl}/listings?active=false`)
-            .then((response) => {
-              setRoleListings(response.data);
-              setFilteredRoleListings(response.data);
-            })
-            .catch((error) => {
-              console.error("Error fetching role listings:", error);
-            });
-        } else {
-          axios
-            .get(`${apiUrl}/listings?active=true`)
-            .then((response) => {
-              setRoleListings(response.data);
-              setFilteredRoleListings(response.data);
-            })
-            .catch((error) => {
-              console.error("Error fetching role listings:", error);
-            });
-        }
-      }
     } else {
       filteredListings = [];
-      axios
-        .get(`${apiUrl}/listings`)
-        .then((response) => {
-          setRoleListings(response.data);
-          setFilteredRoleListings(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching role listings:", error);
-        });
     }
     setFilteredRoleListings(filteredListings);
   };
 
   const resetFilters = () => {
-    setFilteredRoleListings(roleListings);
+    axios
+      .get(`${apiUrl}/listings`)
+      .then((response) => {
+        setRoleListings(response.data);
+        setFilteredRoleListings(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching role listings:", error);
+      });
   };
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -104,6 +78,23 @@ const Home = () => {
       .then((response) => {
         setRoleListings(response.data);
         setFilteredRoleListings(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching role listings:", error);
+      });
+
+    axios
+      .get(`${apiUrl}/listings?active=false`)
+      .then((response) => {
+        setExpiredRoleListings(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching role listings:", error);
+      });
+    axios
+      .get(`${apiUrl}/listings?active=true`)
+      .then((response) => {
+        setAvailableRoleListings(response.data);
       })
       .catch((error) => {
         console.error("Error fetching role listings:", error);
