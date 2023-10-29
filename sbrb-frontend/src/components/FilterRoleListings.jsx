@@ -37,6 +37,7 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
     departments: [],
     countries: [],
   });
+  const [searchInput, setSearchInput] = useState("");
 
   const filterCategories = [
     {
@@ -55,6 +56,7 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
     if (!selectedSkills.includes(value)) {
       setSelectedSkills([...selectedSkills, value]);
     }
+    setSearchInput("");
   };
 
   const handleRemoveSkill = (skillToRemove) => {
@@ -91,6 +93,7 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
     resetFilters();
     setSelectedFilters({
       departments: [],
+      countries: [],
     });
     setSelectedSkills([]);
   };
@@ -169,6 +172,8 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
             <AutoCompleteInput
               placeholder="Type to search for skills"
               variant="filled"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
             <AutoCompleteList>
               {skills.map((skill, cid) => (
