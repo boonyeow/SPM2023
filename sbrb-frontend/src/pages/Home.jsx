@@ -97,6 +97,7 @@ const Home = () => {
     setFilteredRoleListings(roleListings);
   };
   useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     if (!loginInfo.isLoggedIn) window.location.href = "/";
     axios
       .get(`${apiUrl}/listings`)

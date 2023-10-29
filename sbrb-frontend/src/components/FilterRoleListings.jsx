@@ -37,7 +37,6 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
     departments: [],
     countries: [],
   });
-  const apiUrl = import.meta.env.VITE_API_URL;
 
   const filterCategories = [
     {
@@ -109,6 +108,7 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
   };
 
   useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     axios
       .get(`${apiUrl}/listings`)
       .then((response) => {
