@@ -104,11 +104,31 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
       .get(`${apiUrl}/listings`)
       .then((response) => {
         const data = response.data;
+        // const extractedCountries = [
+        //   ...new Set(data.map((item) => item.country_name)),
+        // ];
+        // const extractedDepartments = [
+        //   ...new Set(data.map((item) => item.department_name)),
+        // ];
+
         const extractedCountries = [
-          ...new Set(data.map((item) => item.country_name)),
+          "Malaysia",
+          "Hong Kong",
+          "Indonesia",
+          "Vietnam",
+          "Singapore",
         ];
+      
         const extractedDepartments = [
-          ...new Set(data.map((item) => item.department_name)),
+          "Chariman",
+          "CEO",
+          "Consultancy",
+          "Engineering",
+          "Finance",
+          "HR",
+          "IT",
+          "Sales",
+          "Solutioning",
         ];
         const extractedSkills = [];
 
