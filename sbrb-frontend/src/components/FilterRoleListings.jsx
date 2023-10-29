@@ -104,13 +104,6 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
       .get(`${apiUrl}/listings`)
       .then((response) => {
         const data = response.data;
-        // const extractedCountries = [
-        //   ...new Set(data.map((item) => item.country_name)),
-        // ];
-        // const extractedDepartments = [
-        //   ...new Set(data.map((item) => item.department_name)),
-        // ];
-
         const extractedCountries = [
           "Malaysia",
           "Hong Kong",
