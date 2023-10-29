@@ -67,7 +67,6 @@ const Home = () => {
               console.error("Error fetching role listings:", error);
             });
         } else {
-          console.log("want active");
           axios
             .get(`${apiUrl}/listings?active=true`)
             .then((response) => {
