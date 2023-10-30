@@ -14,7 +14,6 @@ const Home = () => {
   const [availableRoleListings, setAvailableRoleListings] = useState([]);
   const [expiredRoleListings, setExpiredRoleListings] = useState([]);
   const [filteredRoleListings, setFilteredRoleListings] = useState([]);
-  const [isAllUnchecked, setIsAllUnchecked] = useState(true);
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleFilterChange = (checkedValues) => {
@@ -22,8 +21,6 @@ const Home = () => {
     const isAllUnchecked = Object.values(checkedValues).every(
       (values) => values.length === 0
     );
-
-    setIsAllUnchecked(isAllUnchecked);
 
     if (!isAllUnchecked) {
       if (checkedValues.availability.length == 2) {
@@ -124,11 +121,11 @@ const Home = () => {
                       {filteredRoleListings.length === 0 ? (
                         <Flex justify={"center"} align={"center"}>
                           <Text fontSize="4xl" mr={3}>
-                            {isAllUnchecked
-                              ? "Please tick one of the checkboxes to filter the role listings."
-                              : "No open job role listings."}
+                            {roleListings.length == 0
+                              ? "No job role listings."
+                              : "Please select the filters to filter the role listings."}
                           </Text>
-                          {!isAllUnchecked && (
+                          {roleListings.length == 0 && (
                             <CloseIcon fontSize="4xl" color="grey" />
                           )}
                         </Flex>
