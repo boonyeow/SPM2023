@@ -1,10 +1,12 @@
 import { DatePicker } from "antd";
 import Layout from "../components/Layout";
 import axios from "axios";
-import { useEffect } from "react";
+import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
 
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   Flex,
@@ -19,12 +21,14 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Formik, useFormik } from "formik";
+import { useEffect, useState } from "react";
 
 import * as Yup from "yup";
-import dayjs from "dayjs";
 
 function EditJobListing() {
   const { id } = useParams();
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -90,24 +94,47 @@ function EditJobListing() {
   const validationSchema = Yup.object({
     role_name: Yup.string().required("Role Name is required"),
     listing_title: Yup.string().required("Listing Title is required"),
-    listing_desc: Yup.string().required("Listing Description is required"),
+    listing_desc: Yup.string().required("Job Description is required"),
     department_name: Yup.string().required("Department is required"),
     country_name: Yup.string().required("Country is required"),
     reporting_manager_id: Yup.string().required(
       "Reporting Manager ID is required"
     ),
-    expiry_date: Yup.date().required("Expiry Date is required"),
+    expiry_date: Yup.date()
+      .required("Application Deadline is required")
+      .test(
+        "is-future-date",
+        "Application Deadline must be a future date",
+        function (date) {
+          const cutoff = new Date();
+          cutoff.setHours(0, 0, 0, 0);
+          return date >= cutoff;
+        }
+      ),
   });
 
   const handleUpdateListing = (values) => {
-    console.log(values);
+    console.log({
+      role_name: formik.values.role_name,
+      listing_title: formik.values.listing_title,
+      listing_desc: formik.values.listing_desc,
+      department_name: formik.values.department_name,
+      country_name: formik.values.country_name,
+      reporting_manager_id: formik.values.reporting_manager_id,
+      created_by_id: formik.values.created_by_id,
+      expiry_date: formik.values.expiry_date.toISOString(),
+    });
     axios
       .post(`${apiUrl}/listings/${id}`, values)
       .then((res) => {
         console.log("Listing updated successfully:", res);
+        setSuccess("Listing has been successfully updated.");
+        setError(null);
       })
       .catch((error) => {
         console.error("Error updating listing:", error);
+        setError("There was an error processing your request.");
+        setSuccess(null);
       });
   };
   const formik = useFormik({
@@ -119,6 +146,19 @@ function EditJobListing() {
   return (
     <>
       <Layout>
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            {error}
+          </Alert>
+        )}
+
+        {success && (
+          <Alert status="success">
+            <AlertIcon />
+            {success}
+          </Alert>
+        )}
         <Box>
           <Formik
             initialValues={formik.initialValues}
