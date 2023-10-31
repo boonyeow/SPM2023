@@ -11,11 +11,12 @@ function RoleListingCard({
   listing_desc,
   role_name,
   reporting_manager_name,
-  created_by,
-  country,
+  created_by_name,
+  country_name,
   expiry_date,
   created_date,
   skills,
+  department_name,
   ...rest
 }) {
   const { loginInfo } = useLoginContext();
@@ -84,8 +85,9 @@ function RoleListingCard({
         <Heading fontSize="xl">{listing_title}</Heading>
         <Text mt={2}>Job Title: {role_name}</Text>
         <Text mt={4}>{listing_desc}</Text>
-        <Text mt={2}>Created By: {created_by}</Text>
-        <Text mt={2}>Country: {country}</Text>
+        <Text mt={2}>Created By: {created_by_name}</Text>
+        <Text mt={2}>Country: {country_name}</Text>
+        <Text mt={2}>Department: {department_name}</Text>
         <Text mt={2}>Reporting Manager: {reporting_manager_name}</Text>
         <Text mt={2}>Skills Required:</Text>
         {skills.map((skill, index) => (

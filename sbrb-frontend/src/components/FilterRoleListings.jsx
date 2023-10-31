@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import axios from "axios";
 
 import {
@@ -11,15 +10,29 @@ import {
   Button,
   Checkbox,
   CheckboxGroup,
+  Flex,
+  FormControl,
+  FormHelperText,
+  FormLabel,
   Heading,
   Stack,
+  Tag,
+  TagCloseButton,
+  TagLabel,
 } from "@chakra-ui/react";
+import {
+  AutoComplete,
+  AutoCompleteInput,
+  AutoCompleteItem,
+  AutoCompleteList,
+} from "@choc-ui/chakra-autocomplete";
 import { useEffect, useState } from "react";
 
 function FilterRoleListing({ onFilterChange, resetFilters }) {
   const [countries, setCountries] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [skills, setSkills] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({
     departments: [],
     countries: [],
@@ -36,14 +49,22 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
       values: countries,
       key: "countries",
     },
-    {
-      title: "Skills",
-      values: skills,
-    },
   ];
 
+  const handleSkillSelection = (value) => {
+    if (!selectedSkills.includes(value)) {
+      setSelectedSkills([...selectedSkills, value]);
+    }
+  };
+
+  const handleRemoveSkill = (skillToRemove) => {
+    const updatedSkills = selectedSkills.filter(
+      (skill) => skill !== skillToRemove
+    );
+    setSelectedSkills(updatedSkills);
+  };
+
   const handleCheckboxChange = (categoryKey, selectedValues) => {
-    console.log(categoryKey, selectedValues);
     setSelectedFilters({
       ...selectedFilters,
       [categoryKey]: selectedValues,
@@ -62,9 +83,8 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
 
   const handleFilterButtonClick = () => {
     const checkedValues = getCheckedValues();
-    onFilterChange(checkedValues);
-
-    console.log(checkedValues);
+    const filters = { ...checkedValues, skills: selectedSkills };
+    onFilterChange(filters);
   };
 
   const handleResetFiltersClick = () => {
@@ -72,6 +92,7 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
     setSelectedFilters({
       departments: [],
     });
+    setSelectedSkills([]);
   };
 
   useEffect(() => {
@@ -81,10 +102,10 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
       .then((response) => {
         const data = response.data;
         const extractedCountries = [
-          ...new Set(data.map((item) => item.country)),
+          ...new Set(data.map((item) => item.country_name)),
         ];
         const extractedDepartments = [
-          ...new Set(data.map((item) => item.dept)),
+          ...new Set(data.map((item) => item.department_name)),
         ];
         const extractedSkills = [];
 
@@ -140,10 +161,43 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
           </AccordionItem>
         ))}
       </Accordion>
+
+      <Flex pt="5" w="full">
+        <FormControl w="60">
+          <FormLabel>Skills</FormLabel>
+          <AutoComplete openOnFocus>
+            <AutoCompleteInput
+              placeholder="Type to search for skills"
+              variant="filled"
+            />
+            <AutoCompleteList>
+              {skills.map((skill, cid) => (
+                <AutoCompleteItem
+                  key={`option-${cid}`}
+                  value={skill.toString()}
+                  textTransform="capitalize"
+                  onClick={() => handleSkillSelection(skill.toString())}>
+                  {skill.toString()}
+                </AutoCompleteItem>
+              ))}
+            </AutoCompleteList>
+          </AutoComplete>
+          <FormHelperText></FormHelperText>
+        </FormControl>
+      </Flex>
+      <Flex flexWrap="wrap">
+        {selectedSkills.map((skill) => (
+          <Tag key={skill} size="lg" marginEnd="2" marginBottom="2">
+            <TagLabel>{skill}</TagLabel>
+            <TagCloseButton onClick={() => handleRemoveSkill(skill)} />
+          </Tag>
+        ))}
+      </Flex>
+
       <Flex
         direction={{ base: "column", md: "row" }}
         alignItems="center"
-        mt={4}>
+        mt={15}>
         <Button
           onClick={handleFilterButtonClick}
           mr={{ base: 0, md: 4 }}

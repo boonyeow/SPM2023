@@ -68,12 +68,12 @@ function CreateJobListing() {
   const handleCreateListing = () => {
     console.log();
     axios
-      .post("http://localhost:8000/listing/create", {
+      .post(`${import.meta.VITE_API_URL}/listing/create`, {
         role_name: formik.values.role_name,
         listing_title: formik.values.listing_title,
         listing_desc: formik.values.listing_desc,
-        dept: formik.values.dept,
-        country: formik.values.country,
+        department_name: formik.values.dept,
+        country_name: formik.values.country,
         reporting_manager_id: formik.values.reporting_manager_id,
         created_by_id: formik.values.created_by_id,
         expiry_date: formik.values.expiry_date.toISOString(),
@@ -311,3 +311,4 @@ function CreateJobListing() {
 }
 
 export default CreateJobListing;
+
