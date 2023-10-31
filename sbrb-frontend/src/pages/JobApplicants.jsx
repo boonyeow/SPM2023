@@ -1,4 +1,5 @@
 import Layout from "../components/Layout";
+import Swal from "sweetalert2";
 import axios from "axios";
 import { useLoginContext } from "../hooks/useLoginContext";
 import { useQuery } from "@tanstack/react-query";
@@ -130,7 +131,7 @@ const JobApplicants = () => {
 
   const [data, setData] = useState([]);
 
-  const { data: listingData } = useQuery({
+  const { isError, data: listingData } = useQuery({
     queryKey: ["listing"],
     queryFn: async () => {
       const res = await axios.get(`${apiUrl}/listings/${id}`);
@@ -138,7 +139,7 @@ const JobApplicants = () => {
     },
     retry: 3,
   });
-  const { isLoading, isError } = useQuery({
+  const { isLoading } = useQuery({
     queryKey: ["applicants"],
     queryFn: async () => {
       const res = await axios.get(`${apiUrl}/listings/${id}/applicants`);
@@ -202,7 +203,16 @@ const JobApplicants = () => {
   }, [navigate, loginInfo]);
 
   useEffect(() => {
-    if (isError) navigate("/listings");
+    if (isError) {
+      Swal.fire({
+        title: "Error!",
+        text: "Redirecting to home page...",
+        icon: "error",
+      });
+      setTimeout(() => {
+        navigate("/listings");
+      }, 2000);
+    }
   }, [navigate, isError]);
 
   return (

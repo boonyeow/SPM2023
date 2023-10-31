@@ -55,13 +55,23 @@ const RoleCard = ({
               <Spacer />
               <Box>
                 {loginInfo.role != "User" && (
-                  <Button
-                    colorScheme="blue"
-                    onClick={() => {
-                      navigate(`/listings/${id}/applicants`);
-                    }}>
-                    View Applicants
-                  </Button>
+                  <>
+                    <Button
+                      colorScheme="blue"
+                      onClick={() => {
+                        navigate(`/listings/${id}/applicants`);
+                      }}>
+                      View Applicants
+                    </Button>
+                    <Button
+                      colorScheme="blue"
+                      ml="2"
+                      onClick={() => {
+                        console.log("navigated to edit page");
+                      }}>
+                      Edit
+                    </Button>
+                  </>
                 )}
               </Box>
             </Flex>
