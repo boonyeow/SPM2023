@@ -31,21 +31,6 @@ function EditJobListing() {
   const [success, setSuccess] = useState(null);
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  useEffect(() => {
-    axios
-      .get(`${apiUrl}/listings/${id}`)
-      .then((response) => {
-        const roleListingData = response.data;
-        const newExpiryDate = dayjs(roleListingData.expiry_date);
-        const updatedRoleListingData = { ...roleListingData };
-        updatedRoleListingData["expiry_date"] = newExpiryDate;
-        formik.setValues(updatedRoleListingData);
-      })
-      .catch((error) => {
-        console.error("Error fetching listing data:", error);
-      });
-  }, [apiUrl, id]);
-
   const countries = [
     "Malaysia",
     "Hong Kong",
@@ -142,6 +127,21 @@ function EditJobListing() {
     validationSchema: validationSchema,
     onSubmit: handleUpdateListing,
   });
+
+  useEffect(() => {
+    axios
+      .get(`${apiUrl}/listings/${id}`)
+      .then((response) => {
+        const roleListingData = response.data;
+        const newExpiryDate = dayjs(roleListingData.expiry_date);
+        const updatedRoleListingData = { ...roleListingData };
+        updatedRoleListingData["expiry_date"] = newExpiryDate;
+        formik.setValues(updatedRoleListingData);
+      })
+      .catch((error) => {
+        console.error("Error fetching listing data:", error);
+      });
+  }, [apiUrl, id, formik]);
 
   return (
     <>
