@@ -122,13 +122,13 @@ function EditJobListing() {
         setSuccess(null);
       });
   };
+
   const formik = useFormik({
     initialValues: {},
+    enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: handleUpdateListing,
   });
-
-  const formikRef = useRef(formik);
 
   useEffect(() => {
     axios
@@ -138,7 +138,7 @@ function EditJobListing() {
         const newExpiryDate = roleListingData.expiry_date;
         const updatedRoleListingData = { ...roleListingData };
         updatedRoleListingData["expiry_date"] = newExpiryDate;
-        formikRef.current.setValues(updatedRoleListingData);
+        formik.setValues(updatedRoleListingData);
       })
       .catch((error) => {
         console.error("Error fetching listing data:", error);
@@ -163,7 +163,8 @@ function EditJobListing() {
         )}
         <Box>
           <Formik
-            initialValues={formik.initialValues}
+            initialValues={formik.values}
+            enableReinitialize={true}
             onSubmit={formik.handleSubmit}
             validationSchema={formik.validationSchema}>
             {(formikProps) => (
@@ -344,7 +345,7 @@ function EditJobListing() {
                                 formik.values.expiry_date) ||
                               null
                             }
-                            defaultValue={dayjs(formik.values.expiry_date)}
+                            value={dayjs(formik.values.expiry_date)}
                             onChange={(val) => {
                               formik.setFieldValue("expiry_date", val);
                             }}
@@ -362,7 +363,6 @@ function EditJobListing() {
                     </Grid>
                   </Box>
                 </Flex>
-                {console.log("formik", formik.values.expiry_date)}
               </form>
             )}
           </Formik>
