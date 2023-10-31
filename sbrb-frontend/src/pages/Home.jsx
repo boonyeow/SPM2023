@@ -123,7 +123,7 @@ const Home = () => {
                           <Text fontSize="4xl" mr={3}>
                             {roleListings.length == 0
                               ? "No job role listings."
-                              : "Please select the filters to filter the role listings."}
+                              : "No matched job role listings."}
                           </Text>
                           {roleListings.length == 0 && (
                             <CloseIcon fontSize="4xl" color="grey" />
