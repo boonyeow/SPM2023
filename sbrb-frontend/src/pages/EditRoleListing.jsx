@@ -21,6 +21,7 @@ import {
 import { Formik, useFormik } from "formik";
 
 import * as Yup from "yup";
+import dayjs from "dayjs";
 
 function EditJobListing() {
   const { id } = useParams();
@@ -31,8 +32,7 @@ function EditJobListing() {
       .get(`${apiUrl}/listings/${id}`)
       .then((response) => {
         const roleListingData = response.data;
-        const newExpiryDate = new Date(roleListingData.expiry_date);
-        console.log(newExpiryDate);
+        const newExpiryDate = dayjs(roleListingData.expiry_date);
         const updatedRoleListingData = { ...roleListingData };
         updatedRoleListingData["expiry_date"] = newExpiryDate;
         formik.setValues(updatedRoleListingData);
@@ -299,9 +299,10 @@ function EditJobListing() {
                             name="expiry_date"
                             selected={
                               (formik.values.expiry_date &&
-                                new Date(formik.values.expiry_date)) ||
+                                formik.values.expiry_date) ||
                               null
                             }
+                            value={formik.values.expiry_date}
                             onChange={(val) => {
                               formik.setFieldValue("expiry_date", val);
                             }}
