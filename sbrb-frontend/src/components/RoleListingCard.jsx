@@ -1,4 +1,3 @@
-import { EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useLoginContext } from "../hooks/useLoginContext";
@@ -69,14 +68,6 @@ function RoleListingCard({
               _hover={{ bg: "blue.700" }}
               _active={{ bg: "blue.600" }}>
               View Job Applicants
-            </Button>
-          </Link>
-          <Link to={`/listings/${listing_id}/edit`}>
-            <Button
-              colorScheme="teal"
-              _hover={{ bg: "teal.700" }}
-              _active={{ bg: "teal.600" }}>
-              <EditIcon /> Edit Role Listing
             </Button>
           </Link>
         </Stack>
