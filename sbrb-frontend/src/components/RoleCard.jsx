@@ -1,5 +1,6 @@
 import { useLoginContext } from "../hooks/useLoginContext";
 import { useNavigate } from "react-router-dom";
+
 import {
   Badge,
   Box,
@@ -55,13 +56,23 @@ const RoleCard = ({
               <Spacer />
               <Box>
                 {loginInfo.role != "User" && (
-                  <Button
-                    colorScheme="blue"
-                    onClick={() => {
-                      navigate(`/listings/${id}/applicants`);
-                    }}>
-                    View Applicants
-                  </Button>
+                  <>
+                    <Button
+                      colorScheme="blue"
+                      onClick={() => {
+                        navigate(`/listings/${id}/applicants`);
+                      }}>
+                      View Applicants
+                    </Button>
+                    <Button
+                      colorScheme="blue"
+                      ml="2"
+                      onClick={() => {
+                        navigate(`/listings/${id}/edit`);
+                      }}>
+                      Edit
+                    </Button>
+                  </>
                 )}
               </Box>
             </Flex>
