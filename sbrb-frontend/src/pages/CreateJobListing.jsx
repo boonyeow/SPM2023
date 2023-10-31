@@ -1,7 +1,11 @@
 import { DatePicker } from "antd";
 import Layout from "../components/Layout";
 import axios from "axios";
+import { useState } from "react";
+
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   Flex,
@@ -20,6 +24,8 @@ import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 
 function CreateJobListing() {
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const countries = [
     "Malaysia",
     "Hong Kong",
@@ -68,7 +74,7 @@ function CreateJobListing() {
   const handleCreateListing = () => {
     console.log();
     axios
-      .post(`${import.meta.VITE_API_URL}/listing/create`, {
+      .post(`${import.meta.env.VITE_API_URL}/listing/create`, {
         role_name: formik.values.role_name,
         listing_title: formik.values.listing_title,
         listing_desc: formik.values.listing_desc,
@@ -78,7 +84,16 @@ function CreateJobListing() {
         created_by_id: formik.values.created_by_id,
         expiry_date: formik.values.expiry_date.toISOString(),
       })
-      .then((res) => console.log("res", res));
+      .then((res) => {
+        console.log("Listing created successfully:", res);
+        setSuccess("Listing has been successfully created.");
+        setError(null);
+      })
+      .catch((error) => {
+        console.error("Error creating listing:", error);
+        setError("There was an error processing your request.");
+        setSuccess(null);
+      });
   };
 
   const formik = useFormik({
@@ -107,6 +122,19 @@ function CreateJobListing() {
   return (
     <>
       <Layout>
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            {error}
+          </Alert>
+        )}
+
+        {success && (
+          <Alert status="success">
+            <AlertIcon />
+            {success}
+          </Alert>
+        )}
         <Box>
           <Formik
             initialValues={formik.initialValues}
@@ -311,4 +339,3 @@ function CreateJobListing() {
 }
 
 export default CreateJobListing;
-
