@@ -21,7 +21,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Formik, useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import * as Yup from "yup";
 
@@ -128,6 +128,8 @@ function EditJobListing() {
     onSubmit: handleUpdateListing,
   });
 
+  const formikRef = useRef(formik);
+
   useEffect(() => {
     axios
       .get(`${apiUrl}/listings/${id}`)
@@ -136,7 +138,7 @@ function EditJobListing() {
         const newExpiryDate = roleListingData.expiry_date;
         const updatedRoleListingData = { ...roleListingData };
         updatedRoleListingData["expiry_date"] = newExpiryDate;
-        formik.setValues(updatedRoleListingData);
+        formikRef.current.setValues(updatedRoleListingData);
       })
       .catch((error) => {
         console.error("Error fetching listing data:", error);
