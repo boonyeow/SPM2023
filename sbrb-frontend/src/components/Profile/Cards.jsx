@@ -8,7 +8,7 @@ import {
   Flex,
   HStack,
   Image,
-  LinkOverlay,
+  // LinkOverlay,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -17,13 +17,15 @@ import {
   ModalHeader,
   ModalOverlay,
   Skeleton,
+  SkeletonText,
+  // Spacer,
   StackDivider,
   Text,
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
 
-const ProfileHeadCard = () => {
+const ProfileHeadCard = ({ name, department, country, email, isLoading }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -55,35 +57,41 @@ const ProfileHeadCard = () => {
           </Box>
         </CardHeader>
         <CardBody pt={0} px={0}>
-          <Box position="relative" px={14}>
+          <Box px={14}>
             <Box pt={20} pb={5} fontWeight="semibold">
-              <Text fontSize="2xl" mb={2}>
-                Joseph the Legend
-              </Text>
-              <Text fontSize="md" mb={2}>
-                Product Manager | Senior Professor | God of PMs
-              </Text>
-              <HStack gap={4} mb={2}>
-                <Text color="blackAlpha.700">Singapore, Singapore</Text>
-                <Text fontSize="xl"> · </Text>
-                <Text
-                  color="blue.600"
-                  _hover={{
-                    cursor: "pointer",
-                    textDecoration: "underline",
-                  }}
-                  onClick={onOpen}>
-                  Contact Info
-                </Text>
-              </HStack>
-              <Text>
-                <Text color="blackAlpha.700">Placeholder Text Again</Text>
-              </Text>
-            </Box>
-            <Box position="absolute" top="5" right="5">
-              <Button>
-                <LinkOverlay href="/profile/edit">Edit Profile</LinkOverlay>
-              </Button>
+              {isLoading ? (
+                <>
+                  <Skeleton height="17px" width="50%" />
+                  <SkeletonText
+                    mt="5"
+                    noOfLines={3}
+                    spacing="4"
+                    skeletonHeight="2"
+                  />
+                </>
+              ) : (
+                <>
+                  <Text fontSize="2xl" mb={2}>
+                    {name}
+                  </Text>
+                  <Text fontSize="md" mb={2}>
+                    {department}
+                  </Text>
+                  <HStack gap={4} mb={2}>
+                    <Text color="blackAlpha.700">{country}</Text>
+                    <Text fontSize="xl"> · </Text>
+                    <Text
+                      color="blue.600"
+                      _hover={{
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                      }}
+                      onClick={onOpen}>
+                      Contact Info
+                    </Text>
+                  </HStack>
+                </>
+              )}
             </Box>
           </Box>
         </CardBody>
@@ -105,7 +113,7 @@ const ProfileHeadCard = () => {
               </Box>
               <Box>
                 <Text color="blackAlpha.700">Work Email</Text>
-                <Text>josephsung@smu.edu.sg</Text>
+                <Text>{email}</Text>
               </Box>
               <Box>
                 <Text color="blackAlpha.700">Office Address</Text>
@@ -125,51 +133,7 @@ const ProfileHeadCard = () => {
   );
 };
 
-const ProfileSkillCard = (isLoading, skills) => {
-  skills = [
-    "Python",
-    "Java",
-    "C++",
-    "C#",
-    "Javascript",
-    "React",
-    "HTML",
-    "CSS",
-    "Python",
-    "Java",
-    "C++",
-    "C#",
-    "Javascript",
-    "React",
-    "HTML",
-    "CSS",
-    "Python",
-    "Java",
-    "C++",
-    "C#",
-    "Javascript",
-    "React",
-    "HTML",
-    "CSS",
-    "Python",
-    "Java",
-    "C++",
-    "C#",
-    "Javascript",
-    "React",
-    "HTML",
-    "CSS",
-    "Python",
-    "Java",
-    "C++",
-    "C#",
-    "Javascript",
-    "React",
-    "HTML",
-    "CSS",
-  ];
-
-  isLoading = false;
+const ProfileSkillCard = ({ isLoading, skills }) => {
   return (
     <>
       <Card
@@ -179,7 +143,13 @@ const ProfileSkillCard = (isLoading, skills) => {
         px={14}
         py={5}>
         <CardHeader p={0} fontWeight="semibold" mb={5}>
-          <Text fontSize="xl">Skills</Text>
+          <Flex alignItems="center">
+            <Text fontSize="xl">Skills</Text>
+            {/* <Spacer />
+            <Button>
+              <LinkOverlay href="/profile">Add Skills</LinkOverlay>
+            </Button> */}
+          </Flex>
         </CardHeader>
         <CardBody p={0}>
           <Box>
@@ -191,7 +161,7 @@ const ProfileSkillCard = (isLoading, skills) => {
                   );
                 })}
               </Flex>
-            ) : (
+            ) : skills && skills.length > 0 ? (
               skills.map((skill, index) => {
                 return (
                   <Badge
@@ -208,6 +178,8 @@ const ProfileSkillCard = (isLoading, skills) => {
                   </Badge>
                 );
               })
+            ) : (
+              <Text mb={3}>No skills added yet!</Text>
             )}
           </Box>
         </CardBody>
@@ -216,26 +188,26 @@ const ProfileSkillCard = (isLoading, skills) => {
   );
 };
 
-const ProfileJobCard = (jobRole, jobDescription) => {
-  jobRole = "Account Manager";
-  jobDescription = "Test Description";
-  return (
-    <Card
-      variant="elevated"
-      overflow="hidden"
-      borderRadius="25px"
-      px={14}
-      py={5}>
-      <CardHeader p={0} fontWeight="semibold" mb={5}>
-        <Text fontSize="xl">Current Role - {jobRole}</Text>
-      </CardHeader>
-      <CardBody p={0} mb={5}>
-        <Box>
-          <Text>{jobDescription}</Text>
-        </Box>
-      </CardBody>
-    </Card>
-  );
-};
+// const ProfileJobCard = (jobRole, jobDescription) => {
+//   jobRole = "Account Manager";
+//   jobDescription = "Test Description";
+//   return (
+//     <Card
+//       variant="elevated"
+//       overflow="hidden"
+//       borderRadius="25px"
+//       px={14}
+//       py={5}>
+//       <CardHeader p={0} fontWeight="semibold" mb={5}>
+//         <Text fontSize="xl">Current Role - {jobRole}</Text>
+//       </CardHeader>
+//       <CardBody p={0} mb={5}>
+//         <Box>
+//           <Text>{jobDescription}</Text>
+//         </Box>
+//       </CardBody>
+//     </Card>
+//   );
+// };
 
-export { ProfileHeadCard, ProfileSkillCard, ProfileJobCard };
+export { ProfileHeadCard, ProfileSkillCard };
