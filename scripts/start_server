@@ -7,7 +7,7 @@ sudo pkill -f /usr/bin/supervisord
 # Wait for the process to stop gracefully in seconds
 sleep 30
 cd /home/ec2-user/app
-git pull origin test-cd
+git pull origin main
 chmod +x scripts/start_server
 chmod +w /tmp/supervisord.log
 sudo /usr/bin/supervisord -c /home/ec2-user/app/supervisord.conf 
