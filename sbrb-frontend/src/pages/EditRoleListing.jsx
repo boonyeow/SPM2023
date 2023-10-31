@@ -91,8 +91,8 @@ function EditJobListing() {
     role_name: Yup.string().required("Role Name is required"),
     listing_title: Yup.string().required("Listing Title is required"),
     listing_desc: Yup.string().required("Listing Description is required"),
-    dept: Yup.string().required("Department is required"),
-    country: Yup.string().required("Country is required"),
+    department_name: Yup.string().required("Department is required"),
+    country_name: Yup.string().required("Country is required"),
     reporting_manager_id: Yup.string().required(
       "Reporting Manager ID is required"
     ),
@@ -182,22 +182,26 @@ function EditJobListing() {
                       <GridItem colSpan={2}>
                         <FormControl
                           isRequired
-                          isInvalid={formik.touched.dept && formik.errors.dept}>
+                          isInvalid={
+                            formik.touched.department_name &&
+                            formik.errors.department_name
+                          }>
                           <FormLabel>Department</FormLabel>
                           <Select
-                            id="dept"
-                            name="dept"
+                            id="department_name"
+                            name="department_name"
                             placeholder="Select a department"
-                            {...formik.getFieldProps("dept")}>
+                            {...formik.getFieldProps("department_name")}>
                             {departments.map((department) => (
                               <option key={department} value={department}>
                                 {department}
                               </option>
                             ))}
                           </Select>
-                          {formik.touched.dept && formik.errors.dept ? (
+                          {formik.touched.department_name &&
+                          formik.errors.department_name ? (
                             <FormErrorMessage>
-                              {formik.errors.dept}
+                              {formik.errors.department_name}
                             </FormErrorMessage>
                           ) : null}
                         </FormControl>
@@ -207,23 +211,25 @@ function EditJobListing() {
                         <FormControl
                           isRequired
                           isInvalid={
-                            formik.touched.country && formik.errors.country
+                            formik.touched.country_name &&
+                            formik.errors.country_name
                           }>
                           <FormLabel>Country</FormLabel>
                           <Select
-                            id="country"
-                            name="country"
+                            id="country_name"
+                            name="country_name"
                             placeholder="Select a country"
-                            {...formik.getFieldProps("country")}>
+                            {...formik.getFieldProps("country_name")}>
                             {countries.map((country) => (
                               <option key={country} value={country}>
                                 {country}
                               </option>
                             ))}
                           </Select>
-                          {formik.touched.country && formik.errors.country ? (
+                          {formik.touched.country_name &&
+                          formik.errors.country_name ? (
                             <FormErrorMessage>
-                              {formik.errors.country}
+                              {formik.errors.country_name}
                             </FormErrorMessage>
                           ) : null}
                         </FormControl>
