@@ -1,6 +1,7 @@
 import { DatePicker } from "antd";
 import Layout from "../components/Layout";
 import axios from "axios";
+
 import {
   Box,
   Button,
@@ -99,7 +100,17 @@ function CreateJobListing() {
       dept: Yup.string().required("Required"),
       country: Yup.string().required("Required"),
       reporting_manager_id: Yup.string().required("Required"),
-      expiry_date: Yup.date().required("Required"),
+      expiry_date: Yup.date()
+        .required("Application Deadline is required")
+        .test(
+          "is-future-date",
+          "Application Deadline must be a future date",
+          function (date) {
+            const cutoff = new Date();
+            cutoff.setHours(0, 0, 0, 0);
+            return date >= cutoff;
+          }
+        ),
     }),
     onSubmit: handleCreateListing,
   });
@@ -311,4 +322,3 @@ function CreateJobListing() {
 }
 
 export default CreateJobListing;
-
