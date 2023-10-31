@@ -1,7 +1,12 @@
 import { DatePicker } from "antd";
 import Layout from "../components/Layout";
 import axios from "axios";
+import dayjs from "dayjs";
+import { useParams } from "react-router-dom";
+
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   Flex,
@@ -16,10 +21,16 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Formik, useFormik } from "formik";
+import { useEffect, useRef, useState } from "react";
 
 import * as Yup from "yup";
 
-function CreateJobListing() {
+function EditJobListing() {
+  const { id } = useParams();
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const countries = [
     "Malaysia",
     "Hong Kong",
@@ -65,58 +76,102 @@ function CreateJobListing() {
     "Support Engineer",
   ];
 
-  const handleCreateListing = () => {
-    console.log();
+  const validationSchema = Yup.object({
+    role_name: Yup.string().required("Role Name is required"),
+    listing_title: Yup.string().required("Listing Title is required"),
+    listing_desc: Yup.string().required("Job Description is required"),
+    department_name: Yup.string().required("Department is required"),
+    country_name: Yup.string().required("Country is required"),
+    reporting_manager_id: Yup.string().required(
+      "Reporting Manager ID is required"
+    ),
+    expiry_date: Yup.date()
+      .required("Application Deadline is required")
+      .test(
+        "is-future-date",
+        "Application Deadline must be a future date",
+        function (date) {
+          const cutoff = new Date();
+          cutoff.setHours(0, 0, 0, 0);
+          return date >= cutoff;
+        }
+      ),
+  });
+
+  const handleUpdateListing = (values) => {
+    console.log({
+      role_name: formik.values.role_name,
+      listing_title: formik.values.listing_title,
+      listing_desc: formik.values.listing_desc,
+      department_name: formik.values.department_name,
+      country_name: formik.values.country_name,
+      reporting_manager_id: formik.values.reporting_manager_id,
+      created_by_id: formik.values.created_by_id,
+      expiry_date: formik.values.expiry_date.toISOString(),
+    });
     axios
-      .post(`${import.meta.VITE_API_URL}/listing/create`, {
-        role_name: formik.values.role_name,
-        listing_title: formik.values.listing_title,
-        listing_desc: formik.values.listing_desc,
-        department_name: formik.values.dept,
-        country_name: formik.values.country,
-        reporting_manager_id: formik.values.reporting_manager_id,
-        created_by_id: formik.values.created_by_id,
-        expiry_date: formik.values.expiry_date.toISOString(),
+      .post(`${apiUrl}/listings/${id}`, values)
+      .then((res) => {
+        console.log("Listing updated successfully:", res);
+        setSuccess("Listing has been successfully updated.");
+        setError(null);
       })
-      .then((res) => console.log("res", res));
+      .catch((error) => {
+        console.error("Error updating listing:", error);
+        setError("There was an error processing your request.");
+        setSuccess(null);
+      });
   };
 
   const formik = useFormik({
-    initialValues: {
-      role_name: "Sales Director",
-      listing_title: "[NEW] Sales Director",
-      listing_desc: "Hello, this is a sample description",
-      dept: "Sales",
-      country: "Singapore",
-      reporting_manager_id: "140900",
-      created_by_id: "210020",
-      expiry_date: null,
-    },
-    validationSchema: Yup.object({
-      role_name: Yup.string().required("Required"),
-      listing_title: Yup.string().required("Required"),
-      listing_desc: Yup.string().required("Required"),
-      dept: Yup.string().required("Required"),
-      country: Yup.string().required("Required"),
-      reporting_manager_id: Yup.string().required("Required"),
-      expiry_date: Yup.date().required("Required"),
-    }),
-    onSubmit: handleCreateListing,
+    initialValues: {},
+    enableReinitialize: true,
+    validationSchema: validationSchema,
+    onSubmit: handleUpdateListing,
   });
+  const formikRef = useRef(formik);
+  useEffect(() => {
+    axios
+      .get(`${apiUrl}/listings/${id}`)
+      .then((response) => {
+        const roleListingData = response.data;
+        const newExpiryDate = roleListingData.expiry_date;
+        const updatedRoleListingData = { ...roleListingData };
+        updatedRoleListingData["expiry_date"] = newExpiryDate;
+        formikRef.current.setValues(updatedRoleListingData);
+      })
+      .catch((error) => {
+        console.error("Error fetching listing data:", error);
+      });
+  }, [apiUrl, id]);
 
   return (
     <>
       <Layout>
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            {error}
+          </Alert>
+        )}
+
+        {success && (
+          <Alert status="success">
+            <AlertIcon />
+            {success}
+          </Alert>
+        )}
         <Box>
           <Formik
-            initialValues={formik.initialValues}
+            initialValues={formik.values}
+            enableReinitialize={true}
             onSubmit={formik.handleSubmit}
             validationSchema={formik.validationSchema}>
             {(formikProps) => (
               <form onSubmit={formikProps.handleSubmit}>
                 <Flex align="center" justify="center" pl="3">
                   <Box w={"4xl"} p={20}>
-                    <Heading>Create Job Listing</Heading>
+                    <Heading>Edit Job Listing</Heading>
                     <Grid mt={4} templateColumns="repeat(6, 10fr)" gap={4}>
                       <GridItem colSpan={6}>
                         <FormControl
@@ -170,22 +225,26 @@ function CreateJobListing() {
                       <GridItem colSpan={2}>
                         <FormControl
                           isRequired
-                          isInvalid={formik.touched.dept && formik.errors.dept}>
+                          isInvalid={
+                            formik.touched.department_name &&
+                            formik.errors.department_name
+                          }>
                           <FormLabel>Department</FormLabel>
                           <Select
-                            id="dept"
-                            name="dept"
+                            id="department_name"
+                            name="department_name"
                             placeholder="Select a department"
-                            {...formik.getFieldProps("dept")}>
+                            {...formik.getFieldProps("department_name")}>
                             {departments.map((department) => (
                               <option key={department} value={department}>
                                 {department}
                               </option>
                             ))}
                           </Select>
-                          {formik.touched.dept && formik.errors.dept ? (
+                          {formik.touched.department_name &&
+                          formik.errors.department_name ? (
                             <FormErrorMessage>
-                              {formik.errors.dept}
+                              {formik.errors.department_name}
                             </FormErrorMessage>
                           ) : null}
                         </FormControl>
@@ -195,23 +254,25 @@ function CreateJobListing() {
                         <FormControl
                           isRequired
                           isInvalid={
-                            formik.touched.country && formik.errors.country
+                            formik.touched.country_name &&
+                            formik.errors.country_name
                           }>
                           <FormLabel>Country</FormLabel>
                           <Select
-                            id="country"
-                            name="country"
+                            id="country_name"
+                            name="country_name"
                             placeholder="Select a country"
-                            {...formik.getFieldProps("country")}>
+                            {...formik.getFieldProps("country_name")}>
                             {countries.map((country) => (
                               <option key={country} value={country}>
                                 {country}
                               </option>
                             ))}
                           </Select>
-                          {formik.touched.country && formik.errors.country ? (
+                          {formik.touched.country_name &&
+                          formik.errors.country_name ? (
                             <FormErrorMessage>
-                              {formik.errors.country}
+                              {formik.errors.country_name}
                             </FormErrorMessage>
                           ) : null}
                         </FormControl>
@@ -281,9 +342,10 @@ function CreateJobListing() {
                             name="expiry_date"
                             selected={
                               (formik.values.expiry_date &&
-                                new Date(formik.values.expiry_date)) ||
+                                formik.values.expiry_date) ||
                               null
                             }
+                            value={dayjs(formik.values.expiry_date)}
                             onChange={(val) => {
                               formik.setFieldValue("expiry_date", val);
                             }}
@@ -310,4 +372,4 @@ function CreateJobListing() {
   );
 }
 
-export default CreateJobListing;
+export default EditJobListing;
