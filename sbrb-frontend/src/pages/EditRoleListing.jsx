@@ -133,7 +133,7 @@ function EditJobListing() {
       .get(`${apiUrl}/listings/${id}`)
       .then((response) => {
         const roleListingData = response.data;
-        const newExpiryDate = dayjs(roleListingData.expiry_date);
+        const newExpiryDate = roleListingData.expiry_date;
         const updatedRoleListingData = { ...roleListingData };
         updatedRoleListingData["expiry_date"] = newExpiryDate;
         formik.setValues(updatedRoleListingData);
@@ -141,7 +141,7 @@ function EditJobListing() {
       .catch((error) => {
         console.error("Error fetching listing data:", error);
       });
-  }, [apiUrl, id, formik]);
+  }, [apiUrl, id]);
 
   return (
     <>
@@ -342,7 +342,7 @@ function EditJobListing() {
                                 formik.values.expiry_date) ||
                               null
                             }
-                            value={formik.values.expiry_date}
+                            defaultValue={dayjs(formik.values.expiry_date)}
                             onChange={(val) => {
                               formik.setFieldValue("expiry_date", val);
                             }}
@@ -360,6 +360,7 @@ function EditJobListing() {
                     </Grid>
                   </Box>
                 </Flex>
+                {console.log("formik", formik.values.expiry_date)}
               </form>
             )}
           </Formik>
