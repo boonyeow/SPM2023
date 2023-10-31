@@ -129,7 +129,7 @@ function EditJobListing() {
     validationSchema: validationSchema,
     onSubmit: handleUpdateListing,
   });
-
+  const formikRef = useRef(formik);
   useEffect(() => {
     axios
       .get(`${apiUrl}/listings/${id}`)
@@ -138,7 +138,7 @@ function EditJobListing() {
         const newExpiryDate = roleListingData.expiry_date;
         const updatedRoleListingData = { ...roleListingData };
         updatedRoleListingData["expiry_date"] = newExpiryDate;
-        formik.setValues(updatedRoleListingData);
+        formikRef.current.setValues(updatedRoleListingData);
       })
       .catch((error) => {
         console.error("Error fetching listing data:", error);
