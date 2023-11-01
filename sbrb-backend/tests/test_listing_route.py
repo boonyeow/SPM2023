@@ -60,14 +60,8 @@ class TestGetSpecificListing:
         assert "skills" in data
         assert "applied" in data
 
-    def test_get_listing_zero(self):
-        res = client.get("/listings/0")
-        assert res.status_code == 403
-        data = res.json()
-        assert data["detail"] == "Listing ID cannot be 0"
-
     def test_get_listing_non_existent_id(self):
-        res = client.get("/listings/6")
+        res = client.get("/listings/0")
         assert res.status_code == 403
         data = res.json()
         assert data["detail"] == "Listing not found"

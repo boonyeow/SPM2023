@@ -32,9 +32,6 @@ def get_listing_by_id(
     user_id: int = Query(None, description="User ID"),
     db: Session = Depends(get_db),
 ):
-    if listing_id == 0:
-        raise HTTPException(status_code=403, detail="Listing ID cannot be 0")
-
     helper_service = HelperService(db)
     listing_exist = helper_service.check_if_listing_exists(listing_id)
     if not listing_exist:
