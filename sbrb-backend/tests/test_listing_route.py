@@ -18,6 +18,28 @@ def convert_to_utc_timestamp(timestamp_with_z):
     return utc_timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")
 
 
+class TestGetAllListing:
+    def test_get_all_listings_happy(self):
+        res = client.get("/listings")
+        assert res.status_code == 200
+        data = res.json()
+        assert len(data) == 3
+        assert "listing_id" in data[0]
+        assert "role_name" in data[0]
+        assert "listing_title" in data[0]
+        assert "listing_desc" in data[0]
+        assert "country_name" in data[0]
+        assert "department_name" in data[0]
+        assert "reporting_manager_id" in data[0]
+        assert "created_by_id" in data[0]
+        assert "created_date" in data[0]
+        assert "expiry_date" in data[0]
+        assert "reporting_manager_name" in data[0]
+        assert "created_by_name" in data[0]
+        assert "skills" in data[0]
+        assert "applied" in data[0]
+
+
 class TestCreateListing:
     def test_create_listing_happy(self):
         payload = {
