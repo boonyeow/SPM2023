@@ -66,11 +66,11 @@ class TestGetSpecificListing:
         data = res.json()
         assert data["detail"] == "Listing ID cannot be 0"
 
-    def test_get_listing_invalid_id(self):
+    def test_get_listing_non_existent_id(self):
         res = client.get("/listings/6")
         assert res.status_code == 403
         data = res.json()
-        assert data["detail"] == "Listing ID is invalid"
+        assert data["detail"] == "Listing not found"
 
     def test_get_listing_invalid_data_type(self):
         res = client.get("/listings/xx")
