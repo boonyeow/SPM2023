@@ -1,8 +1,9 @@
 from datetime import datetime
 
+from sqlalchemy.orm import Session
+
 from app.models import Listing
 from app.schemas.listing_schema import ListingCreate, ListingWithSkills
-from sqlalchemy.orm import Session
 
 
 def get_staff_name(first_name, last_name):
@@ -12,12 +13,6 @@ def get_staff_name(first_name, last_name):
 class ListingService:
     def __init__(self, db: Session):
         self.db = db
-
-    def check_if_listing_is_active(self, listing_id):
-        listing = self.db.get(Listing, listing_id)
-        if listing.expiry_date >= datetime.utcnow():
-            return True
-        return False
 
     def create_listing(self, body: ListingCreate):
         new_listing = Listing(
@@ -35,12 +30,6 @@ class ListingService:
         self.db.commit()
         self.db.refresh(new_listing)
         return new_listing
-
-    def check_if_listing_exists(self, id):
-        listing = self.db.query(Listing).filter(Listing.listing_id == id).first()
-        if listing:
-            return True
-        return False
 
     def update_listing(self, id, body: ListingCreate):
         listing = self.db.query(Listing).filter(Listing.listing_id == id).first()

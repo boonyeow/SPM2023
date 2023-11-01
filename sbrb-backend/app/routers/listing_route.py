@@ -1,13 +1,14 @@
 from typing import List
 
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.schemas.application_schema import ApplicationWithStaffSkills
 from app.schemas.listing_schema import Listing, ListingCreate, ListingWithSkills
 from app.services.application_service import ApplicationService
 from app.services.helper_service import HelperService
 from app.services.listing_service import ListingService
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
 
 router = APIRouter()
 
@@ -35,8 +36,8 @@ def get_listing_by_id(
     listing_service = ListingService(db)
     listing = listing_service.get_listing_by_id(listing_id)
     if user_id:
-        application_service = ApplicationService(db)
-        listing.applied = application_service.check_if_user_already_applied(
+        helper_service = HelperService(db)
+        listing.applied = helper_service.check_if_user_already_applied(
             user_id, listing_id
         )
 
@@ -128,11 +129,11 @@ def edit_listing(id: int, body: ListingCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=403, detail="Reporting Manager does not exist")
 
     listing_service = ListingService(db)
-    listing_exist = listing_service.check_if_listing_exists(id)
+    listing_exist = helper_service.check_if_listing_exists(id)
     if not listing_exist:
         raise HTTPException(status_code=403, detail="Listing does not exist")
 
-    listing_active = listing_service.check_if_listing_is_active(id)
+    listing_active = helper_service.check_if_listing_is_active(id)
     if not listing_active:
         raise HTTPException(status_code=403, detail="Listing is not active")
     return listing_service.update_listing(id, body)
