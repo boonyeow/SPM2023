@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from app.models import Application, Country, Department, Listing, Role, Staff
 from sqlalchemy.orm import Session
+
+from app.models import Application, Country, Department, Listing, Role, Staff
 
 
 class HelperService:
