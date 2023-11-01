@@ -1,28 +1,14 @@
 from datetime import datetime
 
-from sqlalchemy.orm import Session
-
 from app.models import Application
 from app.schemas.application_schema import ApplicationWithStaffSkills
 from app.schemas.staff_schema import StaffWithSkills
+from sqlalchemy.orm import Session
 
 
 class ApplicationService:
     def __init__(self, db: Session):
         self.db = db
-
-    def check_if_user_already_applied(self, user_id: int, listing_id: int):
-        application = (
-            self.db.query(Application)
-            .filter(
-                Application.listing_id == listing_id,
-                Application.submitted_by_id == user_id,
-            )
-            .all()
-        )
-        if application:
-            return True
-        return False
 
     def get_applicants_for_listing(self, id: int):
         applications = (
@@ -49,7 +35,6 @@ class ApplicationService:
                 staff=staff_with_skills,
                 submission_date=application.submission_date,
             )
-
             result.append(application_with_staff)
 
         return result
@@ -64,3 +49,10 @@ class ApplicationService:
         self.db.commit()
         self.db.refresh(new_application)
         return new_application
+
+    def delete_application(self, application_id: int):
+        self.db.query(Application).filter(
+            Application.application_id == application_id
+        ).delete()
+        self.db.commit()
+        return True
