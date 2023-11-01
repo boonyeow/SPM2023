@@ -2,7 +2,6 @@ from datetime import datetime
 
 import pytz  # Import the pytz library for working with time zones
 from fastapi.testclient import TestClient
-
 from main import app
 
 client = TestClient(app)
@@ -22,6 +21,77 @@ def convert_to_utc_timestamp(timestamp_with_z):
 class TestGetAllListing:
     def test_get_all_listings_happy(self):
         res = client.get("/listings")
+        assert res.status_code == 200
+        data = res.json()
+        assert len(data) == 3
+        assert "listing_id" in data[0]
+        assert "role_name" in data[0]
+        assert "listing_title" in data[0]
+        assert "listing_desc" in data[0]
+        assert "country_name" in data[0]
+        assert "department_name" in data[0]
+        assert "reporting_manager_id" in data[0]
+        assert "created_by_id" in data[0]
+        assert "created_date" in data[0]
+        assert "expiry_date" in data[0]
+        assert "reporting_manager_name" in data[0]
+        assert "created_by_name" in data[0]
+        assert "skills" in data[0]
+        assert "applied" in data[0]
+
+
+class TestGetOpenListings:
+    def test_get_open_listings_is_active_true_happy(self):
+        res = client.get("/listings?active=True")
+        assert res.status_code == 200
+        data = res.json()
+        assert len(data) == 2
+        assert "listing_id" in data[0]
+        assert "role_name" in data[0]
+        assert "listing_title" in data[0]
+        assert "listing_desc" in data[0]
+        assert "country_name" in data[0]
+        assert "department_name" in data[0]
+        assert "reporting_manager_id" in data[0]
+        assert "created_by_id" in data[0]
+        assert "created_date" in data[0]
+        assert "expiry_date" in data[0]
+        assert "reporting_manager_name" in data[0]
+        assert "created_by_name" in data[0]
+        assert "skills" in data[0]
+        assert "applied" in data[0]
+
+    def test_get_open_listings_is_active_false_happy(self):
+        res = client.get("/listings?active=False")
+        assert res.status_code == 200
+        data = res.json()
+        assert len(data) == 1
+        assert "listing_id" in data[0]
+        assert "role_name" in data[0]
+        assert "listing_title" in data[0]
+        assert "listing_desc" in data[0]
+        assert "country_name" in data[0]
+        assert "department_name" in data[0]
+        assert "reporting_manager_id" in data[0]
+        assert "created_by_id" in data[0]
+        assert "created_date" in data[0]
+        assert "expiry_date" in data[0]
+        assert "reporting_manager_name" in data[0]
+        assert "created_by_name" in data[0]
+        assert "skills" in data[0]
+        assert "applied" in data[0]
+
+    def test_get_open_listings_invalid_param_value(self):
+        res = client.get("/listings?active=xx")
+        assert res.status_code == 422
+        data = res.json()
+        assert (
+            data["detail"][0]["msg"]
+            == "Input should be a valid boolean, unable to interpret input"
+        )
+
+    def test_get_open_listings_invalid_param_key(self):
+        res = client.get("/listings?activedssds=False")
         assert res.status_code == 200
         data = res.json()
         assert len(data) == 3
