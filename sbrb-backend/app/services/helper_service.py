@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from app.models import Country, Department, Role, Staff
 from sqlalchemy.orm import Session
 
