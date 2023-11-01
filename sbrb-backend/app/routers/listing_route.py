@@ -38,7 +38,7 @@ def get_listing_by_id(
     helper_service = HelperService(db)
     listing_exist = helper_service.check_if_listing_exists(listing_id)
     if not listing_exist:
-        raise HTTPException(status_code=403, detail="Listing ID is invalid")
+        raise HTTPException(status_code=403, detail="Listing not found")
 
     listing_service = ListingService(db)
     listing = listing_service.get_listing_by_id(listing_id)
