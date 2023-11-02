@@ -1,14 +1,13 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
-
 from app.database import get_db
 from app.schemas.application_schema import ApplicationWithStaffSkills
 from app.schemas.listing_schema import Listing, ListingCreate, ListingWithSkills
 from app.services.application_service import ApplicationService
 from app.services.helper_service import HelperService
 from app.services.listing_service import ListingService
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 
@@ -33,10 +32,14 @@ def get_listing_by_id(
     user_id: int = Query(None, description="User ID"),
     db: Session = Depends(get_db),
 ):
+    helper_service = HelperService(db)
+    listing_exist = helper_service.check_if_listing_exists(listing_id)
+    if not listing_exist:
+        raise HTTPException(status_code=403, detail="Listing not found")
+
     listing_service = ListingService(db)
     listing = listing_service.get_listing_by_id(listing_id)
     if user_id:
-        helper_service = HelperService(db)
         listing.applied = helper_service.check_if_user_already_applied(
             user_id, listing_id
         )

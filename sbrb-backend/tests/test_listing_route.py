@@ -2,7 +2,6 @@ from datetime import datetime
 
 import pytz  # Import the pytz library for working with time zones
 from fastapi.testclient import TestClient
-
 from main import app
 
 client = TestClient(app)
@@ -39,6 +38,42 @@ class TestGetAllListing:
         assert "created_by_name" in data[0]
         assert "skills" in data[0]
         assert "applied" in data[0]
+
+
+class TestGetSpecificListing:
+    def test_get_listing_valid_id_happy(self):
+        res = client.get("/listings/1")
+        assert res.status_code == 200
+        data = res.json()
+        assert "listing_id" in data
+        assert "role_name" in data
+        assert "listing_title" in data
+        assert "listing_desc" in data
+        assert "country_name" in data
+        assert "department_name" in data
+        assert "reporting_manager_id" in data
+        assert "created_by_id" in data
+        assert "created_date" in data
+        assert "expiry_date" in data
+        assert "reporting_manager_name" in data
+        assert "created_by_name" in data
+        assert "skills" in data
+        assert "applied" in data
+
+    def test_get_listing_non_existent_id(self):
+        res = client.get("/listings/0")
+        assert res.status_code == 403
+        data = res.json()
+        assert data["detail"] == "Listing not found"
+
+    def test_get_listing_invalid_data_type(self):
+        res = client.get("/listings/xx")
+        assert res.status_code == 422
+        data = res.json()
+        assert (
+            data["detail"][0]["msg"]
+            == "Input should be a valid integer, unable to parse string as an integer"
+        )
 
 
 class TestCreateListing:
