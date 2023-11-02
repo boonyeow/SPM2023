@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+
 from main import app
 
 client = TestClient(app)
@@ -9,7 +10,7 @@ class TestApplyOpenRoleRoute:
 
     def test_apply_for_listing_happy(self):
         payload = {"user_id": 150518, "listing_id": 3}
-        res = client.request("POST", self.ROUTE, json=payload)
+        res = client.post(self.ROUTE, json=payload)
 
         data = res.json()
         assert res.status_code == 200
@@ -18,7 +19,7 @@ class TestApplyOpenRoleRoute:
 
     def test_apply_for_listing_invalid_listing_id(self):
         payload = {"user_id": 150518, "listing_id": 0}
-        res = client.request("POST", self.ROUTE, json=payload)
+        res = client.post(self.ROUTE, json=payload)
 
         data = res.json()
         assert res.status_code == 404
@@ -26,7 +27,7 @@ class TestApplyOpenRoleRoute:
 
     def test_apply_for_listing_invalid_user_id(self):
         payload = {"user_id": 1500000, "listing_id": 1}
-        res = client.request("POST", self.ROUTE, json=payload)
+        res = client.post(self.ROUTE, json=payload)
 
         data = res.json()
         assert res.status_code == 404
@@ -34,7 +35,7 @@ class TestApplyOpenRoleRoute:
 
     def test_apply_for_listing_inactive_listing(self):
         payload = {"user_id": 150518, "listing_id": 1}
-        res = client.request("POST", self.ROUTE, json=payload)
+        res = client.post(self.ROUTE, json=payload)
 
         data = res.json()
         assert res.status_code == 403
@@ -42,7 +43,7 @@ class TestApplyOpenRoleRoute:
 
     def test_apply_for_listing_already_applied(self):
         payload = {"user_id": 151457, "listing_id": 3}
-        res = client.request("POST", self.ROUTE, json=payload)
+        res = client.post(self.ROUTE, json=payload)
 
         data = res.json()
         assert res.status_code == 400
@@ -50,7 +51,7 @@ class TestApplyOpenRoleRoute:
 
     def test_apply_for_listing_invalid_data_types(self):
         payload = {"user_id": "asd", "listing_id": "asd"}
-        res = client.request("POST", self.ROUTE, json=payload)
+        res = client.post(self.ROUTE, json=payload)
 
         data = res.json()
         assert res.status_code == 422
