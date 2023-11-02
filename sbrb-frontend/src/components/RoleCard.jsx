@@ -1,5 +1,6 @@
 import { useLoginContext } from "../hooks/useLoginContext";
 import { useNavigate } from "react-router-dom";
+
 import {
   Badge,
   Box,
@@ -67,7 +68,7 @@ const RoleCard = ({
                       colorScheme="blue"
                       ml="2"
                       onClick={() => {
-                        console.log("navigated to edit page");
+                        navigate(`/listings/${id}/edit`);
                       }}>
                       Edit
                     </Button>
