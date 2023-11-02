@@ -108,13 +108,25 @@ function CreateJobListing() {
       expiry_date: null,
     },
     validationSchema: Yup.object({
-      role_name: Yup.string().required("Required"),
-      listing_title: Yup.string().required("Required"),
-      listing_desc: Yup.string().required("Required"),
-      dept: Yup.string().required("Required"),
-      country: Yup.string().required("Required"),
-      reporting_manager_id: Yup.string().required("Required"),
-      expiry_date: Yup.date().required("Required"),
+      role_name: Yup.string().required("Role Name is required"),
+      listing_title: Yup.string().required("Listing Title is required"),
+      listing_desc: Yup.string().required("Job Description is required"),
+      dept: Yup.string().required("Department is required"),
+      country: Yup.string().required("Country is required"),
+      reporting_manager_id: Yup.string().required(
+        "Reporting Manager ID is required"
+      ),
+      expiry_date: Yup.date()
+        .required("Application Deadline is required")
+        .test(
+          "is-future-date",
+          "Application Deadline must be a future date",
+          function (date) {
+            const cutoff = new Date();
+            cutoff.setHours(0, 0, 0, 0);
+            return date >= cutoff;
+          }
+        ),
     }),
     onSubmit: handleCreateListing,
   });
