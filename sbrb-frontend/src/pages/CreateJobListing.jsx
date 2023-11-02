@@ -74,7 +74,6 @@ function CreateJobListing() {
   ];
 
   const handleCreateListing = () => {
-    console.log();
     axios
       .post(`${import.meta.env.VITE_API_URL}/listing/create`, {
         role_name: formik.values.role_name,
