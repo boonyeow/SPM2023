@@ -14,12 +14,6 @@ class ListingService:
     def __init__(self, db: Session):
         self.db = db
 
-    def check_if_listing_is_active(self, listing_id):
-        listing = self.db.get(Listing, listing_id)
-        if listing.expiry_date >= datetime.utcnow():
-            return True
-        return False
-
     def create_listing(self, body: ListingCreate):
         new_listing = Listing(
             role_name=body.role_name,
@@ -36,6 +30,15 @@ class ListingService:
         self.db.commit()
         self.db.refresh(new_listing)
         return new_listing
+
+    def update_listing(self, id, body: ListingCreate):
+        listing = self.db.query(Listing).filter(Listing.listing_id == id).first()
+        for field, value in body.model_dump(exclude_unset=True).items():
+            setattr(listing, field, value)
+
+        self.db.commit()
+        self.db.refresh(listing)
+        return listing
 
     def get_listings_with_skills(self, active=None):
         listings_query = self.db.query(Listing)

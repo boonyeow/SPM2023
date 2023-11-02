@@ -99,18 +99,9 @@ function EditJobListing() {
   });
 
   const handleUpdateListing = (values) => {
-    console.log({
-      role_name: formik.values.role_name,
-      listing_title: formik.values.listing_title,
-      listing_desc: formik.values.listing_desc,
-      department_name: formik.values.department_name,
-      country_name: formik.values.country_name,
-      reporting_manager_id: formik.values.reporting_manager_id,
-      created_by_id: formik.values.created_by_id,
-      expiry_date: formik.values.expiry_date.toISOString(),
-    });
+    console.log("formik", formik);
     axios
-      .post(`${apiUrl}/listings/${id}`, values)
+      .put(`${apiUrl}/listings/${id}`, values)
       .then((res) => {
         console.log("Listing updated successfully:", res);
         setSuccess("Listing has been successfully updated.");
@@ -359,7 +350,13 @@ function EditJobListing() {
                           ) : null}
                         </FormControl>
                       </GridItem>
-                      <Button type="submit">Submit</Button>
+                      <Button
+                        type="submit"
+                        isDisabled={
+                          new Date() > new Date(formik.values.expiry_date)
+                        }>
+                        Submit
+                      </Button>
                     </Grid>
                   </Box>
                 </Flex>
