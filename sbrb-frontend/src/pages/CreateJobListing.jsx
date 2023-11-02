@@ -109,6 +109,7 @@ function CreateJobListing() {
       expiry_date: null,
     },
     validationSchema: Yup.object({
+
       role_name: Yup.string().required("Role Name is required"),
       listing_title: Yup.string().required("Listing Title is required"),
       listing_desc: Yup.string().required("Job Description is required"),
