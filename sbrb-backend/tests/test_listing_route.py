@@ -572,3 +572,37 @@ class TestUpdateListing:
 
         data = res.json()
         assert data["detail"] == "Listing is not active"
+
+
+class TestGetListingApplicants:
+    def test_get_listing_applicants_happy(self):
+        listing_id = 2
+        res = client.get(f"/listings/{listing_id}/applicants")
+
+        data = res.json()
+        assert res.status_code == 200
+        assert len(data) == 3
+        assert "application_id" in data[0]
+        assert "listing_id" in data[0]
+        assert "staff" in data[0]
+        assert "submission_date" in data[0]
+
+    def test_get_listing_applicants_invalid_listing_id(self):
+        listing_id = 99999
+        res = client.get(f"/listings/{listing_id}/applicants")
+
+        data = res.json()
+        assert res.status_code == 404
+        assert data["detail"] == "Listing does not exist"
+
+    def test_get_listing_applicants_invalid_data_type(self):
+        listing_id = "asdf"
+        res = client.get(f"/listings/{listing_id}/applicants")
+
+        data = res.json()
+        assert res.status_code == 422
+        assert data["detail"][0]["loc"] == ["path", "id"]
+        assert (
+            data["detail"][0]["msg"]
+            == "Input should be a valid integer, unable to parse string as an integer"
+        )

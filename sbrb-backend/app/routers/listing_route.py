@@ -2,7 +2,8 @@ from typing import List
 
 from app.database import get_db
 from app.schemas.application_schema import ApplicationWithStaffSkills
-from app.schemas.listing_schema import Listing, ListingCreate, ListingWithSkills
+from app.schemas.listing_schema import (Listing, ListingCreate,
+                                        ListingWithSkills)
 from app.services.application_service import ApplicationService
 from app.services.helper_service import HelperService
 from app.services.listing_service import ListingService
@@ -53,6 +54,10 @@ def get_listing_by_id(
     response_model=List[ApplicationWithStaffSkills],
 )
 def get_applicants_for_listing(id: int, db: Session = Depends(get_db)):
+    helper_service = HelperService(db)
+    if not helper_service.check_if_listing_exists(id):
+        raise HTTPException(status_code=404, detail="Listing does not exist")
+
     application_service = ApplicationService(db)
     return application_service.get_applicants_for_listing(id)
 
