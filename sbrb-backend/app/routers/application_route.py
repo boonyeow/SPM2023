@@ -1,12 +1,11 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Body, Depends, HTTPException
-from sqlalchemy.orm import Session
-
 from app.database import get_db
 from app.schemas.application_schema import Application, ApplyListing
 from app.services.application_service import ApplicationService
 from app.services.helper_service import HelperService
+from fastapi import APIRouter, Body, Depends, HTTPException
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 
@@ -16,6 +15,10 @@ def apply_for_listing(apply_listing: ApplyListing, db: Session = Depends(get_db)
     application_service = ApplicationService(db)
     helper_service = HelperService(db)
 
+    if not helper_service.check_if_listing_exists(apply_listing.listing_id):
+        raise HTTPException(status_code=404, detail="Listing does not exist")
+    if not helper_service.check_if_staff_exists(apply_listing.user_id):
+        raise HTTPException(status_code=404, detail="User does not exist")
     if not helper_service.check_if_listing_is_active(apply_listing.listing_id):
         raise HTTPException(status_code=403, detail="Listing is not active")
     if helper_service.check_if_user_already_applied(
