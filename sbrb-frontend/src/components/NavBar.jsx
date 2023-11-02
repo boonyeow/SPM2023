@@ -1,5 +1,6 @@
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { useLoginContext } from "../hooks/useLoginContext";
+
 import {
   Avatar,
   Box,
@@ -31,7 +32,9 @@ const NavBar = () => {
   ];
 
   let activeLink;
-  if (location.pathname.includes("/listings")) {
+  if (location.pathname.includes("/listings/create")) {
+    activeLink = "Create Listing";
+  } else if (location.pathname.includes("/listings")) {
     activeLink = "Listings";
   } else if (location.pathname.includes("/applications")) {
     activeLink = "My Applications";
@@ -92,6 +95,24 @@ const NavBar = () => {
                 {link.name}
               </Link>
             ))}
+            {loginInfo.role !== "User" && (
+              <Link
+                as={ReactRouterLink}
+                to="/listings/create"
+                mr={10}
+                color={
+                  activeLink == "Create Listing" ? "blackAlpha.800" : "gray.600"
+                }
+                fontWeight={
+                  activeLink == "Create Listing" ? "semibold" : "normal"
+                }
+                _hover={{
+                  color: "blackAlpha.800",
+                  fontWeight: "semibold",
+                }}>
+                Create Listing
+              </Link>
+            )}
             {loginInfo.isLoggedIn && (
               <Link
                 mr={10}

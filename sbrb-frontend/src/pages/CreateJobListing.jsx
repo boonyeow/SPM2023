@@ -1,8 +1,12 @@
 import { DatePicker } from "antd";
 import Layout from "../components/Layout";
 import axios from "axios";
+import { useLoginContext } from "../hooks/useLoginContext";
+import { useState } from "react";
 
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   Flex,
@@ -21,6 +25,9 @@ import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 
 function CreateJobListing() {
+  const { loginInfo } = useLoginContext();
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const countries = [
     "Malaysia",
     "Hong Kong",
@@ -78,7 +85,16 @@ function CreateJobListing() {
         created_by_id: formik.values.created_by_id,
         expiry_date: formik.values.expiry_date.toISOString(),
       })
-      .then((res) => console.log("res", res));
+      .then((res) => {
+        console.log("Listing created successfully:", res);
+        setSuccess("Listing has been successfully created.");
+        setError(null);
+      })
+      .catch((error) => {
+        console.error("Error creating listing:", error);
+        setError("There was an error processing your request.");
+        setSuccess(null);
+      });
   };
 
   const formik = useFormik({
@@ -93,12 +109,15 @@ function CreateJobListing() {
       expiry_date: null,
     },
     validationSchema: Yup.object({
-      role_name: Yup.string().required("Required"),
-      listing_title: Yup.string().required("Required"),
-      listing_desc: Yup.string().required("Required"),
-      dept: Yup.string().required("Required"),
-      country: Yup.string().required("Required"),
-      reporting_manager_id: Yup.string().required("Required"),
+
+      role_name: Yup.string().required("Role Name is required"),
+      listing_title: Yup.string().required("Listing Title is required"),
+      listing_desc: Yup.string().required("Job Description is required"),
+      dept: Yup.string().required("Department is required"),
+      country: Yup.string().required("Country is required"),
+      reporting_manager_id: Yup.string().required(
+        "Reporting Manager ID is required"
+      ),
       expiry_date: Yup.date()
         .required("Application Deadline is required")
         .test(
@@ -117,203 +136,225 @@ function CreateJobListing() {
   return (
     <>
       <Layout>
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            {error}
+          </Alert>
+        )}
+
+        {success && (
+          <Alert status="success">
+            <AlertIcon />
+            {success}
+          </Alert>
+        )}
         <Box>
-          <Formik
-            initialValues={formik.initialValues}
-            onSubmit={formik.handleSubmit}
-            validationSchema={formik.validationSchema}>
-            {(formikProps) => (
-              <form onSubmit={formikProps.handleSubmit}>
-                <Flex align="center" justify="center" pl="3">
-                  <Box w={"4xl"} p={20}>
-                    <Heading>Create Job Listing</Heading>
-                    <Grid mt={4} templateColumns="repeat(6, 10fr)" gap={4}>
-                      <GridItem colSpan={6}>
-                        <FormControl
-                          isRequired
-                          isInvalid={
-                            formik.touched.listing_title &&
-                            formik.errors.listing_title
-                          }>
-                          <FormLabel>Listing Title</FormLabel>
-                          <Input
-                            id="listing_title"
-                            name="listing_title"
-                            type="text"
-                            placeholder="Enter Listing Title"
-                            {...formik.getFieldProps("listing_title")}
-                          />
-                          {formik.touched.listing_title &&
-                          formik.errors.listing_title ? (
-                            <FormErrorMessage>
-                              {formik.errors.listing_title}
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                      </GridItem>
+          {loginInfo.role != "User" ? (
+            <Formik
+              initialValues={formik.initialValues}
+              onSubmit={formik.handleSubmit}
+              validationSchema={formik.validationSchema}>
+              {(formikProps) => (
+                <form onSubmit={formikProps.handleSubmit}>
+                  <Flex align="center" justify="center" pl="3">
+                    <Box w={"4xl"} p={20}>
+                      <Heading>Create Job Listing</Heading>
+                      <Grid mt={4} templateColumns="repeat(6, 10fr)" gap={4}>
+                        <GridItem colSpan={6}>
+                          <FormControl
+                            isRequired
+                            isInvalid={
+                              formik.touched.listing_title &&
+                              formik.errors.listing_title
+                            }>
+                            <FormLabel>Listing Title</FormLabel>
+                            <Input
+                              id="listing_title"
+                              name="listing_title"
+                              type="text"
+                              placeholder="Enter Listing Title"
+                              {...formik.getFieldProps("listing_title")}
+                            />
+                            {formik.touched.listing_title &&
+                            formik.errors.listing_title ? (
+                              <FormErrorMessage>
+                                {formik.errors.listing_title}
+                              </FormErrorMessage>
+                            ) : null}
+                          </FormControl>
+                        </GridItem>
 
-                      <GridItem colSpan={6}>
-                        <FormControl
-                          isRequired
-                          isInvalid={
-                            formik.touched.listing_desc &&
-                            formik.errors.listing_desc
-                          }>
-                          <FormLabel>Job Description</FormLabel>
-                          <Textarea
-                            rows={6}
-                            id="listing_desc"
-                            name="listing_desc"
-                            type="text"
-                            placeholder="Enter Job Description"
-                            {...formik.getFieldProps("listing_desc")}
-                          />
-                          {formik.touched.listing_desc &&
-                          formik.errors.listing_desc ? (
-                            <FormErrorMessage>
-                              {formik.errors.listing_desc}
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                      </GridItem>
+                        <GridItem colSpan={6}>
+                          <FormControl
+                            isRequired
+                            isInvalid={
+                              formik.touched.listing_desc &&
+                              formik.errors.listing_desc
+                            }>
+                            <FormLabel>Job Description</FormLabel>
+                            <Textarea
+                              rows={6}
+                              id="listing_desc"
+                              name="listing_desc"
+                              type="text"
+                              placeholder="Enter Job Description"
+                              {...formik.getFieldProps("listing_desc")}
+                            />
+                            {formik.touched.listing_desc &&
+                            formik.errors.listing_desc ? (
+                              <FormErrorMessage>
+                                {formik.errors.listing_desc}
+                              </FormErrorMessage>
+                            ) : null}
+                          </FormControl>
+                        </GridItem>
 
-                      <GridItem colSpan={2}>
-                        <FormControl
-                          isRequired
-                          isInvalid={formik.touched.dept && formik.errors.dept}>
-                          <FormLabel>Department</FormLabel>
-                          <Select
-                            id="dept"
-                            name="dept"
-                            placeholder="Select a department"
-                            {...formik.getFieldProps("dept")}>
-                            {departments.map((department) => (
-                              <option key={department} value={department}>
-                                {department}
-                              </option>
-                            ))}
-                          </Select>
-                          {formik.touched.dept && formik.errors.dept ? (
-                            <FormErrorMessage>
-                              {formik.errors.dept}
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                      </GridItem>
+                        <GridItem colSpan={2}>
+                          <FormControl
+                            isRequired
+                            isInvalid={
+                              formik.touched.dept && formik.errors.dept
+                            }>
+                            <FormLabel>Department</FormLabel>
+                            <Select
+                              id="dept"
+                              name="dept"
+                              placeholder="Select a department"
+                              {...formik.getFieldProps("dept")}>
+                              {departments.map((department) => (
+                                <option key={department} value={department}>
+                                  {department}
+                                </option>
+                              ))}
+                            </Select>
+                            {formik.touched.dept && formik.errors.dept ? (
+                              <FormErrorMessage>
+                                {formik.errors.dept}
+                              </FormErrorMessage>
+                            ) : null}
+                          </FormControl>
+                        </GridItem>
 
-                      <GridItem colSpan={2}>
-                        <FormControl
-                          isRequired
-                          isInvalid={
-                            formik.touched.country && formik.errors.country
-                          }>
-                          <FormLabel>Country</FormLabel>
-                          <Select
-                            id="country"
-                            name="country"
-                            placeholder="Select a country"
-                            {...formik.getFieldProps("country")}>
-                            {countries.map((country) => (
-                              <option key={country} value={country}>
-                                {country}
-                              </option>
-                            ))}
-                          </Select>
-                          {formik.touched.country && formik.errors.country ? (
-                            <FormErrorMessage>
-                              {formik.errors.country}
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                      </GridItem>
+                        <GridItem colSpan={2}>
+                          <FormControl
+                            isRequired
+                            isInvalid={
+                              formik.touched.country && formik.errors.country
+                            }>
+                            <FormLabel>Country</FormLabel>
+                            <Select
+                              id="country"
+                              name="country"
+                              placeholder="Select a country"
+                              {...formik.getFieldProps("country")}>
+                              {countries.map((country) => (
+                                <option key={country} value={country}>
+                                  {country}
+                                </option>
+                              ))}
+                            </Select>
+                            {formik.touched.country && formik.errors.country ? (
+                              <FormErrorMessage>
+                                {formik.errors.country}
+                              </FormErrorMessage>
+                            ) : null}
+                          </FormControl>
+                        </GridItem>
 
-                      <GridItem colSpan={2}>
-                        <FormControl
-                          isRequired
-                          isInvalid={
-                            formik.touched.role_name && formik.errors.role_name
-                          }>
-                          <FormLabel>Role</FormLabel>
-                          <Select
-                            id="role_name"
-                            name="role_name"
-                            placeholder="Select a role"
-                            {...formik.getFieldProps("role_name")}>
-                            {roles.map((role) => (
-                              <option key={role} value={role}>
-                                {role}
-                              </option>
-                            ))}
-                          </Select>
-                          {formik.touched.role_name &&
-                          formik.errors.role_name ? (
-                            <FormErrorMessage>
-                              {formik.errors.role_name}
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                      </GridItem>
+                        <GridItem colSpan={2}>
+                          <FormControl
+                            isRequired
+                            isInvalid={
+                              formik.touched.role_name &&
+                              formik.errors.role_name
+                            }>
+                            <FormLabel>Role</FormLabel>
+                            <Select
+                              id="role_name"
+                              name="role_name"
+                              placeholder="Select a role"
+                              {...formik.getFieldProps("role_name")}>
+                              {roles.map((role) => (
+                                <option key={role} value={role}>
+                                  {role}
+                                </option>
+                              ))}
+                            </Select>
+                            {formik.touched.role_name &&
+                            formik.errors.role_name ? (
+                              <FormErrorMessage>
+                                {formik.errors.role_name}
+                              </FormErrorMessage>
+                            ) : null}
+                          </FormControl>
+                        </GridItem>
 
-                      <GridItem colSpan={3}>
-                        <FormControl
-                          isRequired
-                          isInvalid={
-                            formik.touched.reporting_manager_id &&
-                            formik.errors.reporting_manager_id
-                          }>
-                          <FormLabel>Reporting Manager</FormLabel>
-                          <Input
-                            placeholder="Enter Reporting Manager ID"
-                            id="reporting_manager_id"
-                            name="reporting_manager_id"
-                            {...formik.getFieldProps(
-                              "reporting_manager_id"
-                            )}></Input>
-                          {formik.touched.reporting_manager_id &&
-                          formik.errors.reporting_manager_id ? (
-                            <FormErrorMessage>
-                              {formik.errors.reporting_manager_id}
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                      </GridItem>
+                        <GridItem colSpan={3}>
+                          <FormControl
+                            isRequired
+                            isInvalid={
+                              formik.touched.reporting_manager_id &&
+                              formik.errors.reporting_manager_id
+                            }>
+                            <FormLabel>Reporting Manager</FormLabel>
+                            <Input
+                              placeholder="Enter Reporting Manager ID"
+                              id="reporting_manager_id"
+                              name="reporting_manager_id"
+                              {...formik.getFieldProps(
+                                "reporting_manager_id"
+                              )}></Input>
+                            {formik.touched.reporting_manager_id &&
+                            formik.errors.reporting_manager_id ? (
+                              <FormErrorMessage>
+                                {formik.errors.reporting_manager_id}
+                              </FormErrorMessage>
+                            ) : null}
+                          </FormControl>
+                        </GridItem>
 
-                      <GridItem colSpan={3}>
-                        <FormControl
-                          isRequired
-                          isInvalid={
-                            formik.touched.expiry_date &&
-                            formik.errors.expiry_date
-                          }>
-                          <FormLabel>Application Deadline</FormLabel>
-                          <Input
-                            id="expiry_date"
-                            name="expiry_date"
-                            selected={
-                              (formik.values.expiry_date &&
-                                new Date(formik.values.expiry_date)) ||
-                              null
-                            }
-                            onChange={(val) => {
-                              formik.setFieldValue("expiry_date", val);
-                            }}
-                            onBlur={formik.handleBlur}
-                            as={DatePicker}></Input>
-                          {formik.touched.expiry_date &&
-                          formik.errors.expiry_date ? (
-                            <FormErrorMessage>
-                              {formik.errors.expiry_date}
-                            </FormErrorMessage>
-                          ) : null}
-                        </FormControl>
-                      </GridItem>
-                      <Button type="submit">Submit</Button>
-                    </Grid>
-                  </Box>
-                </Flex>
-              </form>
-            )}
-          </Formik>
+                        <GridItem colSpan={3}>
+                          <FormControl
+                            isRequired
+                            isInvalid={
+                              formik.touched.expiry_date &&
+                              formik.errors.expiry_date
+                            }>
+                            <FormLabel>Application Deadline</FormLabel>
+                            <Input
+                              id="expiry_date"
+                              name="expiry_date"
+                              selected={
+                                (formik.values.expiry_date &&
+                                  new Date(formik.values.expiry_date)) ||
+                                null
+                              }
+                              onChange={(val) => {
+                                formik.setFieldValue("expiry_date", val);
+                              }}
+                              onBlur={formik.handleBlur}
+                              as={DatePicker}></Input>
+                            {formik.touched.expiry_date &&
+                            formik.errors.expiry_date ? (
+                              <FormErrorMessage>
+                                {formik.errors.expiry_date}
+                              </FormErrorMessage>
+                            ) : null}
+                          </FormControl>
+                        </GridItem>
+                        <Button type="submit">Submit</Button>
+                      </Grid>
+                    </Box>
+                  </Flex>
+                </form>
+              )}
+            </Formik>
+          ) : (
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Heading>Not authorized</Heading>
+            </Box>
+          )}
         </Box>
       </Layout>
     </>
