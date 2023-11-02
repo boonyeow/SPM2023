@@ -40,40 +40,75 @@ class TestGetAllListing:
         assert "applied" in data[0]
 
 
-class TestGetSpecificListing:
-    def test_get_listing_valid_id_happy(self):
-        res = client.get("/listings/1")
+class TestGetOpenListings:
+    def test_get_open_listings_is_active_true_happy(self):
+        res = client.get("/listings?active=True")
         assert res.status_code == 200
         data = res.json()
-        assert "listing_id" in data
-        assert "role_name" in data
-        assert "listing_title" in data
-        assert "listing_desc" in data
-        assert "country_name" in data
-        assert "department_name" in data
-        assert "reporting_manager_id" in data
-        assert "created_by_id" in data
-        assert "created_date" in data
-        assert "expiry_date" in data
-        assert "reporting_manager_name" in data
-        assert "created_by_name" in data
-        assert "skills" in data
-        assert "applied" in data
+        assert len(data) == 2
+        assert "listing_id" in data[0]
+        assert "role_name" in data[0]
+        assert "listing_title" in data[0]
+        assert "listing_desc" in data[0]
+        assert "country_name" in data[0]
+        assert "department_name" in data[0]
+        assert "reporting_manager_id" in data[0]
+        assert "created_by_id" in data[0]
+        assert "created_date" in data[0]
+        assert "expiry_date" in data[0]
+        assert "reporting_manager_name" in data[0]
+        assert "created_by_name" in data[0]
+        assert "skills" in data[0]
+        assert "applied" in data[0]
 
-    def test_get_listing_non_existent_id(self):
-        res = client.get("/listings/0")
-        assert res.status_code == 403
+    def test_get_open_listings_is_active_false_happy(self):
+        res = client.get("/listings?active=False")
+        assert res.status_code == 200
         data = res.json()
-        assert data["detail"] == "Listing not found"
+        assert len(data) == 1
+        assert "listing_id" in data[0]
+        assert "role_name" in data[0]
+        assert "listing_title" in data[0]
+        assert "listing_desc" in data[0]
+        assert "country_name" in data[0]
+        assert "department_name" in data[0]
+        assert "reporting_manager_id" in data[0]
+        assert "created_by_id" in data[0]
+        assert "created_date" in data[0]
+        assert "expiry_date" in data[0]
+        assert "reporting_manager_name" in data[0]
+        assert "created_by_name" in data[0]
+        assert "skills" in data[0]
+        assert "applied" in data[0]
 
-    def test_get_listing_invalid_data_type(self):
-        res = client.get("/listings/xx")
+    def test_get_open_listings_invalid_param_value(self):
+        res = client.get("/listings?active=xx")
         assert res.status_code == 422
         data = res.json()
         assert (
             data["detail"][0]["msg"]
-            == "Input should be a valid integer, unable to parse string as an integer"
+            == "Input should be a valid boolean, unable to interpret input"
         )
+
+    def test_get_open_listings_invalid_param_key(self):
+        res = client.get("/listings?activedssds=False")
+        assert res.status_code == 200
+        data = res.json()
+        assert len(data) == 3
+        assert "listing_id" in data[0]
+        assert "role_name" in data[0]
+        assert "listing_title" in data[0]
+        assert "listing_desc" in data[0]
+        assert "country_name" in data[0]
+        assert "department_name" in data[0]
+        assert "reporting_manager_id" in data[0]
+        assert "created_by_id" in data[0]
+        assert "created_date" in data[0]
+        assert "expiry_date" in data[0]
+        assert "reporting_manager_name" in data[0]
+        assert "created_by_name" in data[0]
+        assert "skills" in data[0]
+        assert "applied" in data[0]
 
 
 class TestCreateListing:
