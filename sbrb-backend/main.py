@@ -1,8 +1,9 @@
 import uvicorn
-from app.database import init_engine
-from app.routers import application_route, listing_route, staff_route
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.database import init_engine
+from app.routers import application_route, listing_route, staff_route
 
 api_router = APIRouter()
 
@@ -12,7 +13,7 @@ def get_root():
     return {"message": "Hello World!"}
 
 
-init_engine(is_test=True)
+init_engine()
 
 app = FastAPI()
 app.add_middleware(

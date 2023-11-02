@@ -13,9 +13,8 @@ SessionLocal = None
 Base = declarative_base()
 
 
-def init_engine(is_test=False):
+def init_engine():
     global engine, SessionLocal
-    # database = "test_db" if is_test else "production_db"
     database = "production_db"
     db_url = URL.create(
         database=database,
