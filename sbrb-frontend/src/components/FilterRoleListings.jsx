@@ -1,5 +1,4 @@
-import axios from "axios";
-
+import { useState } from "react";
 import {
   Accordion,
   AccordionButton,
@@ -26,12 +25,109 @@ import {
   AutoCompleteItem,
   AutoCompleteList,
 } from "@choc-ui/chakra-autocomplete";
-import { useEffect, useState } from "react";
 
 function FilterRoleListing({ onFilterChange, resetFilters }) {
-  const [countries, setCountries] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [skills, setSkills] = useState([]);
+  const countries = [
+    "Malaysia",
+    "Hong Kong",
+    "Indonesia",
+    "Vietnam",
+    "Singapore",
+  ];
+  const departments = [
+    "Chariman",
+    "CEO",
+    "Consultancy",
+    "Engineering",
+    "Finance",
+    "HR",
+    "IT",
+    "Sales",
+    "Solutioning",
+  ];
+  const skills = [
+    "Account Management",
+    "Accounting and Tax Systems",
+    "Accounting Standards",
+    "Applications Development",
+    "Applications Integration",
+    "Applications Support and Enhancement",
+    "Audit Compliance",
+    "Audit Frameworks",
+    "Automated Equipment and Control Configuration",
+    "Budgeting",
+    "Business Acumen",
+    "Business Development",
+    "Business Environment Analysis",
+    "Business Needs Analysis",
+    "Business Negotiation",
+    "Business Presentation Delivery",
+    "Business Requirements Mapping",
+    "Business Risk Management",
+    "Call Centre Management",
+    "Collaboration",
+    "Communication",
+    "Configuration Tracking",
+    "Customer Acquisition Management",
+    "Customer Relationship Management",
+    "Data Analytics",
+    "Database Administration",
+    "Developing People",
+    "Digital Fluency",
+    "Employee Communication Management",
+    "Employee Engagement Management",
+    "Finance Business Partnering",
+    "Financial Acumen",
+    "Financial Closing",
+    "Financial Management",
+    "Financial Planning",
+    "Financial Reporting",
+    "Financial Statements Analysis",
+    "Financial Transactions",
+    "Human Resource Advisory",
+    "Human Resource Practices Implementation",
+    "Human Resource Strategy Formulation",
+    "Human Resource Systems Management",
+    "Infrastructure Deployment",
+    "Infrastructure Support",
+    "Learning and Development Programme Management",
+    "Learning Needs Analysis",
+    "Network Administration and Maintenance",
+    "Onboarding",
+    "Organisational Design",
+    "People and Performance Management",
+    "Pricing Strategy",
+    "Problem Management",
+    "Problem Solving",
+    "Product Management",
+    "Professional and Business Ethics",
+    "Project Management",
+    "Regulatory Compliance",
+    "Regulatory Risk Assessment",
+    "Regulatory Strategy",
+    "Sales Closure",
+    "Sales Strategy",
+    "Security Administration",
+    "Sense Making",
+    "Service Level Management",
+    "Skills Framework Adoption",
+    "Software Configuration",
+    "Software Design",
+    "Software Testing",
+    "Solution Architecture",
+    "Solutions Design Thinking",
+    "SOP Development and Implementation",
+    "Stakeholder Management",
+    "Strategy Planning",
+    "System Integration",
+    "Talent Management",
+    "Tax Computation",
+    "Tax Implications",
+    "Technology Application",
+    "Technology Integration",
+    "Technology Road Mapping",
+    "User Interface Design",
+  ];
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [selectedFilters, setSelectedFilters] = useState({
@@ -108,110 +204,6 @@ function FilterRoleListing({ onFilterChange, resetFilters }) {
     });
     setSelectedSkills([]);
   };
-
-  useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL;
-    axios
-      .get(`${apiUrl}/listings`)
-      .then((response) => {
-        const data = response.data;
-        const extractedCountries = [
-          ...new Set(data.map((item) => item.country_name)),
-        ];
-        const extractedDepartments = [
-          ...new Set(data.map((item) => item.department_name)),
-        ];
-        const extractedSkills = [
-          "Account Management",
-          "Accounting and Tax Systems",
-          "Accounting Standards",
-          "Applications Development",
-          "Applications Integration",
-          "Applications Support and Enhancement",
-          "Audit Compliance",
-          "Audit Frameworks",
-          "Automated Equipment and Control Configuration",
-          "Budgeting",
-          "Business Acumen",
-          "Business Development",
-          "Business Environment Analysis",
-          "Business Needs Analysis",
-          "Business Negotiation",
-          "Business Presentation Delivery",
-          "Business Requirements Mapping",
-          "Business Risk Management",
-          "Call Centre Management",
-          "Collaboration",
-          "Communication",
-          "Configuration Tracking",
-          "Customer Acquisition Management",
-          "Customer Relationship Management",
-          "Data Analytics",
-          "Database Administration",
-          "Developing People",
-          "Digital Fluency",
-          "Employee Communication Management",
-          "Employee Engagement Management",
-          "Finance Business Partnering",
-          "Financial Acumen",
-          "Financial Closing",
-          "Financial Management",
-          "Financial Planning",
-          "Financial Reporting",
-          "Financial Statements Analysis",
-          "Financial Transactions",
-          "Human Resource Advisory",
-          "Human Resource Practices Implementation",
-          "Human Resource Strategy Formulation",
-          "Human Resource Systems Management",
-          "Infrastructure Deployment",
-          "Infrastructure Support",
-          "Learning and Development Programme Management",
-          "Learning Needs Analysis",
-          "Network Administration and Maintenance",
-          "Onboarding",
-          "Organisational Design",
-          "People and Performance Management",
-          "Pricing Strategy",
-          "Problem Management",
-          "Problem Solving",
-          "Product Management",
-          "Professional and Business Ethics",
-          "Project Management",
-          "Regulatory Compliance",
-          "Regulatory Risk Assessment",
-          "Regulatory Strategy",
-          "Sales Closure",
-          "Sales Strategy",
-          "Security Administration",
-          "Sense Making",
-          "Service Level Management",
-          "Skills Framework Adoption",
-          "Software Configuration",
-          "Software Design",
-          "Software Testing",
-          "Solution Architecture",
-          "Solutions Design Thinking",
-          "SOP Development and Implementation",
-          "Stakeholder Management",
-          "Strategy Planning",
-          "System Integration",
-          "Talent Management",
-          "Tax Computation",
-          "Tax Implications",
-          "Technology Application",
-          "Technology Integration",
-          "Technology Road Mapping",
-          "User Interface Design",
-        ];
-        setCountries(extractedCountries);
-        setDepartments(extractedDepartments);
-        setSkills(extractedSkills);
-      })
-      .catch((error) => {
-        console.error("Error fetching role listings:", error);
-      });
-  }, []);
 
   return (
     <>

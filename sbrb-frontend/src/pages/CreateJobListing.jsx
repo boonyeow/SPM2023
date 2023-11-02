@@ -1,6 +1,7 @@
 import { DatePicker } from "antd";
 import Layout from "../components/Layout";
 import axios from "axios";
+
 import {
   Box,
   Button,
@@ -66,9 +67,8 @@ function CreateJobListing() {
   ];
 
   const handleCreateListing = () => {
-    console.log();
     axios
-      .post(`${import.meta.VITE_API_URL}/listing/create`, {
+      .post(`${import.meta.env.VITE_API_URL}/listing/create`, {
         role_name: formik.values.role_name,
         listing_title: formik.values.listing_title,
         listing_desc: formik.values.listing_desc,
