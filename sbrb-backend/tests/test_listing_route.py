@@ -400,7 +400,7 @@ class TestUpdateListing:
             "listing_title": "Listing for Admin Executive 1",
             "listing_desc": "This is sample description",
             "country_name": "Singapore",
-            "department_name": "Superman",
+            "department_name": "Mickey Mouse",
             "reporting_manager_id": 130001,
             "created_by_id": 130002,
             "expiry_date": "2023-11-30T07:09:43.919Z",
@@ -557,7 +557,7 @@ class TestUpdateListing:
             == "Input should be a valid datetime, input is too short"
         )
 
-    def test_update_expired_listing(self):
+    def test_update_listing_expired(self):
         payload = {
             "role_name": "Admin Executive",
             "listing_title": "Listing for Admin Executive 1",
