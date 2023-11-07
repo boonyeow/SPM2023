@@ -6,9 +6,9 @@ This application is part of the project for SMU's IS212 Module which involves th
 
 The Frontend is created with ReactJS + Vite with ChakraUI as the main styling framework and the Backend is created using FastAPI. Database is PostgreSQL hosted on AWS RDS.
 
-You can access the frontend via the following link, hosted on **AWS Amplify**: [Frontend](https://main.d2dx3el4befds9.amplifyapp.com)
+You can access the frontend via the following link, hosted on **AWS Amplify**: [Frontend](https://main.d3pyqqj74i8c7p.amplifyapp.com/)
 
-The FastAPI server is hosted on **AWS EC2** and is accessible via the following link: [FastAPI Server](https://5780jtn894.execute-api.us-east-1.amazonaws.com/v1)  
+The FastAPI server is hosted on **AWS EC2** and is accessible via the following link: [FastAPI Server](https://5780jtn894.execute-api.us-east-1.amazonaws.com/v1)
 
 For comprehensive documentation of API endpoints, please refer to the following link: [API Documentation](http://54.82.236.192:8000/docs)
 
