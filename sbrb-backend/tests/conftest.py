@@ -158,7 +158,7 @@ def db_session():
     from app.database import SessionLocal, engine
 
     db_url = URL.create(
-        database="production_db",
+        database="test_db",
         drivername="postgresql+psycopg2",
         host=os.getenv("DB_HOST"),
         username=os.getenv("DB_USERNAME"),
