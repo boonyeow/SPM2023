@@ -12,6 +12,10 @@ The FastAPI server is hosted on **AWS EC2** and is accessible via the following 
 
 For comprehensive documentation of API endpoints, please refer to the following link: [API Documentation](http://54.82.236.192:8000/docs)
 
+For Github Workflows, please refer to the following links:
+* [Continuous Integration](https://github.com/kengboonang/SPM2023/blob/main/.github/workflows/On%20PR.yaml)
+* [Continuous Deployment](https://github.com/kengboonang/SPM2023/blob/main/.github/workflows/On%20Main%20Push.yaml)
+
 ### Login Credentials
 
 The following account credentials and their respective roles are listed below and can be used for testing purposes.
