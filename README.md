@@ -68,6 +68,14 @@ DB_USERNAME=<enter your db username>
 DB_PASSWORD=<enter your db password>
 ```
 
+3. Please ensure the following Github Actions secrets are configured for CI/CD workflow
+```
+AWS_ACCESS_KEY_ID=<enter your aws access key>
+AWS_SECRET_ACCESS_KEY=<enter your aws secret key>
+DB_USERNAME=<enter your db username>
+DB_PASSWORD=<enter your db password>
+```
+
 Please contact kbang.2021@scis.smu.edu.sg for the AWS RDS key.
 
 ### Frontend
